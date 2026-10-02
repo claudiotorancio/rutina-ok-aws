@@ -1,4 +1,4 @@
-import baseUrl from "./baseUrl.js";
+import {baseUrl} from "./baseUrl.js";
 
  const getPrueba = async () => {
   try {
