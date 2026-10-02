@@ -5,7 +5,6 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node backend/api/index.js",
     "server": "nodemon --env-file=.env api/index.js"
   },
   "keywords": [],
