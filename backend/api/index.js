@@ -1,5 +1,5 @@
 //index.js
-import app from "../backend/config/app.js";
+import app from "../config/app.js";
 
 const PORT = process.env.PORT || 3000;
 
