@@ -6,7 +6,7 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       input: {
-        main: resolve(import.meta.dirname, "/frontend/index.html"),
+        main: resolve(import.meta.dirname, "index.html"),
       }
     }
   },
