@@ -1,0 +1,12 @@
+//schema.prisma
+
+datasource db {
+    provider = "postgresql"
+    url= en("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+//Modelo de Base de datos
