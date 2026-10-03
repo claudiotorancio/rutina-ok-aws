@@ -128,11 +128,6 @@ exports.Prisma.UsuarioScalarFieldEnum = {
   creado_en: 'creado_en'
 };
 
-exports.Prisma.RelationLoadStrategy = {
-  query: 'query',
-  join: 'join'
-};
-
 exports.Prisma.AdministradorScalarFieldEnum = {
   id_usuario: 'id_usuario',
   nivel_acceso: 'nivel_acceso',
