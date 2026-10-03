@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 
-//Ruta ppal
+//Ruta ppal hacia servidor
 app.use("/", mainRoutes);
 
 export default app;
