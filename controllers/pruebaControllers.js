@@ -1,8 +1,7 @@
-import { PrismaPg } from '@prisma/adapter-pg'
-import path from 'path';
 
-const clientPath = path.resolve(process.cwd(), 'generated/client.ts');
-const { PrismaClient } = await import(clientPath);
+import { PrismaPg } from '@prisma/adapter-pg';
+
+import { PrismaClient } from 'db-client';
 
 const adapter = new PrismaPg();
 const prisma = new PrismaClient({ adapter });
