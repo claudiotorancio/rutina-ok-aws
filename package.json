@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "server": "nodemon --env-file=.env api/index.js",
-    "build": "prisma generate && cd frontend && npm install && npm run build"
+    "build": "npx tsx ./node_modules/prisma/build/index.js generate && cd frontend && npm run build"
   },
   "keywords": [],
   "author": "",
