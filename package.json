@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "server": "nodemon --env-file=.env api/index.js",
-    "build": "prisma generate"
+    "build": "cd backend && prisma generate"
   },
   "keywords": [],
   "author": "",
