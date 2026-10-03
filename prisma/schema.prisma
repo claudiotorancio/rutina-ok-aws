@@ -1,8 +1,7 @@
 generator client {
   provider            = "prisma-client-js"
-  output              = "../generated"
   previewFeatures     = ["driverAdapters","relationJoins"]
-  runtime             = "nodejs"
+ 
 }
 
 datasource db {
