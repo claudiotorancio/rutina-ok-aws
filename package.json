@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "server": "nodemon --env-file=.env ../api/index.js"
+    "server": "nodemon --env-file=.env ./api/index.mjs"
   },
   "keywords": [],
   "author": "",
