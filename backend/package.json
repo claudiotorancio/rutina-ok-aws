@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "server": "nodemon --env-file=.env ../api/index.mjs"
+    "server": "nodemon --env-file=.env ../api/index.mjs",
+    "build": "prisma generate"
   },
   "keywords": [],
   "author": "",
