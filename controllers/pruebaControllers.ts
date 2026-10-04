@@ -3,7 +3,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { Request, Response } from 'express';
 
 // 💡 Importación limpia y directa de TypeScript nativo:
-import { PrismaClient } from '../../generated/client.js';
+import { PrismaClient } from '@prisma/client';
 
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
