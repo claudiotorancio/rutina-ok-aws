@@ -1,5 +1,5 @@
 //index.js
-import app from "../config/app.js";
+import app from "../backend/config/app.js";
 
 //Definir el puerto en el que se ejecutará el servidor
 const PORT = process.env.PORT || 3000;
