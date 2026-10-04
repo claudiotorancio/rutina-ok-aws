@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "publicSource": "frontend/dist",
+    "outputDirectory": ".",
     "rewrites": [
         {
             "source": "/api/(.*)",
