@@ -1,9 +1,17 @@
 {
     "version": 2,
+    "functions": {
+        "api/**/*.js": {
+            "includeFiles": "node_modules/@prisma/client/**"
+        },
+        "api/**/*.ts": {
+            "includeFiles": "node_modules/@prisma/client/**"
+        }
+    },
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "api/index.js"
+            "destination": "/api/index.js"
         }
     ]
 }

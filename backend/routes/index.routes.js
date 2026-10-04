@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { prueba } from "../controllers/pruebaControllers.ts";
+import { prueba } from "../controllers/pruebaControllers.js";
 
 const router = Router();
 
