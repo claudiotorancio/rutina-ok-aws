@@ -1,12 +1,13 @@
 generator client {
   provider            = "prisma-client-js"
   output              = "../generated"
+  engineType          = "client" 
+   previewFeatures = ["queryCompiler"]
   binaryTargets   = ["native", "rhel-openssl-3.0.x"] 
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Usuario {
