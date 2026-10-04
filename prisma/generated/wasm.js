@@ -27,7 +27,7 @@ const {
   Public,
   getRuntime,
   createParam,
-} = require('./runtime/wasm-compiler-edge.js')
+} = require('./runtime/wasm-engine-edge.js')
 
 
 const Prisma = {}
@@ -232,11 +232,11 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/clau_/rutina-ok-app/generated",
+      "value": "/home/clau_/rutina-ok-app/prisma/generated",
       "fromEnvVar": null
     },
     "config": {
-      "engineType": "client"
+      "engineType": "library"
     },
     "binaryTargets": [
       {
@@ -249,17 +249,15 @@ const config = {
         "value": "rhel-openssl-3.0.x"
       }
     ],
-    "previewFeatures": [
-      "queryCompiler"
-    ],
+    "previewFeatures": [],
     "sourceFilePath": "/home/clau_/rutina-ok-app/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../.env",
-    "schemaEnvPath": "../.env"
+    "rootEnvPath": "../../.env",
+    "schemaEnvPath": "../../.env"
   },
-  "relativePath": "../prisma",
+  "relativePath": "..",
   "clientVersion": "6.19.3",
   "engineVersion": "c2990dca591cba766e3b7ef5d9e8a84796e47ab7",
   "datasourceNames": [
@@ -275,23 +273,23 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../generated\"\n  engineType      = \"client\"\n  previewFeatures = [\"queryCompiler\"]\n  binaryTargets   = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Usuario {\n  id_usuario    Int            @id @default(autoincrement())\n  nombre        String\n  apellido      String\n  email         String         @unique\n  password_hash String\n  telefono      String?\n  tipo_usuario  TipoUsuario\n  creado_en     DateTime       @default(now())\n  administrador Administrador?\n  tecnico       Tecnico?\n\n  @@map(\"usuarios\")\n}\n\nmodel Administrador {\n  id_usuario   Int     @id\n  nivel_acceso String  @default(\"OPERADOR\")\n  departamento String?\n  usuario      Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)\n\n  @@map(\"administradores\")\n}\n\nmodel Tecnico {\n  id_usuario            Int                  @id\n  especialidad          String?\n  matricula             String?\n  estado_disponibilidad EstadoDisponibilidad @default(DISPONIBLE)\n  ordenes               OrdenTrabajo[]\n  usuario               Usuario              @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)\n\n  @@map(\"tecnicos\")\n}\n\nmodel Cliente {\n  id_cliente      Int      @id @default(autoincrement())\n  nombre_empresa  String\n  contacto_nombre String?\n  telefono        String?\n  email           String?\n  direccion       String\n  creado_en       DateTime @default(now())\n  equipos         Equipo[]\n\n  @@map(\"clientes\")\n}\n\nmodel Equipo {\n  id_equipo         Int            @id @default(autoincrement())\n  id_cliente        Int\n  nombre_equipo     String\n  marca             String\n  modelo            String\n  numero_serie      String         @unique\n  ubicacion_interna String?\n  tipo_refrigerante String?\n  cliente           Cliente        @relation(fields: [id_cliente], references: [id_cliente])\n  ordenes           OrdenTrabajo[]\n\n  @@map(\"equipos\")\n}\n\nmodel OrdenTrabajo {\n  id_orden             Int               @id @default(autoincrement())\n  id_equipo            Int\n  id_tecnico           Int\n  tipo_mantenimiento   TipoMantenimiento\n  estado               EstadoOrden       @default(PENDIENTE)\n  prioridad            Prioridad         @default(MEDIA)\n  fecha_programada     DateTime\n  descripcion_tarea    String\n  comentario_respuesta String?\n  fecha_respuesta      DateTime?\n  creado_en            DateTime          @default(now())\n  intervenciones       Intervencion[]\n  equipo               Equipo            @relation(fields: [id_equipo], references: [id_equipo])\n  tecnico              Tecnico           @relation(fields: [id_tecnico], references: [id_usuario])\n\n  @@map(\"ordenes_trabajo\")\n}\n\nmodel Intervencion {\n  id_intervencion      Int          @id @default(autoincrement())\n  id_orden             Int\n  fecha_ejecucion      DateTime     @default(now())\n  presion_alta         Decimal?     @db.Decimal(6, 2)\n  presion_baja         Decimal?     @db.Decimal(6, 2)\n  temperatura_salida   Decimal?     @db.Decimal(5, 2)\n  corriente_consumo    Decimal?     @db.Decimal(5, 2)\n  checklist_completado Boolean      @default(false)\n  observaciones        String?\n  url_imagen_adjunta   String?\n  orden                OrdenTrabajo @relation(fields: [id_orden], references: [id_orden], onDelete: Cascade)\n\n  @@map(\"intervenciones\")\n}\n\nenum TipoUsuario {\n  ADMIN\n  TECNICO\n}\n\nenum TipoMantenimiento {\n  PREVENTIVO\n  CORRECTIVO\n}\n\nenum EstadoOrden {\n  PENDIENTE\n  ACEPTADA\n  RECHAZADA\n  EN_PROCESO\n  COMPLETADA\n  CANCELADA\n}\n\nenum EstadoDisponibilidad {\n  DISPONIBLE\n  EN_CAMPO\n  LICENCIA\n  INACTIVO\n}\n\nenum Prioridad {\n  BAJA\n  MEDIA\n  ALTA\n  URGENTE\n}\n",
-  "inlineSchemaHash": "d4a721c6c10bb2ee96b8c793a92895a0184892a7cb744c9c1a4563c257ed66a8",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./generated\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Usuario {\n  id_usuario    Int            @id @default(autoincrement())\n  nombre        String\n  apellido      String\n  email         String         @unique\n  password_hash String\n  telefono      String?\n  tipo_usuario  TipoUsuario\n  creado_en     DateTime       @default(now())\n  administrador Administrador?\n  tecnico       Tecnico?\n\n  @@map(\"usuarios\")\n}\n\nmodel Administrador {\n  id_usuario   Int     @id\n  nivel_acceso String  @default(\"OPERADOR\")\n  departamento String?\n  usuario      Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)\n\n  @@map(\"administradores\")\n}\n\nmodel Tecnico {\n  id_usuario            Int                  @id\n  especialidad          String?\n  matricula             String?\n  estado_disponibilidad EstadoDisponibilidad @default(DISPONIBLE)\n  ordenes               OrdenTrabajo[]\n  usuario               Usuario              @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)\n\n  @@map(\"tecnicos\")\n}\n\nmodel Cliente {\n  id_cliente      Int      @id @default(autoincrement())\n  nombre_empresa  String\n  contacto_nombre String?\n  telefono        String?\n  email           String?\n  direccion       String\n  creado_en       DateTime @default(now())\n  equipos         Equipo[]\n\n  @@map(\"clientes\")\n}\n\nmodel Equipo {\n  id_equipo         Int            @id @default(autoincrement())\n  id_cliente        Int\n  nombre_equipo     String\n  marca             String\n  modelo            String\n  numero_serie      String         @unique\n  ubicacion_interna String?\n  tipo_refrigerante String?\n  cliente           Cliente        @relation(fields: [id_cliente], references: [id_cliente])\n  ordenes           OrdenTrabajo[]\n\n  @@map(\"equipos\")\n}\n\nmodel OrdenTrabajo {\n  id_orden             Int               @id @default(autoincrement())\n  id_equipo            Int\n  id_tecnico           Int\n  tipo_mantenimiento   TipoMantenimiento\n  estado               EstadoOrden       @default(PENDIENTE)\n  prioridad            Prioridad         @default(MEDIA)\n  fecha_programada     DateTime\n  descripcion_tarea    String\n  comentario_respuesta String?\n  fecha_respuesta      DateTime?\n  creado_en            DateTime          @default(now())\n  intervenciones       Intervencion[]\n  equipo               Equipo            @relation(fields: [id_equipo], references: [id_equipo])\n  tecnico              Tecnico           @relation(fields: [id_tecnico], references: [id_usuario])\n\n  @@map(\"ordenes_trabajo\")\n}\n\nmodel Intervencion {\n  id_intervencion      Int          @id @default(autoincrement())\n  id_orden             Int\n  fecha_ejecucion      DateTime     @default(now())\n  presion_alta         Decimal?     @db.Decimal(6, 2)\n  presion_baja         Decimal?     @db.Decimal(6, 2)\n  temperatura_salida   Decimal?     @db.Decimal(5, 2)\n  corriente_consumo    Decimal?     @db.Decimal(5, 2)\n  checklist_completado Boolean      @default(false)\n  observaciones        String?\n  url_imagen_adjunta   String?\n  orden                OrdenTrabajo @relation(fields: [id_orden], references: [id_orden], onDelete: Cascade)\n\n  @@map(\"intervenciones\")\n}\n\nenum TipoUsuario {\n  ADMIN\n  TECNICO\n}\n\nenum TipoMantenimiento {\n  PREVENTIVO\n  CORRECTIVO\n}\n\nenum EstadoOrden {\n  PENDIENTE\n  ACEPTADA\n  RECHAZADA\n  EN_PROCESO\n  COMPLETADA\n  CANCELADA\n}\n\nenum EstadoDisponibilidad {\n  DISPONIBLE\n  EN_CAMPO\n  LICENCIA\n  INACTIVO\n}\n\nenum Prioridad {\n  BAJA\n  MEDIA\n  ALTA\n  URGENTE\n}\n",
+  "inlineSchemaHash": "92374829766424a14a02f876151ba467d3b457be8bcf911cf5e1fa4e01302d88",
   "copyEngine": true
 }
 config.dirname = '/'
 
 config.runtimeDataModel = JSON.parse("{\"models\":{\"Usuario\":{\"fields\":[{\"name\":\"id_usuario\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apellido\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password_hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"telefono\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tipo_usuario\",\"kind\":\"enum\",\"type\":\"TipoUsuario\"},{\"name\":\"creado_en\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"administrador\",\"kind\":\"object\",\"type\":\"Administrador\",\"relationName\":\"AdministradorToUsuario\"},{\"name\":\"tecnico\",\"kind\":\"object\",\"type\":\"Tecnico\",\"relationName\":\"TecnicoToUsuario\"}],\"dbName\":\"usuarios\"},\"Administrador\":{\"fields\":[{\"name\":\"id_usuario\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nivel_acceso\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"departamento\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"usuario\",\"kind\":\"object\",\"type\":\"Usuario\",\"relationName\":\"AdministradorToUsuario\"}],\"dbName\":\"administradores\"},\"Tecnico\":{\"fields\":[{\"name\":\"id_usuario\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"especialidad\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"matricula\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"estado_disponibilidad\",\"kind\":\"enum\",\"type\":\"EstadoDisponibilidad\"},{\"name\":\"ordenes\",\"kind\":\"object\",\"type\":\"OrdenTrabajo\",\"relationName\":\"OrdenTrabajoToTecnico\"},{\"name\":\"usuario\",\"kind\":\"object\",\"type\":\"Usuario\",\"relationName\":\"TecnicoToUsuario\"}],\"dbName\":\"tecnicos\"},\"Cliente\":{\"fields\":[{\"name\":\"id_cliente\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre_empresa\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contacto_nombre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"telefono\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"direccion\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creado_en\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"equipos\",\"kind\":\"object\",\"type\":\"Equipo\",\"relationName\":\"ClienteToEquipo\"}],\"dbName\":\"clientes\"},\"Equipo\":{\"fields\":[{\"name\":\"id_equipo\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"id_cliente\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre_equipo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"marca\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"modelo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"numero_serie\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ubicacion_interna\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tipo_refrigerante\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cliente\",\"kind\":\"object\",\"type\":\"Cliente\",\"relationName\":\"ClienteToEquipo\"},{\"name\":\"ordenes\",\"kind\":\"object\",\"type\":\"OrdenTrabajo\",\"relationName\":\"EquipoToOrdenTrabajo\"}],\"dbName\":\"equipos\"},\"OrdenTrabajo\":{\"fields\":[{\"name\":\"id_orden\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"id_equipo\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"id_tecnico\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tipo_mantenimiento\",\"kind\":\"enum\",\"type\":\"TipoMantenimiento\"},{\"name\":\"estado\",\"kind\":\"enum\",\"type\":\"EstadoOrden\"},{\"name\":\"prioridad\",\"kind\":\"enum\",\"type\":\"Prioridad\"},{\"name\":\"fecha_programada\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"descripcion_tarea\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"comentario_respuesta\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fecha_respuesta\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"creado_en\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"intervenciones\",\"kind\":\"object\",\"type\":\"Intervencion\",\"relationName\":\"IntervencionToOrdenTrabajo\"},{\"name\":\"equipo\",\"kind\":\"object\",\"type\":\"Equipo\",\"relationName\":\"EquipoToOrdenTrabajo\"},{\"name\":\"tecnico\",\"kind\":\"object\",\"type\":\"Tecnico\",\"relationName\":\"OrdenTrabajoToTecnico\"}],\"dbName\":\"ordenes_trabajo\"},\"Intervencion\":{\"fields\":[{\"name\":\"id_intervencion\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"id_orden\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"fecha_ejecucion\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"presion_alta\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"presion_baja\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"temperatura_salida\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"corriente_consumo\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"checklist_completado\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"observaciones\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url_imagen_adjunta\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"orden\",\"kind\":\"object\",\"type\":\"OrdenTrabajo\",\"relationName\":\"IntervencionToOrdenTrabajo\"}],\"dbName\":\"intervenciones\"}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
-config.engineWasm = undefined
-config.compilerWasm = {
-  getRuntime: async () => require('./query_compiler_bg.js'),
-  getQueryCompilerWasmModule: async () => {
-    const loader = (await import('#wasm-compiler-loader')).default
-    const compiler = (await loader).default
-    return compiler
+config.engineWasm = {
+  getRuntime: async () => require('./query_engine_bg.js'),
+  getQueryEngineWasmModule: async () => {
+    const loader = (await import('#wasm-engine-loader')).default
+    const engine = (await loader).default
+    return engine
   }
 }
+config.compilerWasm = undefined
 
 config.injectableEdgeEnv = () => ({
   parsed: {
