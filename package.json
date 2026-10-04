@@ -5,9 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "server": "tsx --env-file=.env api/index.js",
-    "build": "prisma generate && cd frontend && npm install && npm run build",
-    "start": "node --experimental-strip-types --experimental-transform-types api/index.ts"
+    "server": "nodemon --env-file=.env api/index.js",
+    "build": "cd frontend && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
