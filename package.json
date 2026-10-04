@@ -4,6 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd backend && prisma generate && cd ../frontend && npm install && npm run build"
+    "build": "cd backend && npm install && npx prisma generate && cd ../frontend && npm install && npm run build"
   }
 }
