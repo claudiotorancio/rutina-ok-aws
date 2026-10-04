@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "server": "nodemon --env-file=.env ../api/index.mjs",
-    "build": "prisma generate"
+    "build": "npm install && npx prisma generate"
   },
   "keywords": [],
   "author": "",
