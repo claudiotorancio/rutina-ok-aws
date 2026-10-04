@@ -1,0 +1,9 @@
+{
+  "name": "rutina-ok-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd backend && prisma generate && cd ../frontend && npm install && npm run build"
+  }
+}
