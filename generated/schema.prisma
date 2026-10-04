@@ -1,0 +1,141 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated"
+  engineType    = "client"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  id_usuario    Int            @id @default(autoincrement())
+  nombre        String
+  apellido      String
+  email         String         @unique
+  password_hash String
+  telefono      String?
+  tipo_usuario  TipoUsuario
+  creado_en     DateTime       @default(now())
+  administrador Administrador?
+  tecnico       Tecnico?
+
+  @@map("usuarios")
+}
+
+model Administrador {
+  id_usuario   Int     @id
+  nivel_acceso String  @default("OPERADOR")
+  departamento String?
+  usuario      Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@map("administradores")
+}
+
+model Tecnico {
+  id_usuario            Int                  @id
+  especialidad          String?
+  matricula             String?
+  estado_disponibilidad EstadoDisponibilidad @default(DISPONIBLE)
+  ordenes               OrdenTrabajo[]
+  usuario               Usuario              @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@map("tecnicos")
+}
+
+model Cliente {
+  id_cliente      Int      @id @default(autoincrement())
+  nombre_empresa  String
+  contacto_nombre String?
+  telefono        String?
+  email           String?
+  direccion       String
+  creado_en       DateTime @default(now())
+  equipos         Equipo[]
+
+  @@map("clientes")
+}
+
+model Equipo {
+  id_equipo         Int            @id @default(autoincrement())
+  id_cliente        Int
+  nombre_equipo     String
+  marca             String
+  modelo            String
+  numero_serie      String         @unique
+  ubicacion_interna String?
+  tipo_refrigerante String?
+  cliente           Cliente        @relation(fields: [id_cliente], references: [id_cliente])
+  ordenes           OrdenTrabajo[]
+
+  @@map("equipos")
+}
+
+model OrdenTrabajo {
+  id_orden             Int               @id @default(autoincrement())
+  id_equipo            Int
+  id_tecnico           Int
+  tipo_mantenimiento   TipoMantenimiento
+  estado               EstadoOrden       @default(PENDIENTE)
+  prioridad            Prioridad         @default(MEDIA)
+  fecha_programada     DateTime
+  descripcion_tarea    String
+  comentario_respuesta String?
+  fecha_respuesta      DateTime?
+  creado_en            DateTime          @default(now())
+  intervenciones       Intervencion[]
+  equipo               Equipo            @relation(fields: [id_equipo], references: [id_equipo])
+  tecnico              Tecnico           @relation(fields: [id_tecnico], references: [id_usuario])
+
+  @@map("ordenes_trabajo")
+}
+
+model Intervencion {
+  id_intervencion      Int          @id @default(autoincrement())
+  id_orden             Int
+  fecha_ejecucion      DateTime     @default(now())
+  presion_alta         Decimal?     @db.Decimal(6, 2)
+  presion_baja         Decimal?     @db.Decimal(6, 2)
+  temperatura_salida   Decimal?     @db.Decimal(5, 2)
+  corriente_consumo    Decimal?     @db.Decimal(5, 2)
+  checklist_completado Boolean      @default(false)
+  observaciones        String?
+  url_imagen_adjunta   String?
+  orden                OrdenTrabajo @relation(fields: [id_orden], references: [id_orden], onDelete: Cascade)
+
+  @@map("intervenciones")
+}
+
+enum TipoUsuario {
+  ADMIN
+  TECNICO
+}
+
+enum TipoMantenimiento {
+  PREVENTIVO
+  CORRECTIVO
+}
+
+enum EstadoOrden {
+  PENDIENTE
+  ACEPTADA
+  RECHAZADA
+  EN_PROCESO
+  COMPLETADA
+  CANCELADA
+}
+
+enum EstadoDisponibilidad {
+  DISPONIBLE
+  EN_CAMPO
+  LICENCIA
+  INACTIVO
+}
+
+enum Prioridad {
+  BAJA
+  MEDIA
+  ALTA
+  URGENTE
+}
