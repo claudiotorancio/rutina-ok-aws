@@ -18,8 +18,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "pg": "^8.23.1",
-    "db-client": "file:./prisma-client"
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "dotenv": "^18.0.5",
