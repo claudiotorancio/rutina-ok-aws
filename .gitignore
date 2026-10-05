@@ -10,6 +10,7 @@ backend/.env
 
 frontend/node_modules
 backend/node_modules
+backend/prisma/generated
 
 frontend/dist
 dist-ssr

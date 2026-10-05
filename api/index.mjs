@@ -2,7 +2,7 @@
 import app from "../backend/config/app.js";
 
 //Definir el puerto en el que se ejecutará el servidor
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 //Habilitar la escucha del servidor en el puerto especificado
 app.listen(PORT, () => {
