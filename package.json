@@ -14,14 +14,25 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "@quixo3/prisma-session-store": "^3.1.21",
+    "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "escape-html": "^1.0.3",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.12.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.23.1"
   },
   "devDependencies": {
     "dotenv": "^18.0.5",
     "nodemon": "^3.1.14",
     "prisma": "7.10"
+  },
+  "prisma": {
+    "seed": "node prisma/seeed.js"
   }
 }

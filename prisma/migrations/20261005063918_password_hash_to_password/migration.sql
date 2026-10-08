@@ -14,12 +14,22 @@ CREATE TYPE "EstadoDisponibilidad" AS ENUM ('DISPONIBLE', 'EN_CAMPO', 'LICENCIA'
 CREATE TYPE "Prioridad" AS ENUM ('BAJA', 'MEDIA', 'ALTA', 'URGENTE');
 
 -- CreateTable
+CREATE TABLE "sessions" (
+    "id" TEXT NOT NULL,
+    "sid" TEXT NOT NULL,
+    "data" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "sessions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "usuarios" (
     "id_usuario" SERIAL NOT NULL,
     "nombre" TEXT NOT NULL,
     "apellido" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password_hash" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "telefono" TEXT,
     "tipo_usuario" "TipoUsuario" NOT NULL,
     "creado_en" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -105,6 +115,9 @@ CREATE TABLE "intervenciones" (
 
     CONSTRAINT "intervenciones_pkey" PRIMARY KEY ("id_intervencion")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "sessions_sid_key" ON "sessions"("sid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "usuarios_email_key" ON "usuarios"("email");
