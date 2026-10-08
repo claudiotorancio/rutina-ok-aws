@@ -8,14 +8,24 @@ datasource db {
   provider = "postgresql"
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   // Se guarda el JSON de la sesión
+  expiresAt DateTime
+
+  @@map("sessions")
+}
+
 model Usuario {
   id_usuario    Int            @id @default(autoincrement())
   nombre        String
   apellido      String
   email         String         @unique
-  password_hash String
+  password      String
   telefono      String?
   tipo_usuario  TipoUsuario
+  debe_cambiar_pass Boolean        @default(true) //
   creado_en     DateTime       @default(now())
   administrador Administrador?
   tecnico       Tecnico?

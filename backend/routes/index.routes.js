@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { prueba } from "../controllers/pruebaControllers.js";
+import authRoutes from "./auth.routes.js";
+import adminRoutes from "./admin.routes.js"
 
 const router = Router();
 
-router.get("/api/prueba", prueba);
+// ===== AUTHENTICATION =====
+router.use("/auth", authRoutes);
+
+// ===== ADMIN =====
+router.use("/admin", adminRoutes)
 
 export default router;
