@@ -17,8 +17,18 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, '../dist')));
 
+// 2. Middleware personalizado para proteger el Dashboard (index.html)
+function asegurarAutenticacionAdmin(req, res, next) {
+    // Passport inyecta req.isAuthenticated() y req.user
+    if (req.isAuthenticated() && req.user?.tipo_usuario === 'ADMIN') {
+        return next(); // Si es admin, lo dejamos pasar a la ruta solicitada
+    }
+    // Si no está autenticado o no es admin, lo redirigimos al login
+    return res.redirect('/login.html');
+}
+
 // 3. Ruta Raíz Protegida
-app.get('/', estaAuthenticado, esAdministrador, (req, res) => {
+app.get('/', asegurarAutenticacionAdmin, (req, res) => {
     // Si pasa el middleware, Express le entrega el index.html del panel administrativo
     res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
