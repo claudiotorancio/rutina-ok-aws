@@ -6,5 +6,5 @@ const PORT = process.env.PORT;
 
 //Habilitar la escucha del servidor en el puerto especificado
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Servidor corriendo en puerto:  ${PORT}`);
 });

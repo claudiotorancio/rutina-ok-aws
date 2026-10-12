@@ -1,3 +1,3 @@
-const baseUrl = import.meta.env.PROD ? "https://rutina-ok-app.vercel.app" : "http://localhost:5173";
+const baseUrl = import.meta.env.PROD ? "https://rutina-ok-app.vercel.app" : "";
 
 export default baseUrl;

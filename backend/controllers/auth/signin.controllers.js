@@ -3,11 +3,6 @@ import passport from "../../config/lib/passport.js";
 
 
 const signin = async (req, res) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        res.status(400).json({ error: "Todos los campos son obligatorios" });
-    }
 
     //Implementar con passport la valdiación del login
     try {
@@ -15,11 +10,11 @@ const signin = async (req, res) => {
             //Manejo de errores de autenticacion
             if (err) {
                 console.error("Errorr en la autenticación", err);
-                res.status(400).json({ err: "Error en la autenticación" });
+                res.status(400).json({ error: "Error en la autenticación" });
             }
             //Verficar si el usuario fue encontrado
             if (!user) {
-                return res.status(401).json({ err: "Usuario o contraseña incorrectos" });
+                return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
             }
 
             //Autenticacion de la session con la devolucion del user

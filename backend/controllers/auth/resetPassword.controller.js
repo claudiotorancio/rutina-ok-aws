@@ -6,10 +6,6 @@ const resetPassword = async (req, res) => {
     //creamos el req.body
     const { id_usuario, nuevaPassword } = req.body;
 
-    if (!id_usuario || !nuevaPassword) {
-        return res.status(400).json({ error: "Todos los campos son obligatorios" });
-    }
-
     try {
         // bsucar el usuario
         const usuario = await prisma.usuario.findUnique({

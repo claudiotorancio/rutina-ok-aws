@@ -7,19 +7,20 @@ import { estaAuthenticado } from '../middlewares/auth.middleware.js';
 import loginMovil from '../controllers/auth/loginMovil.controllers.js';
 import resetPassword from '../controllers/auth/resetPassword.controller.js';
 import { prueba } from '../controllers/pruebaControllers.js';
+import { validarResetPassword, validarSignin } from '../middlewares/validators/auth.validator.js';
 
 
 const router = Router();
 
 //---- Rutas Web para administrador ----
 router.post('/signup', signup);
-router.post("/signin", signin);
+router.post("/signin", validarSignin, signin);
 router.delete("/logout", logout);
 router.get("/me", estaAuthenticado, getProfile);
 
 //---- Ruta M{ovil (App Inventor) ----
-router.post("/login-movil", loginMovil);
-router.put("/reset-password", resetPassword)
+router.post("/login-movil", validarSignin, loginMovil);
+router.put("/reset-password", validarResetPassword, resetPassword)
 router.get("/prueba", estaAuthenticado, prueba)
 
 export default router;

@@ -12,11 +12,6 @@ const registrarTecnico = async (req, res) => {
 
     const { nombre, apellido, email, password, telefono, especialidad, matricula } = req.body;
 
-    // Validación de campos requeridos
-    if (!nombre || !apellido || !email || !password) {
-        return res.status(400).json({ error: "Los campos nombre, apellido, email y contraseña son obligatorios." });
-    };
-
 
     //Validacion de existencia
     const usuarioExistente = await prisma.usuario.findUnique({

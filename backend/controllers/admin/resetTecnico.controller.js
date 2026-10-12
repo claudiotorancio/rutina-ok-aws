@@ -11,10 +11,6 @@ export const resetTecnico = async (req, res) => {
 
     const { id_usuario, nuevaPasswordTemporal } = req.body;
 
-    if (!id_usuario || !nuevaPasswordTemporal) {
-        return res.status(400).json({ error: "El ID del técnico y la nueva contraseña temporal son obligatorios." });
-    }
-
     try {
 
         const hashedPassword = await helpers.encryptPassword(nuevaPasswordTemporal, 10);

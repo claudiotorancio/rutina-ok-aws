@@ -101,17 +101,15 @@ model OrdenTrabajo {
 }
 
 model Intervencion {
-  id_intervencion      Int          @id @default(autoincrement())
-  id_orden             Int
-  fecha_ejecucion      DateTime     @default(now())
-  presion_alta         Decimal?     @db.Decimal(6, 2)
-  presion_baja         Decimal?     @db.Decimal(6, 2)
-  temperatura_salida   Decimal?     @db.Decimal(5, 2)
-  corriente_consumo    Decimal?     @db.Decimal(5, 2)
-  checklist_completado Boolean      @default(false)
-  observaciones        String?
-  url_imagen_adjunta   String?
-  orden                OrdenTrabajo @relation(fields: [id_orden], references: [id_orden], onDelete: Cascade)
+  id_intervencion   Int              @id @default(autoincrement())
+  id_orden          Int              @unique
+  tipo              TipoIntervencion 
+
+  //Los datos específicos de cada intervencion
+  detalles_json     Json?            
+
+  orden             OrdenTrabajo     @relation(fields: [id_orden], references: [id_orden])
+  creado_en         DateTime         @default(now())
 
   @@map("intervenciones")
 }
@@ -147,4 +145,11 @@ enum Prioridad {
   MEDIA
   ALTA
   URGENTE
+}
+
+enum TipoIntervencion {
+  RECARGA_GAS
+  PREVENTIVO
+  CORRECTIVO
+  INSTALACION_ELECTRICA
 }
