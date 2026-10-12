@@ -13,37 +13,7 @@ const authService = new AuthService();
 const mainContainer = document.getElementById('main-container-content');
 const navLinks = document.querySelectorAll('.sidebar .nav-link');
 
-// ... (tus funciones de loader, error y vistas anteriores se mantienen igual) ...
 
-// ==========================================
-// LÓGICA DE AUTENTICACIÓN Y LOGOUT
-// ==========================================
-async function verificarSesionYCargar() {
-  try {
-    // 1. Verificamos si hay sesión activa antes de cargar el panel
-    const usuario = await authService.getPerfil();
-
-    // Si el backend responde pero no es admin o no hay usuario, mandamos al login
-    if (!usuario) {
-      window.location.href = '/login.html';
-      return;
-    }
-
-    // Opcional: mostrar el email o nombre del admin logueado
-    const emailDisplay = document.getElementById('user-email-display');
-    if (emailDisplay && usuario.email) {
-      emailDisplay.textContent = usuario.email;
-    }
-
-    // 2. Si todo OK, inicializamos el panel
-    inicializarNavegacion();
-    cargarVistaOrdenes(); // Vista por defecto
-
-  } catch (error) {
-    console.error('Sesión no válida:', error);
-    window.location.href = '/login.html'; // Redirige si da 401 o error de red
-  }
-}
 
 // Configurar el botón de Cerrar Sesión
 function inicializarLogout() {
@@ -428,7 +398,7 @@ function inicializarNavegacion() {
 
 // Inicializar al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
-  verificarSesionYCargar();
+
   inicializarLogout();
   inicializarNavegacion();
 });
