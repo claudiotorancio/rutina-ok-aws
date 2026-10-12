@@ -6,11 +6,6 @@ const loginMovil = async (req, res) => {
     //recibir los datos
     const { email, password } = req.body;
 
-    //Comprobar la llegada del body
-    if (!email || !password) {
-        return res.status(400).json({ error: "Todos los campos son obligatorios" });
-    }
-
     try {
         //Buscar el usuario en la base de datos
         const usuario = await prisma.usuario.findUnique({ where: { email } });
