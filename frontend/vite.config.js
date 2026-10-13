@@ -7,7 +7,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, "index.html"),
-        login: resolve(import.meta.dirname, "panel.html"),
+        panel: resolve(import.meta.dirname, "panel.html"),
       }
     }
   },

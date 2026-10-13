@@ -17,6 +17,7 @@ export class AdminService {
     // --- TÉCNICOS ---
     async getTecnicos() {
         try {
+
             const response = await fetch(`${this.baseUrl}api/admin/tecnicos`, this.fetchOptions);
             const data = await response.json();
 

@@ -1,5 +1,4 @@
 import baseUrl from "./baseUrl.js";
-import { mostrarModalRespuesta } from "../views/mostrarModal.js";
 
 export class AuthService {
     constructor() {
@@ -15,11 +14,14 @@ export class AuthService {
     // 1. Iniciar Sesión (Login)
     async login(email, password) {
         try {
+ 
+
             const response = await fetch(`${this.baseUrl}api/auth/signin`, {
                 ...this.fetchOptions,
                 method: 'POST',
                 body: JSON.stringify({ email, password })
             });
+
 
             //Valdiar respuesta exitosa
             if (response.ok) {

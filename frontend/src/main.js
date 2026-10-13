@@ -1,7 +1,7 @@
 import { AdminService } from '../services/adminService.js';
 import { AuthService } from '../services/authService.js';
 
-import "../src/assets/css/admin.css";
+import "./assets/css/admin.css";
 
 
 // Instanciamos el servicio del Administrador
@@ -32,7 +32,7 @@ function inicializarLogout() {
         console.error('Error al notificar logout al servidor:', error);
       } finally {
         // Independientemente de si el backend respondió o no, limpiamos y redirigimos
-        window.location.href = '/login.html';
+        window.location.href = '/index.html';
       }
     });
   }
