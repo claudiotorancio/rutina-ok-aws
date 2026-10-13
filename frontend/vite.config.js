@@ -7,7 +7,13 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, "index.html"),
-        panel: resolve(import.meta.dirname, "panel.html"),
+        adminSecret: resolve(import.meta.dirname, "panel.html"),
+      },
+      output: {
+        // 💡 2. Esta función renombra el HTML en la carpeta dist/ para que no se llame panel.html
+        assetFileNames: '[name].[ext]',
+        chunkFileNames: '[name].js',
+        entryFileNames: '[name].js'
       }
     }
   },
