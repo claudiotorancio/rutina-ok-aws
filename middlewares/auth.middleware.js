@@ -20,3 +20,12 @@ export const esAdministrador = (req, res, next) => {
     }
     next()
 }
+
+export const verificarAdmin = (req, res, next) => {
+    // Si la sesión de Passport está activa y el usuario es ADMIN
+    if (req.isAuthenticated() && req.user?.tipo_usuario === 'ADMIN') {
+        return next(); // Permitimos que continúe a la siguiente ruta o archivo
+    }
+    // SI NO ESTÁ LOGUEADO (o ya hizo logout), lo expulsamos al login de raíz
+    return res.redirect("/");
+};
