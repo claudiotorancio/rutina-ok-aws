@@ -4,7 +4,9 @@
         {
             "source": "/panel.html",
             "destination": "/api/index.mjs"
-        },
+        }
+    ],
+    "routes": [
         {
             "source": "/panel-admin",
             "destination": "/api/index.mjs"
