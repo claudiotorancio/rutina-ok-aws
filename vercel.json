@@ -2,7 +2,7 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/api/(.*)",
+            "source": "/panel.html",
             "destination": "/api/index.mjs"
         },
         {
@@ -10,8 +10,11 @@
             "destination": "/api/index.mjs"
         },
         {
-            "source": "/panel.html",
+            "source": "/api/(.*)",
             "destination": "/api/index.mjs"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/frontend/dist/$1"
         }
-    ]
-}
+    }
