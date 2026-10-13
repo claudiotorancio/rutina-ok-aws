@@ -45,7 +45,7 @@ app.use("/api", mainRoutes);
 
 //entrar como admin
 app.get("/panel-admin", verificarAdmin, (req, res) => {
-    return res.sendFile(path.join(__dirname, "../frontend/dist/adminSecret.html"));
+    return res.sendFile(path.join(__dirname, "../../frontend/dist/panel.html"));
 });
 
 app.get("*catchAll", (req, res) => {
