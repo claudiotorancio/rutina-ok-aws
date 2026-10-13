@@ -4,6 +4,18 @@
         {
             "source": "/api/(.*)",
             "destination": "/api/index.mjs"
+        },
+        {
+            "source": "/panel-admin",
+            "destination": "/api/index.js"
+        },
+        {
+            "source": "/panel.html",
+            "destination": "/api/index.js"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/frontend/dist/$1"
         }
     ]
 }
