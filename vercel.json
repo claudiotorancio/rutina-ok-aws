@@ -2,17 +2,17 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/panel.html",
+            "source": "/api/(.*)",
             "destination": "/api/index.mjs"
         }
     ],
     "routes": [
         {
-            "source": "/panel-admin",
+            "source": "/panel.html",
             "destination": "/api/index.mjs"
         },
         {
-            "source": "/api/(.*)",
+            "source": "/panel-admin",
             "destination": "/api/index.mjs"
         },
         {
