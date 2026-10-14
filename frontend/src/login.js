@@ -17,7 +17,7 @@ formLogin.addEventListener('submit', async (e) => {
         if (res.user && res.user.tipo_usuario === 'ADMIN') {
             window.location.href = '/panel-admin'; // Redirige al Dashboard
         } else {
-            alert('Acceso no autorizado para este usuario.');
+            mostrarModalRespuesta('Acceso no autorizado para este usuario.');
         }
     } catch (error) {
         mostrarModalRespuesta(error.message);

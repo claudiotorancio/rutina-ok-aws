@@ -1,4 +1,4 @@
-import { AdminService } from "../../services/adminService";
+import { AdminService } from "../../services/adminService.js";
 import { mostrarLoader, mostrarError } from "../../config/helpersInterfaz.js";
 
 
@@ -9,10 +9,10 @@ const mainContainer = document.getElementById('main-container-content');
 
 // Vista de Técnicos
 export const cargarVistaTecnicos = async () => {
-    mostrarLoader();
-    try {
-        const tecnicos = await adminService.getTecnicos();
-        let html = `
+  mostrarLoader();
+  try {
+    const tecnicos = await adminService.getTecnicos();
+    let html = `
       <div class="col-12">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -32,11 +32,11 @@ export const cargarVistaTecnicos = async () => {
               <tbody>
     `;
 
-        if (!tecnicos || tecnicos.length === 0) {
-            html += `<tr><td colspan="4" class="text-center text-muted py-3">No hay técnicos registrados.</td></tr>`;
-        } else {
-            tecnicos.forEach(t => {
-                html += `
+    if (!tecnicos || tecnicos.length === 0) {
+      html += `<tr><td colspan="4" class="text-center text-muted py-3">No hay técnicos registrados.</td></tr>`;
+    } else {
+      tecnicos.forEach(t => {
+        html += `
           <tr class="border-secondary">
             <td class="fw-semibold">${t.nombre} ${t.apellido || ''}</td>
             <td><span class="badge bg-dark border border-secondary text-info">${t.especialidad || 'HVAC / Electromecánica'}</span></td>
@@ -51,19 +51,19 @@ export const cargarVistaTecnicos = async () => {
             </td>
           </tr>
         `;
-            });
-        }
+      });
+    }
 
-        html += `
+    html += `
               </tbody>
             </table>
           </div>
         </div>
       </div>
     `;
-        mainContainer.innerHTML = html;
-    } catch (error) {
-        console.error('Error al cargar técnicos:', error);
-        mostrarError('Error al cargar la lista de técnicos. Verifique sesión de admin.');
-    }
+    mainContainer.innerHTML = html;
+  } catch (error) {
+    console.error('Error al cargar técnicos:', error);
+    mostrarError('Error al cargar la lista de técnicos. Verifique sesión de admin.');
+  }
 }

@@ -1,8 +1,9 @@
-import { cargarVistaConfiguracion } from "../views/ajustes/cargarConfiguracion.js";
-import { cargarVistaClientes } from "../views/clientes/cargarClientes.js";
-import { cargarVistaEquipos } from "../views/equipos/cargarEquipos.js";
-import { cargarVistaOrdenes } from "../views/ordenes/cargarOrdenes.js";
-import { cargarVistaTecnicos } from "../views/tecnicos/cargarTecnicos.js";
+import { cargarVistaConfiguracion } from "../views/ajustes/cargarVistaConfiguracion.js";
+import { cargarVistaClientes } from "../views/clientes/cargarVistaClientes.js";
+import { cargarVistaEquipos } from "../views/equipos/cargarVistaEquipos.js";
+import { cargarVistaOrdenes } from "../views/ordenes/cargarVistaOrdenes.js";
+import { cargarVistaTecnicos } from "../views/tecnicos/cargarVistaTecnicos.js";
+import { cargarVistaIntervenciones } from "../views/intervenciones/cargarVistaIntervenciones.js";
 
 
 const navLinks = document.querySelectorAll('.sidebar .nav-link');
@@ -27,6 +28,9 @@ export const inicializarNavegacion = () => {
                     break;
                 case 'tecnicos':
                     await cargarVistaTecnicos();
+                    break;
+                case 'intervenciones':
+                    await cargarVistaIntervenciones();
                     break;
                 case 'clientes':
                     await cargarVistaClientes();

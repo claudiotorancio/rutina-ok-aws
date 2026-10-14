@@ -1,5 +1,5 @@
 
-import { inicializarLogout } from '../views/registro/logout.js';
+import { inicializarLogout } from '../views/registro/inicializarLogout.js';
 import { inicializarNavegacion } from '../config/inicializarNavegacion.js';
 //Importar los estilos css
 import "./assets/css/admin.css";

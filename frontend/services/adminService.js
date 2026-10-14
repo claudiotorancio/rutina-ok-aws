@@ -131,4 +131,18 @@ export class AdminService {
             throw error;
         }
     }
+
+    async getIntervenciones() {
+        try {
+            const response = await fetch(`${this.baseUrl}api/admin/intervenciones`, this.fetchOptions);
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.error || 'Error al obtener las intervenciones');
+
+            return data; 
+        } catch (error) {
+            console.error('AdminService.getIntervenciones:', error);
+            throw error;
+        }
+    }
 }
