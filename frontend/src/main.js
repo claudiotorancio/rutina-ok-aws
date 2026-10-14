@@ -7,7 +7,7 @@ import "./assets/css/admin.css";
 
 // Inicializar al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
-
-  inicializarLogout();
   inicializarNavegacion();
+  inicializarLogout();
+
 });
