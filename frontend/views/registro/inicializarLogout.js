@@ -1,4 +1,4 @@
-import { AuthService } from "../../services/authService";
+import { AuthService } from "../../services/authService.js"
 
 const authService = new AuthService();
 
