@@ -16,6 +16,10 @@
             "destination": "/api/index.mjs"
         },
         {
+            "source": "/login",
+            "destination": "/api/index.mjs"
+        },
+        {
             "source": "/(.*)",
             "destination": "/frontend/dist/$1"
         }
