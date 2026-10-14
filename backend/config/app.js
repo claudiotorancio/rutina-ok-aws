@@ -43,7 +43,7 @@ app.get("/panel-admin", verificarAdmin, (req, res) => {
     return res.sendFile(path.join(__dirname, "../../frontend/dist/panel.html"));
 });
 
-app.get("*catchAll", (req, res) => {
+app.get("/login", (req, res) => {
     res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 
