@@ -34,16 +34,19 @@ app.get("/panel.html", verificarAdmin);
 //Servir los archivos estaticos
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
+
+//Ruta ppal hacia servidor
+app.use("/api", mainRoutes);
+
 //entrar como admin
 app.get("/panel-admin", verificarAdmin, (req, res) => {
     return res.sendFile(path.join(__dirname, "../../frontend/dist/panel.html"));
 });
-//ruta relativ a la pagina ppal /login
+
 app.get("/login", (req, res) => {
     res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 
-//Ruta ppal hacia servidor
-app.use("/api", mainRoutes);
+
 
 export default app;
