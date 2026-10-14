@@ -47,6 +47,7 @@ model Tecnico {
   especialidad          String?
   matricula             String?
   estado_disponibilidad EstadoDisponibilidad @default(DISPONIBLE)
+  activo       Boolean      @default(true)
   ordenes               OrdenTrabajo[]
   usuario               Usuario              @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
 
@@ -60,6 +61,7 @@ model Cliente {
   telefono        String?
   email           String?
   direccion       String
+  activo          Boolean  @default(true)
   creado_en       DateTime @default(now())
   equipos         Equipo[]
 
@@ -75,6 +77,7 @@ model Equipo {
   numero_serie      String         @unique
   ubicacion_interna String?
   tipo_refrigerante String?
+  activo            Boolean      @default(true)
   cliente           Cliente        @relation(fields: [id_cliente], references: [id_cliente])
   ordenes           OrdenTrabajo[]
 

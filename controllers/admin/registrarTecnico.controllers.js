@@ -3,12 +3,8 @@
 import prisma from "../../config/dbConnection.js";
 import helpers from "../../config/lib/helpers/helpers.js";
 
-const registrarTecnico = async (req, res) => {
+export const registrarTecnico = async (req, res) => {
 
-    // 1. Verificación de seguridad 
-    if (!req.isAuthenticated() || req.user.tipo_usuario !== 'ADMIN') {
-        return res.status(403).json({ error: "Acceso denegado. Solo administradores pueden dar de alta técnicos." });
-    }
 
     const { nombre, apellido, email, password, telefono, especialidad, matricula } = req.body;
 
@@ -80,5 +76,34 @@ const registrarTecnico = async (req, res) => {
     }
 };
 
+export const desactivarTecnico = async (req, res) => {
 
-export default registrarTecnico;
+    try {
+        const { id } = req.params;
+
+        // Actualizamos el campo activo a false utilizando el id_tecnico del modelo
+        const tecnicoDesactivado = await prisma.tecnico.update({
+            where: { id_tecnico: parseInt(id) },
+            data: { activo: false }
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Técnico desactivado correctamente',
+            tecnico: tecnicoDesactivado
+        });
+
+    } catch (error) {
+        console.error("Error al desactivar técnico:", error);
+
+        // Control opcional por si el ID no existe en la base de datos
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: 'No se encontró el técnico especificado.' });
+        }
+
+        return res.status(500).json({ error: 'Error interno al intentar desactivar el técnico.' });
+    }
+};
+
+
+

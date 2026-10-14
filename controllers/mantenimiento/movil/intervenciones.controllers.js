@@ -5,7 +5,7 @@ const registrarIntervencion = async (req, res) => {
 
     const {
         id_orden,
-        tipo, //
+        tipo,
         detalles_json,
     } = req.body;
 
@@ -21,10 +21,6 @@ const registrarIntervencion = async (req, res) => {
         //Verificar si la orden pertenece al tecnico autenticadp
         if (orden.id_tecnico !== id_tecnico_autenticado) {
             res.status(403).json({ succes: false, error: "Acceso denegado, sin permisos para modificar orden " })
-        }
-
-        if (orden.estado === "COMPLETADA") {
-            return res.status(400).json({ success: false, error: "Esta orden de trabajo ya ha sido completada y archivada previamente con éxito." });
         }
 
         // TRANSACCIÓN
@@ -60,29 +56,13 @@ const registrarIntervencion = async (req, res) => {
             });
 
 
-
-            // Cerrar la orden pasándola a COMPLETADA
-            const otActualizada = await tx.ordenTrabajo.update({
-                where: { id_orden: orden.id_orden },
-                data: {
-                    estado: "COMPLETADA"
-                }
-            });
-
-            // Liberar técnico
-            await tx.tecnico.update({
-                where: { id_usuario: id_tecnico_autenticado },
-                data: { estado_disponibilidad: "DISPONIBLE" }
-            });
-
-            return { nuevaIntervencion, otActualizada };
+            return { nuevaIntervencion };
         });
 
         return res.status(201).json({
             success: true,
-            message: `¡Informe guardado! Intervención de tipo ${tipo} registrada y orden finalizada con éxito.`,
+            message: `¡Informe guardado! Intervención de tipo ${tipo} registrada con éxito.`,
             id_intervencion: resultado.nuevaIntervencion.id_intervencion,
-            nuevo_estado_orden: resultado.otActualizada.estado
         });
 
     } catch (error) {
