@@ -61,7 +61,7 @@ const obtenerOrdenes = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error al recuperar órdenes desde el móvil:", error);
+        console.error("Error al recuperar órdenes:", error);
         return res.status(500).json({ success: false, error: "Error interno al sincronizar tus órdenes de trabajo." });
     }
 };

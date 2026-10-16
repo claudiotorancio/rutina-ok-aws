@@ -33,7 +33,7 @@ app.get("/panel.html", verificarAdmin);
 
 //entrar como admin
 app.get("/panel-admin", verificarAdmin, (req, res) => {
-    console.log("pase por app.js (panel-admin)")
+    // console.log("pase por app.js (panel-admin)")
     //Evitar qeu el navegador guarde esta ruta protegida
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     return res.sendFile(path.join(__dirname, "../../frontend/dist/panel.html"));
