@@ -13,7 +13,13 @@ export const obtenerIntervenciones = async (req, res) => {
                                 cliente: true // Traemos también los datos del cliente y equipo
                             }
                         },
-                        tecnico: true // Traemos el técnico que realizó el trabajo
+                        tecnico: {
+                            include: {
+                                usuario: {
+                                    select: { nombre: true, apellido: true }
+                                }
+                            }
+                        }, // Traemos el técnico que realizó el trabajo
                     }
                 }
             }

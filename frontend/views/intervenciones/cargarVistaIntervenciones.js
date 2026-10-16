@@ -1,19 +1,19 @@
 import { mostrarError, mostrarLoader } from "../../config/helpersInterfaz.js";
-import { AdminService } from "../../services/adminService.js";
+import { IntervencionService } from "../../services/intervencionService.js";
 
-const adminService = new AdminService();
+const intervencionService = new IntervencionService();
 const mainContainer = document.getElementById('main-container-content');
 
 export const cargarVistaIntervenciones = async () => {
-    mostrarLoader();
-    try {
-        // Llamada al servicio que consume el endpoint /api/admin/intervenciones
-        const respuesta = await adminService.getIntervenciones();
-        // Extraemos el array de intervenciones del JSON recibido
-        const intervenciones = respuesta.intervenciones || [];
-        console.log(intervenciones)
+  mostrarLoader();
+  try {
+    // Llamada al servicio que consume el endpoint /api/admin/intervenciones
+    const respuesta = await intervencionService.getIntervenciones();
 
-        let html = `
+    // Extraemos el array de intervenciones del JSON recibido
+    const intervenciones = respuesta.intervenciones || [];
+
+    let html = `
       <div class="col-12">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -35,43 +35,43 @@ export const cargarVistaIntervenciones = async () => {
               <tbody>
     `;
 
-        if (!intervenciones || intervenciones.length === 0) {
-            html += `<tr><td colspan="7" class="text-center text-muted py-3">No hay intervenciones registradas.</td></tr>`;
-        } else {
-            intervenciones.forEach(i => {
-                const idIntervencion = i.id_intervencion;
-                const idOrden = i.id_orden;
-                const tipoIntervencion = i.tipo.replace(/_/g, ' '); // Ej: RECARGA_GAS -> RECARGA GAS
+    if (!intervenciones || intervenciones.length === 0) {
+      html += `<tr><td colspan="7" class="text-center text-muted py-3">No hay intervenciones registradas.</td></tr>`;
+    } else {
+      intervenciones.forEach(i => {
+        const idIntervencion = i.id_intervencion;
+        const idOrden = i.id_orden;
+        const tipoIntervencion = i.tipo.replace(/_/g, ' '); // Ej: RECARGA_GAS -> RECARGA GAS
 
-                // Extrayendo datos relacionados de forma segura
-                const clienteNombre = i.orden?.equipo?.cliente?.nombre_empresa || 'Cliente N/A';
-                const equipoNombre = i.orden?.equipo?.nombre_equipo || 'Equipo N/A';
+        // Extrayendo datos relacionados de forma segura
+        const clienteNombre = i.orden?.equipo?.cliente?.nombre_empresa || 'Cliente N/A';
+        const equipoNombre = i.orden?.equipo?.nombre_equipo || 'Equipo N/A';
 
-                // Si el modelo de técnico guarda nombre y apellido o solo ID/Matricula
-                const tecnicoInfo = i.orden?.tecnico ? `Técnico #${i.orden.tecnico.id_usuario} (${i.orden.tecnico.especialidad || 'General'})` : 'Sin Asignar';
+        // Si el modelo de técnico guarda nombre y apellido o solo ID/Matricula
+        const tecnicoInfo = i.orden?.tecnico ? `Técnico #${i.orden.tecnico.id_usuario} (${i.orden.tecnico.usuario.nombre} ${i.orden.tecnico.usuario.apellido || ''})` : 'Sin Asignar';
 
-                // Detalles dinámicos desde el JSON
-                const observaciones = i.detalles_json?.observaciones || 'Sin observaciones';
-                const salaEquipo = i.detalles_json?.sala_equipo ? `<br><small class="text-muted"><i class="bi bi-geo-alt"></i> ${i.detalles_json.sala_equipo}</small>` : '';
+        // Detalles dinámicos desde el JSON
+        const observaciones = i.detalles_json?.observaciones || 'Sin observaciones';
+        const salaEquipo = i.detalles_json?.sala_equipo ? `<br><small class="text-muted"><i class="bi bi-geo-alt"></i> ${i.detalles_json.sala_equipo}</small>` : '';
 
-                // Fotos de evidencia en S3
-                const fotoAntes = i.detalles_json?.fotos_evidencia?.antes_url;
-                const fotoDespues = i.detalles_json?.fotos_evidencia?.despues_url;
+        // Fotos de evidencia en S3
+        const fotoAntes = i.detalles_json?.fotos_evidencia?.antes_url;
+        const fotoDespues = i.detalles_json?.fotos_evidencia?.despues_url;
 
-                let linksFotos = '<span class="text-muted small">Sin fotos</span>';
-                if (fotoAntes || fotoDespues) {
-                    linksFotos = `<div class="d-flex gap-1">`;
-                    if (fotoAntes) linksFotos += `<a href="${fotoAntes}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Ver foto Antes"><i class="bi bi-image"></i> Antes</a>`;
-                    if (fotoDespues) linksFotos += `<a href="${fotoDespues}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Ver foto Después"><i class="bi bi-image-fill"></i> Después</a>`;
-                    linksFotos += `</div>`;
-                }
+        let linksFotos = '<span class="text-muted small">Sin fotos</span>';
+        if (fotoAntes || fotoDespues) {
+          linksFotos = `<div class="d-flex gap-1">`;
+          if (fotoAntes) linksFotos += `<a href="${fotoAntes}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Ver foto Antes"><i class="bi bi-image"></i> Antes</a>`;
+          if (fotoDespues) linksFotos += `<a href="${fotoDespues}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Ver foto Después"><i class="bi bi-image-fill"></i> Después</a>`;
+          linksFotos += `</div>`;
+        }
 
-                // Fecha formateada
-                const fecha = new Date(i.creado_en).toLocaleDateString('es-AR', {
-                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                });
+        // Fecha formateada
+        const fecha = new Date(i.creado_en).toLocaleDateString('es-AR', {
+          day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
 
-                html += `
+        html += `
           <tr class="border-secondary">
             <td class="fw-bold text-accent">#${idIntervencion}</td>
             <td>
@@ -96,19 +96,19 @@ export const cargarVistaIntervenciones = async () => {
             </td>
           </tr>
         `;
-            });
-        }
+      });
+    }
 
-        html += `
+    html += `
               </tbody>
             </table>
           </div>
         </div>
       </div>
     `;
-        mainContainer.innerHTML = html;
-    } catch (error) {
-        console.error('Error al cargar intervenciones:', error);
-        mostrarError('Error al cargar las intervenciones técnicas del servidor.');
-    }
+    mainContainer.innerHTML = html;
+  } catch (error) {
+    console.error('Error al cargar intervenciones:', error);
+    mostrarError('Error al cargar las intervenciones técnicas del servidor.');
+  }
 };

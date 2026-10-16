@@ -1,8 +1,8 @@
-import { AdminService } from "../../services/adminService.js";
+import { TecnicoService } from "../../services/tecnicoService.js";
 import { mostrarLoader, mostrarError } from "../../config/helpersInterfaz.js";
 
 
-const adminService = new AdminService();
+const tecnicoService = new TecnicoService();
 
 
 const mainContainer = document.getElementById('main-container-content');
@@ -11,7 +11,7 @@ const mainContainer = document.getElementById('main-container-content');
 export const cargarVistaTecnicos = async () => {
   mostrarLoader();
   try {
-    const tecnicos = await adminService.getTecnicos();
+    const tecnicos = await tecnicoService.getTecnicos();
     let html = `
       <div class="col-12">
         <div class="custom-card">

@@ -96,7 +96,7 @@
           </div>
         </header>
 
-        <!-- Modal Dinámico de Notificaciones / Respuestas -->
+       <!-- Modal Dinámico de Notificaciones / Respuestas / Confirmaciones -->
 <div class="modal fade" id="modalRespuesta" tabindex="-1" aria-labelledby="modalRespuestaLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content custom-card border-secondary">
@@ -110,7 +110,8 @@
       <div class="modal-body">
         <p id="modal-mensaje" class="m-0 text-muted">Mensaje de respuesta del servidor...</p>
       </div>
-      <div class="modal-footer border-secondary">
+      <!-- Aquí dejamos un contenedor para los botones dinámicos -->
+      <div class="modal-footer border-secondary" id="modal-footer-botones">
         <button type="button" class="btn btn-accent btn-sm px-4" data-bs-dismiss="modal">Aceptar</button>
       </div>
     </div>

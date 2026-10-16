@@ -1,15 +1,15 @@
 import { mostrarLoader, mostrarError } from "../../config/helpersInterfaz.js";
-import { AdminService } from "../../services/adminService.js";
+import { ClienteService } from "../../services/clienteService.js";
 
-const adminService = new AdminService()
+const clienteService = new ClienteService()
 
 const mainContainer = document.getElementById('main-container-content');
 
 export const cargarVistaClientes = async () => {
-    mostrarLoader();
-    try {
-        const clientes = await adminService.getClientes();
-        let html = `
+  mostrarLoader();
+  try {
+    const clientes = await clienteService.getClientes();
+    let html = `
       <div class="col-12">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -29,11 +29,11 @@ export const cargarVistaClientes = async () => {
               <tbody>
     `;
 
-        if (!clientes || clientes.length === 0) {
-            html += `<tr><td colspan="4" class="text-center text-muted py-3">No hay clientes registrados.</td></tr>`;
-        } else {
-            clientes.forEach(c => {
-                html += `
+    if (!clientes || clientes.length === 0) {
+      html += `<tr><td colspan="4" class="text-center text-muted py-3">No hay clientes registrados.</td></tr>`;
+    } else {
+      clientes.forEach(c => {
+        html += `
           <tr class="border-secondary">
             <td class="fw-semibold">${c.nombre_empresa}</td>
             <td class="text-muted">${c.email || 'Sin correo'}</td>
@@ -43,19 +43,19 @@ export const cargarVistaClientes = async () => {
             </td>
           </tr>
         `;
-            });
-        }
+      });
+    }
 
-        html += `
+    html += `
               </tbody>
             </table>
           </div>
         </div>
       </div>
     `;
-        mainContainer.innerHTML = html;
-    } catch (error) {
-        console.error('Error al cargar clientes:', error);
-        mostrarError('Error al obtener los clientes del sistema.');
-    }
+    mainContainer.innerHTML = html;
+  } catch (error) {
+    console.error('Error al cargar clientes:', error);
+    mostrarError('Error al obtener los clientes del sistema.');
+  }
 }

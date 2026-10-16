@@ -21,7 +21,7 @@ export const inicializarNavegacion = () => {
 
             switch (tab) {
                 case 'dashboard':
-                    window.location.href = '/panel-admin';;
+                    // window.location.href = '/panel-admin';
                     break;
                 case 'ordenes':
                     await cargarVistaOrdenes();

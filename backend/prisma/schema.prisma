@@ -107,7 +107,7 @@ model Intervencion {
   id_intervencion   Int              @id @default(autoincrement())
   id_orden          Int              @unique
   tipo              TipoIntervencion 
-
+  realizada          Boolean          @default(false)
   //Los datos específicos de cada intervencion
   detalles_json     Json?            
 

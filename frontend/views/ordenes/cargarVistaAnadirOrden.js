@@ -1,8 +1,13 @@
 import { mostrarError, mostrarExito, mostrarLoader } from "../../config/helpersInterfaz.js";
-import { AdminService } from "../../services/adminService.js";
+import { OrdenService } from "../../services/ordenService.js";
+import { EquipoService } from "../../services/equipoService.js";
+import { TecnicoService } from "../../services/tecnicoService.js";
 import { cargarVistaOrdenes } from './cargarVistaOrdenes.js';
 
-const adminService = new AdminService();
+const ordenService = new OrdenService();
+const equipoService = new EquipoService();
+const tecnicoService = new TecnicoService();
+
 const mainContainer = document.getElementById('main-container-content');
 
 export const cargarVistaAnadirOrden = async () => {
@@ -10,8 +15,8 @@ export const cargarVistaAnadirOrden = async () => {
   try {
     // Obtenemos en paralelo los equipos y técnicos para poblar los selectores del formulario
     const [equiposRes, tecnicosRes] = await Promise.all([
-      adminService.getEquipos(),
-      adminService.getTecnicos()
+      equipoService.getEquipos(),
+      tecnicoService.getTecnicos()
     ]);
 
     const equipos = equiposRes?.equipos || equiposRes || [];
@@ -97,7 +102,7 @@ export const cargarVistaAnadirOrden = async () => {
             <!-- Botones de Acción -->
             <div class="d-flex justify-content-end gap-2">
               <button type="button" class="btn btn-outline-secondary" id="btn-cancelar">Cancelar</button>
-              <button type="submit" class="btn btn-accent px-4"><i class="bi bi-check-lg me-1"></i>Guardar Orden</button>
+              <button type="submit" class="btn btn-accent px-4"><i class="bi bi-check-lg me-1"></i>Asignar Orden</button>
             </div>
 
           </form>
@@ -164,7 +169,7 @@ function configurarEventosFormularioOrden() {
 
     try {
       // Llamada a tu servicio para crear la orden en el backend
-      await adminService.asignarOrden(nuevaOrden);
+      await ordenService.asignarOrden(nuevaOrden);
       mostrarExito('Orden de trabajo creada con éxito.');
       volverAlListado();
     } catch (error) {

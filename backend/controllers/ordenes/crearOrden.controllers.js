@@ -1,7 +1,6 @@
 import prisma from "../../config/dbConnection.js";
 
-
-const crearOrdenTrabajo = async (req, res) => {
+export const crearOrdenTrabajo = async (req, res) => {
 
     if (!req.isAuthenticated || req.user.tipo_usuario !== "ADMIN") {
         return res.status(403).json({ error: "Acceso denegado. Solo administradores pueden crear ordenes de trabajo" })
@@ -97,4 +96,5 @@ const crearOrdenTrabajo = async (req, res) => {
 
 };
 
-export default crearOrdenTrabajo;
+
+

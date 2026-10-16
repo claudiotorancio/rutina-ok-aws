@@ -1,14 +1,14 @@
 import { mostrarError, mostrarLoader } from "../../config/helpersInterfaz.js";
-import { AdminService } from "../../services/adminService.js";
+import { EquipoService } from "../../services/equipoService.js";
 
-const adminService = new AdminService();
+const equipoService = new EquipoService();
 
 const mainContainer = document.getElementById('main-container-content');
 
 export const cargarVistaEquipos = async () => {
   mostrarLoader();
   try {
-    const equipos = await adminService.getEquipos();
+    const equipos = await equipoService.getEquipos();
     let html = `
       <div class="col-12">
         <div class="custom-card">

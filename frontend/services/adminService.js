@@ -1,170 +1,222 @@
 
-import baseUrl from "./baseUrl.js"
+// import baseUrl from "./baseUrl.js"
 
-// src/services/AdminService.js
-export class AdminService {
-    constructor() {
-        this.baseUrl = baseUrl;
-        // Configuración común para enviar cookies de sesión (Passport)
-        this.fetchOptions = {
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
-    }
+// // src/services/AdminService.js
+// export class AdminService {
+//     constructor() {
+//         this.baseUrl = baseUrl;
+//         // Configuración común para enviar cookies de sesión (Passport)
+//         this.fetchOptions = {
+//             credentials: 'include',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             }
+//         };
+//     }
 
-    // --- TÉCNICOS ---
-    async getTecnicos() {
-        try {
+//     // --- TÉCNICOS ---
+//     async getTecnicos() {
+//         try {
 
-            const response = await fetch(`${this.baseUrl}api/admin/tecnicos`, this.fetchOptions);
-            const data = await response.json();
+//             const response = await fetch(`${this.baseUrl}api/admin/tecnicos`, this.fetchOptions);
+//             const data = await response.json();
 
-            if (!response.ok) throw new Error(data.error || 'Error al obtener técnicos');
-            return data.tecnicos;
-        } catch (error) {
-            console.error('AdminService.getTecnicos:', error);
-            throw error;
-        }
-    }
+//             if (!response.ok) throw new Error(data.error || 'Error al obtener técnicos');
+//             return data.tecnicos;
+//         } catch (error) {
+//             console.error('AdminService.getTecnicos:', error);
+//             throw error;
+//         }
+//     }
 
-    async actualizarTecnico(id, tecnicoData) {
-        try {
-            const response = await fetch(`${this.baseUrl}api/admin/tecnicos/${id}`, {
-                ...this.fetchOptions,
-                method: 'PUT',
-                body: JSON.stringify(tecnicoData)
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Error al actualizar técnico');
-            return data.tecnico;
-        } catch (error) {
-            console.error('AdminService.actualizarTecnico:', error);
-            throw error;
-        }
-    }
+//     async actualizarTecnico(id, tecnicoData) {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/admin/tecnicos/${id}`, {
+//                 ...this.fetchOptions,
+//                 method: 'PUT',
+//                 body: JSON.stringify(tecnicoData)
+//             });
+//             const data = await response.json();
+//             if (!response.ok) throw new Error(data.error || 'Error al actualizar técnico');
+//             return data.tecnico;
+//         } catch (error) {
+//             console.error('AdminService.actualizarTecnico:', error);
+//             throw error;
+//         }
+//     }
 
-    // --- CLIENTES ---
-    async getClientes() {
-        try {
-            const response = await fetch(`${this.baseUrl}api/admin/clientes`, this.fetchOptions);
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Error al obtener clientes');
-            return data.clientes;
-        } catch (error) {
-            console.error('AdminService.getClientes:', error);
-            throw error;
-        }
-    }
+//     // --- CLIENTES ---
+//     async getClientes() {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/admin/clientes`, this.fetchOptions);
+//             const data = await response.json();
+//             if (!response.ok) throw new Error(data.error || 'Error al obtener clientes');
+//             return data.clientes;
+//         } catch (error) {
+//             console.error('AdminService.getClientes:', error);
+//             throw error;
+//         }
+//     }
 
-    async crearCliente(clienteData) {
-        try {
-            const response = await fetch(`${this.baseUrl}api/admin/clientes`, {
-                ...this.fetchOptions,
-                method: 'POST',
-                body: JSON.stringify(clienteData)
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Error al crear cliente');
-            return data.cliente;
-        } catch (error) {
-            console.error('AdminService.crearCliente:', error);
-            throw error;
-        }
-    }
+//     async crearCliente(clienteData) {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/admin/clientes`, {
+//                 ...this.fetchOptions,
+//                 method: 'POST',
+//                 body: JSON.stringify(clienteData)
+//             });
+//             const data = await response.json();
+//             if (!response.ok) throw new Error(data.error || 'Error al crear cliente');
+//             return data.cliente;
+//         } catch (error) {
+//             console.error('AdminService.crearCliente:', error);
+//             throw error;
+//         }
+//     }
 
-    // --- EQUIPOS ---
-    async getEquipos() {
-        try {
-            const response = await fetch(`${this.baseUrl}api/admin/equipos`, this.fetchOptions);
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Error al obtener equipos');
-            return data.equipos;
-        } catch (error) {
-            console.error('AdminService.getEquipos:', error);
-            throw error;
-        }
-    }
+//     // --- EQUIPOS ---
+//     async getEquipos() {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/admin/equipos`, this.fetchOptions);
+//             const data = await response.json();
+//             if (!response.ok) throw new Error(data.error || 'Error al obtener equipos');
+//             return data.equipos;
+//         } catch (error) {
+//             console.error('AdminService.getEquipos:', error);
+//             throw error;
+//         }
+//     }
 
-    async crearEquipo(equipoData) {
-        try {
-            const response = await fetch(`${this.baseUrl}api/admin//equipos`, {
-                ...this.fetchOptions,
-                method: 'POST',
-                body: JSON.stringify(equipoData)
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Error al crear equipo');
-            return data.equipo;
-        } catch (error) {
-            console.error('AdminService.crearEquipo:', error);
-            throw error;
-        }
-    }
+//     async crearEquipo(equipoData) {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/admin//equipos`, {
+//                 ...this.fetchOptions,
+//                 method: 'POST',
+//                 body: JSON.stringify(equipoData)
+//             });
+//             const data = await response.json();
+//             if (!response.ok) throw new Error(data.error || 'Error al crear equipo');
+//             return data.equipo;
+//         } catch (error) {
+//             console.error('AdminService.crearEquipo:', error);
+//             throw error;
+//         }
+//     }
 
-    // --- ÓRDENES DE TRABAJO ---
-    async getOrdenes() {
-        try {
-            const response = await fetch(`${this.baseUrl}api/admin/listar-ordenes`, this.fetchOptions);
-            const data = await response.json();
-            console.log(data.ordenes)
-            if (!response.ok) throw new Error(data.error || 'Error al obtener órdenes');
-            return data.ordenes;
-        } catch (error) {
-            console.error('AdminService.getOrdenes:', error);
-            throw error;
-        }
-    }
+//     // --- ÓRDENES DE TRABAJO ---
+//     async getOrdenById(id) {
+//         const response = await fetch(`${this.baseUrl}api/orden/obtener-orden/${id}`, this.fetchOptions);
+//         const resultado = await response.json();
 
-    async asignarOrden(ordenData) {
-        try {
-            const response = await fetch(`${this.baseUrl}api/admin/asignar-orden`, {
-                ...this.fetchOptions,
-                method: 'POST',
-                body: JSON.stringify(ordenData)
-            });
-            //Valdiar respuesta exitosa
-            if (response.ok) {
-                const data = await response.json();
-                return data.orden;
-            }
+//         if (!response.ok) {
+//             throw new Error(resultado.message || 'No se pudo cargar el detalle de la orden.');
+//         }
 
-            //Controlar el error
-            let data = {};
-            try {
-                data = await response.json();
-            } catch (jsonError) {
-                // Si el error del servidor no incluyó un JSON evito que la app se rompa
-                data = {};
-            }
-            //Guardo los tipos de errores para mostrarlos
-            const backendMessage =
-                data?.errores?.[0]?.msg ||
-                data?.message ||
-                data?.error;
+//         return resultado.data;
+//     }
 
-            const errorMessage = backendMessage || "Ocurrio un error inesperado";
 
-            throw new Error(errorMessage);
+//     async getOrdenes() {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/admin/listar-ordenes`, this.fetchOptions);
+//             const data = await response.json();
+//             // console.log(data.ordenes)
+//             if (!response.ok) throw new Error(data.error || 'Error al obtener órdenes');
+//             return data.ordenes;
+//         } catch (error) {
+//             console.error('AdminService.getOrdenes:', error);
+//             throw error;
+//         }
+//     }
 
-        } catch (error) {
-            console.error('AuthService.orden:', error);
-            throw error;
-        }
-    }
+//     async asignarOrden(ordenData) {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/admin/asignar-orden`, {
+//                 ...this.fetchOptions,
+//                 method: 'POST',
+//                 body: JSON.stringify(ordenData)
+//             });
+//             //Valdiar respuesta exitosa
+//             if (response.ok) {
+//                 const data = await response.json();
+//                 return data.orden;
+//             }
 
-    async getIntervenciones() {
-        try {
-            const response = await fetch(`${this.baseUrl}api/admin/intervenciones`, this.fetchOptions);
-            const data = await response.json();
+//             //Controlar el error
+//             let data = {};
+//             try {
+//                 data = await response.json();
+//             } catch (jsonError) {
+//                 // Si el error del servidor no incluyó un JSON evito que la app se rompa
+//                 data = {};
+//             }
+//             //Guardo los tipos de errores para mostrarlos
+//             const backendMessage =
+//                 data?.errores?.[0]?.msg ||
+//                 data?.message ||
+//                 data?.error;
 
-            if (!response.ok) throw new Error(data.error || 'Error al obtener las intervenciones');
+//             const errorMessage = backendMessage || "Ocurrio un error inesperado";
 
-            return data;
-        } catch (error) {
-            console.error('AdminService.getIntervenciones:', error);
-            throw error;
-        }
-    }
-}
+//             throw new Error(errorMessage);
+
+//         } catch (error) {
+//             console.error('AuthService.orden:', error);
+//             throw error;
+//         }
+//     }
+
+//     //ELIMINAR ORDEN
+//     async eliminarOrden(id) {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/orden/eliminar-orden/${id}`, {
+//                 ...this.fetchOptions,
+//                 method: 'DELETE',
+//             });
+//             //Valdiar respuesta exitosa
+//             if (response.ok) {
+//                 const data = await response.json();
+
+//                 return data.message;
+
+//             }
+
+//             //Controlar el error
+//             let data = {};
+//             try {
+//                 data = await response.json();
+
+//             } catch (jsonError) {
+//                 // Si el error del servidor no incluyó un JSON evito que la app se rompa
+//                 data = {};
+//             }
+//             //Guardo los tipos de errores para mostrarlos
+//             const backendMessage =
+//                 data?.errores?.[0]?.msg ||
+//                 data?.message ||
+//                 data?.error;
+
+//             const errorMessage = backendMessage || "Ocurrio un error inesperado";
+
+//             throw new Error(errorMessage);
+
+//         } catch (error) {
+//             console.error('AdminService.eliminarOrden:', error);
+//             throw error;
+//         }
+//     }
+
+//     async getIntervenciones() {
+//         try {
+//             const response = await fetch(`${this.baseUrl}api/admin/intervenciones`, this.fetchOptions);
+//             const data = await response.json();
+
+//             if (!response.ok) throw new Error(data.error || 'Error al obtener las intervenciones');
+
+//             return data;
+//         } catch (error) {
+//             console.error('AdminService.getIntervenciones:', error);
+//             throw error;
+//         }
+//     }
+// }

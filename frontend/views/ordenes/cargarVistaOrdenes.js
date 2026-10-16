@@ -1,8 +1,10 @@
-import { mostrarError, mostrarLoader, getBadgeEstado } from "../../config/helpersInterfaz.js";
-import { AdminService } from "../../services/adminService.js";
+import { mostrarError, mostrarLoader, getBadgeEstado, mostrarExito } from "../../config/helpersInterfaz.js";
+import { OrdenService } from "../../services/ordenService.js";
+import { mostrarModalConfirmacion } from "../mostrarModal.js";
 import { cargarVistaAnadirOrden } from "./cargarVistaAnadirOrden.js";
+import { cargarVistaDetalleOrden } from "./cargarVistaDetalleOrden.js";
 
-const adminService = new AdminService();
+const ordenService = new OrdenService();
 
 const mainContainer = document.getElementById('main-container-content');
 
@@ -10,7 +12,7 @@ export const cargarVistaOrdenes = async () => {
   mostrarLoader();
   try {
     // Si tu servicio tiene el método getOrdenesTrabajo() o getOrdenes()
-    const ordenes = await adminService.getOrdenes()
+    const ordenes = await ordenService.getOrdenes()
 
     let html = `
       <div class="col-12">
@@ -31,7 +33,7 @@ export const cargarVistaOrdenes = async () => {
                   <th class="text-end">Acciones</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="tabla-ordenes-body">
     `;
 
     if (!ordenes || ordenes.length === 0) {
@@ -50,8 +52,8 @@ export const cargarVistaOrdenes = async () => {
             <td><i class="bi bi-person me-1"></i>${tecnicoNom}</td>
             <td>${getBadgeEstado(o.estado)}</td>
             <td class="text-end">
-              <button class="btn btn-outline-info btn-sm me-1" title="Ver Detalle"><i class="bi bi-eye"></i></button>
-              <button class="btn btn-outline-warning btn-sm" title="Editar"><i class="bi bi-pencil"></i></button>
+              <button class="btn btn-outline-info btn-sm mb-1 btn-ver-detalle" title="Ver Detalle" data-id="${o.id_orden}"><i class="bi bi-eye"></i></button>
+              <button  class="btn btn-outline-danger btn-sm btn-eliminar-orden" title="Eliminar" data-id="${o.id_orden}"><i class="bi bi-trash"></i></i></button>
             </td>
           </tr>
         `;
@@ -74,6 +76,52 @@ export const cargarVistaOrdenes = async () => {
         cargarVistaAnadirOrden();
       });
     }
+
+    const tBodyOrdenes = document.getElementById('tabla-ordenes-body');
+
+    tBodyOrdenes.addEventListener('click', async (e) => {
+      const btnEliminar = e.target.closest('.btn-eliminar-orden');
+      const btnVerDetalle = e.target.closest('.btn-ver-detalle');
+
+      //Cargar vista detalles
+      if (btnVerDetalle) {
+
+        const idOrden = btnVerDetalle.dataset.id;
+        console.log(idOrden)
+        cargarVistaDetalleOrden(idOrden);
+      };
+
+      //Eliminar orden
+      if (btnEliminar) {
+        const idOrden = btnEliminar.dataset.id;
+
+        // 1. Llamamos a nuestro modal de confirmación personalizado
+        const confirmado = await mostrarModalConfirmacion(
+          "Confirmar eliminación",
+          `¿Estás seguro de que deseas eliminar la orden #${idOrden}?`
+        );
+
+        // Si el usuario canceló, no hacemos nada
+        if (!confirmado) return;
+
+        try {
+          //Si aceptó, eliminamos en el backend
+          await ordenService.eliminarOrden(idOrden);
+
+          // Borrar la fila de la tabla visualmente al instante
+          const fila = btnEliminar.closest('tr');
+          if (fila) fila.remove();
+
+          // 4. Mostrar el modal de éxito de siempre
+          mostrarExito(`La orden #${idOrden} fue eliminada con éxito.`);
+
+        } catch (error) {
+          console.error('Error al eliminar orden de trabajo:', error);
+          mostrarError(error.message || 'Error al registrar la orden de trabajo.',);
+        }
+      }
+    });
+
   } catch (error) {
     console.error('Error al cargar órdenes de trabajo:', error);
     mostrarError('Error al cargar las órdenes de trabajo del servidor.');

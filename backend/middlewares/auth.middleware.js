@@ -25,7 +25,7 @@ export const verificarAdmin = (req, res, next) => {
 
     // Si la sesión de Passport está activa y el usuario es ADMIN
     if (req.isAuthenticated() && req.user?.tipo_usuario === 'ADMIN') {
-        console.log("estoy en el middleware, verificarAdmin")
+        // console.log("estoy en el middleware, verificarAdmin")
         return next(); // Permitimos que continúe a la siguiente ruta o archivo
     }
 
