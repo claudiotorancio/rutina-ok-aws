@@ -47,7 +47,7 @@ app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 app.use("/api", mainRoutes);
 
 app.get("/*catchall", (req, res) => {
-    console.log("pase por app.js (/catcall)")
+    // console.log("pase por app.js (/catcall)")
     res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 

@@ -16,7 +16,7 @@ formLogin.addEventListener('submit', async (e) => {
         // Si la respuesta es exitosa, Express ya guardó la cookie connect.sid
 
         if (res.user && res.user.tipo_usuario === 'ADMIN') {
-            const esProduccion = import.meta.PROD
+            const esProduccion = process.env.NODE_ENV === 'production'
             window.location.href = esProduccion ? '/panel-admin' : '/panel.html';
         } else {
             mostrarModalRespuesta('Acceso no autorizado para este usuario.');
