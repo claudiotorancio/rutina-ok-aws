@@ -1,4 +1,4 @@
-
+import { mostrarModalRespuesta } from "../views/mostrarModal.js";
 const mainContainer = document.getElementById('main-container-content');
 
 
@@ -14,14 +14,13 @@ export const mostrarLoader = () => {
 }
 
 export const mostrarError = (mensaje) => {
-  mainContainer.innerHTML = `
-    <div class="col-12">
-      <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
-        <i class="bi bi-exclamation-triangle-fill fs-4"></i>
-        <div>${mensaje}</div>
-      </div>
-    </div>
-  `;
+  if (typeof mostrarModalRespuesta === 'function') {
+    // Opcional: Podés pasarle un parámetro extra o configurar el modal para que tenga borde verde o título "Éxito"
+    mostrarModalRespuesta("", mensaje, "error");
+  } else {
+    // Fallback nativo por si el modal no estuviera disponible
+    alert('Error: ' + mensaje);
+  }
 }
 
 // Helper para insignias de estado en Órdenes de Trabajo
@@ -32,3 +31,14 @@ export const getBadgeEstado = (estado) => {
   if (est.includes('completad') || est.includes('finaliz')) return `<span class="badge bg-success">Completada</span>`;
   return `<span class="badge bg-secondary">${estado || 'Sin estado'}</span>`;
 }
+
+// Helper exito
+export const mostrarExito = (mensaje) => {
+  if (typeof mostrarModalRespuesta === 'function') {
+    // Opcional: Podés pasarle un parámetro extra o configurar el modal para que tenga borde verde o título "Éxito"
+    mostrarModalRespuesta("", mensaje, 'exito');
+  } else {
+    // Fallback nativo por si el modal no estuviera disponible
+    alert('ÉXITO: ' + mensaje);
+  }
+};

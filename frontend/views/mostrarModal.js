@@ -9,7 +9,7 @@ export const mostrarModalRespuesta = (titulo, mensaje, tipo = 'exito') => {
     const iconoEl = document.getElementById('modal-icono');
 
     // Textos
-    tituloEl.textContent = titulo;
+    tituloEl.textContent = titulo
     mensajeEl.textContent = mensaje;
 
     // Estilos según el tipo de respuesta

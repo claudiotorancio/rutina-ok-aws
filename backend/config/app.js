@@ -33,19 +33,23 @@ app.get("/panel.html", verificarAdmin);
 
 //entrar como admin
 app.get("/panel-admin", verificarAdmin, (req, res) => {
+    console.log("pase por app.js (panel-admin)")
+    //Evitar qeu el navegador guarde esta ruta protegida
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     return res.sendFile(path.join(__dirname, "../../frontend/dist/panel.html"));
 });
 
-app.get("/login", (req, res) => {
-    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
-});
 
 //Servir los archivos estaticos
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
 //Ruta ppal hacia servidor
 app.use("/api", mainRoutes);
+
+app.get("/*catchall", (req, res) => {
+    console.log("pase por app.js (/catcall)")
+    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+});
 
 
 export default app;

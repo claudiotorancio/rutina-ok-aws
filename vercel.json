@@ -8,20 +8,8 @@
     ],
     "routes": [
         {
-            "source": "/panel.html",
-            "destination": "/api/index.mjs"
-        },
-        {
             "source": "/panel-admin",
             "destination": "/api/index.mjs"
-        },
-        {
-            "source": "/login",
-            "destination": "/api/index.mjs"
-        },
-        {
-            "source": "/(.*)",
-            "destination": "/frontend/dist/$1"
         }
     ]
 }

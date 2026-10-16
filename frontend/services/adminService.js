@@ -108,6 +108,7 @@ export class AdminService {
         try {
             const response = await fetch(`${this.baseUrl}api/admin/listar-ordenes`, this.fetchOptions);
             const data = await response.json();
+            console.log(data.ordenes)
             if (!response.ok) throw new Error(data.error || 'Error al obtener órdenes');
             return data.ordenes;
         } catch (error) {
@@ -118,16 +119,37 @@ export class AdminService {
 
     async asignarOrden(ordenData) {
         try {
-            const response = await fetch(`${this.baseUrl}api/orden/asignar`, {
+            const response = await fetch(`${this.baseUrl}api/admin/asignar-orden`, {
                 ...this.fetchOptions,
                 method: 'POST',
                 body: JSON.stringify(ordenData)
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Error al asignar orden');
-            return data.orden;
+            //Valdiar respuesta exitosa
+            if (response.ok) {
+                const data = await response.json();
+                return data.orden;
+            }
+
+            //Controlar el error
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                // Si el error del servidor no incluyó un JSON evito que la app se rompa
+                data = {};
+            }
+            //Guardo los tipos de errores para mostrarlos
+            const backendMessage =
+                data?.errores?.[0]?.msg ||
+                data?.message ||
+                data?.error;
+
+            const errorMessage = backendMessage || "Ocurrio un error inesperado";
+
+            throw new Error(errorMessage);
+
         } catch (error) {
-            console.error('AdminService.asignarOrden:', error);
+            console.error('AuthService.orden:', error);
             throw error;
         }
     }
@@ -139,7 +161,7 @@ export class AdminService {
 
             if (!response.ok) throw new Error(data.error || 'Error al obtener las intervenciones');
 
-            return data; 
+            return data;
         } catch (error) {
             console.error('AdminService.getIntervenciones:', error);
             throw error;

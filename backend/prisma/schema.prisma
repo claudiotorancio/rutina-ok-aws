@@ -87,8 +87,8 @@ model Equipo {
 model OrdenTrabajo {
   id_orden             Int               @id @default(autoincrement())
   id_equipo            Int
-  id_tecnico           Int
-  tipo_mantenimiento   TipoMantenimiento
+  id_tecnico           Int 
+  tipificacion         Tipificacion      @default(AIRE_ACONDICIONADO)
   estado               EstadoOrden       @default(PENDIENTE)
   prioridad            Prioridad         @default(MEDIA)
   fecha_programada     DateTime
@@ -122,9 +122,9 @@ enum TipoUsuario {
   TECNICO
 }
 
-enum TipoMantenimiento {
-  PREVENTIVO
-  CORRECTIVO
+enum Tipificacion {
+  AIRE_ACONDICIONADO
+  INSTALACION_ELECTRICA
 }
 
 enum EstadoOrden {
