@@ -12,11 +12,11 @@ const s3 = new S3Client({
     },
 });
 
-const registrarIntervencion = async (req, res) => {
+export const registrarIntervencion = async (req, res) => {
     try {
         const id_orden = req.query.id_orden;
         const tipo = req.query.tipo;
-        // const detalles_json = req.query.detalles_json;
+        const detalles_json = req.query.detalles_json;
 
 
         // // 1. Validar técnico autenticado
@@ -43,29 +43,25 @@ const registrarIntervencion = async (req, res) => {
         }
         const buffer = Buffer.concat(chunks);
 
-        // let urlImagenSubida = null;
+        let urlImagenSubida = null;
 
-        if (buffer.length === 0) {
-            return res.status(400).json({ error: "No se recibieron bytes de imagen." });
+        if (buffer.length > 0) {
+            const bucketName = process.env.BUCKET_AWS || process.env.AWS_BUCKET_NAME;
+            const region = process.env.S3_BUCKET_REGION || process.env.AWS_REGION;
+            const fileName = `intervencion-ord${id_orden}-${Date.now()}.png`;
+
+            await s3.send(
+                new PutObjectCommand({
+                    Bucket: bucketName,
+                    Key: fileName,
+                    Body: buffer,
+                    ContentType: "image/png"
+                })
+            );
+
+            urlImagenSubida = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
         }
 
-        const fileName = `mobile-${Date.now()}.png`;
-
-        // 4. Subida directa a AWS S3
-        await s3.send(
-            new PutObjectCommand({
-                Bucket: process.env.BUCKET_AWS,
-                Key: fileName,
-                Body: buffer,
-                ContentType: "image/png",
-                ACL: "public-read",
-            })
-        );
-
-
-        const imagePath = `https://${process.env.BUCKET_AWS}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${fileName}`;
-
-        console.log(imagePath)
 
         // 4. Parsear detalles_json de forma segura
         // let infoFormulario = {};
@@ -82,7 +78,8 @@ const registrarIntervencion = async (req, res) => {
         const detallesFinales = {
             id_orden,
             tipo,
-            Image: imagePath
+            detalles_json,
+            image: urlImagenSubida
         };
 
         // 5. Guardar en Prisma
@@ -101,4 +98,3 @@ const registrarIntervencion = async (req, res) => {
     }
 };
 
-export default registrarIntervencion;
