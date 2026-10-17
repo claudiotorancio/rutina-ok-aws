@@ -13,6 +13,7 @@ const s3 = new S3Client({
 });
 
 export const registrarIntervencion = async (req, res) => {
+    
     try {
         const id_orden = req.query.id_orden;
         const tipo = req.query.tipo;
@@ -25,7 +26,7 @@ export const registrarIntervencion = async (req, res) => {
         //     });
         // }
 
-
+ 
 
         // 1. Validar técnico autenticado
         // const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
@@ -44,32 +45,13 @@ export const registrarIntervencion = async (req, res) => {
         // }
 
         // 3. Capturar el stream binario de la foto enviado por PostFile
-        console.log("=== INICIO DE RECEPCIÓN DE STREAM ===");
-
-        let bytesRecibidos = 0;
         const chunks = [];
-
-        // Escuchamos cuando llega un trozo de datos
-        req.on('data', (chunk) => {
-            bytesRecibidos += chunk.length;
-            console.log(`> Chunk recibido de ${chunk.length} bytes. Total acumulado: ${bytesRecibidos} bytes`);
+        for await (const chunk of req) {
             chunks.push(chunk);
-        });
-
-        // Esperamos a que el stream termine formalmente
-        await new Promise((resolve, reject) => {
-            req.on('end', () => {
-                console.log("=== FIN DEL STREAM (Evento 'end' disparado) ===");
-                resolve();
-            });
-            req.on('error', (err) => {
-                console.error("❌ ERROR EN EL STREAM DE REQ:", err);
-                reject(err);
-            });
-        });
-
+        }
         const buffer = Buffer.concat(chunks);
-        console.log(`Buffer final consolidado: ${buffer.length} bytes`);
+
+        console.log("TAMAÑO REAL DEL BUFFER RECIBIDO:", buffer.length);
 
         let urlImagenSubida = null;
 
