@@ -14,7 +14,10 @@ import { reasignarOrdenTrabajo } from "../controllers/ordenes/reasignarOrden.con
 
 const router = Router()
 
-const rawBodyMiddleware = express.raw({ type: '*/*', limit: '10mb' });
+const rawBodyMiddleware = express.raw({
+    type: () => true,
+    limit: '10mb'
+});
 
 
 router.post("/crear-orden", validarOrdenTrabajo, estaAuthenticado, esAdministrador, crearOrdenTrabajo);
