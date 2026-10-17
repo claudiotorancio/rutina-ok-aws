@@ -3,11 +3,10 @@ import prisma from "../../../config/dbConnection.js";
 
 const registrarIntervencion = async (req, res) => {
 
-    const {
-        id_orden,
-        tipo,
-        detalles_json,
-    } = req.body;
+    const id_orden  = req.query.id_orden;
+    const  tipo  = req.query.tipo;
+    const  detalles_json  = req.query.detalles_json;
+    console.log(id_orden)
 
     //Validar tecnico autenticado
     const id_tecnico_autenticado = req.usuarioMovil.id_usuario;

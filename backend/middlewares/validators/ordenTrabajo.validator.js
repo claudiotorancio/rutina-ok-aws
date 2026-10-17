@@ -4,7 +4,7 @@ import { validar } from "./common/common.validators.js";
 export const validarOrdenTrabajo = [
     validar.id("id_equipo", "El id_equipo es requerido"),
     validar.id("id_tecnico", "El id_tecnico es requerido"),
-    validar.campo("tipo_mantenimiento", "El tipo de mantenimiento es requerido", false),
+    validar.campo("tipificacion", "El tipo de mantenimiento es requerido", false),
     validar.campo("prioridad", "La prioridad es requerida", false),
     validar.fecha_programada("fecha_programada", "Debe adjuntar una fecha de programación"),
     validar.campo("descripcion_tarea", "La descripcion de la tarea es requerida", false),
