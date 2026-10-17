@@ -1,4 +1,5 @@
-import { Router, express } from "express";
+import { Router } from "express";
+import express from "express";
 import { crearOrdenTrabajo } from "../controllers/ordenes/crearOrden.controllers.js";
 import { validarActualizarOrden, validarOrdenTrabajo } from "../middlewares/validators/ordenTrabajo.validator.js";
 import { esAdministrador, estaAuthenticado } from "../middlewares/auth.middleware.js";
