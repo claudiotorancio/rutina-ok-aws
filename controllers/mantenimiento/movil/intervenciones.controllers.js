@@ -23,9 +23,9 @@ export const registrarIntervencion = async (req, res) => {
         // const id_tecnico_autenticado = req.usuarioMovil.id_usuario;
 
         // // 2. Validar orden
-        // const orden = await prisma.ordenTrabajo.findUnique({
-        //     where: { id_orden: parseInt(id_orden) }
-        // });
+        const orden = await prisma.ordenTrabajo.findUnique({
+            where: { id_orden: parseInt(id_orden) }
+        });
 
         // if (!orden) return res.status(404).json({ success: false, error: "La orden no existe." });
         // if (orden.id_tecnico !== id_tecnico_autenticado) {
