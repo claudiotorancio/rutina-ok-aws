@@ -18,41 +18,33 @@ export const registrarIntervencion = async (req, res) => {
         const tipo = req.query.tipo;
         const detalles_json = req.query.detalles_json;
 
-        if (!id_orden || !tipo) {
-            return res.status(400).json({ success: false, error: "Faltan parámetros obligatorios." });
+        // Si Express ya parseó el body como objeto con claves binarias:
+        let buffer = null;
+        if (Buffer.isBuffer(req.body)) {
+            buffer = req.body;
+        } else if (req.body && typeof req.body === 'object') {
+            const rawKeys = Object.keys(req.body);
+            if (rawKeys.length > 0) {
+                // Juntamos las claves que interceptó express.urlencoded y las pasamos a Buffer
+                buffer = Buffer.from(rawKeys.join(''), 'latin1');
+            }
         }
 
-        // const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
-
-        const orden = await prisma.ordenTrabajo.findUnique({
-            where: { id_orden: parseInt(id_orden) }
-        });
-
-        if (!orden) {
-            return res.status(404).json({ success: false, error: "La orden no existe." });
-        }
-
-        // if (orden.id_tecnico !== id_tecnico_autenticado) {
-        //     return res.status(403).json({ success: false, error: "Sin permisos para esta orden." });
-        // }
-
-        // El Buffer de la imagen viene limpio gracias a express.raw()
-        const buffer = req.body;
-        console.log("Buffer binario limpio recibido:", buffer.length, "bytes");
+        console.log("Buffer rescatado desde req.body:", buffer ? buffer.length : 0, "bytes");
 
         let urlImagenSubida = null;
 
-        if (buffer && Buffer.isBuffer(buffer) && buffer.length > 100) {
+        if (buffer && buffer.length > 100) {
             const bucketName = process.env.BUCKET_AWS || process.env.AWS_BUCKET_NAME;
             const region = process.env.S3_BUCKET_REGION || process.env.AWS_REGION;
-            const fileName = `intervencion-ord${id_orden}-${Date.now()}.png`;
+            const fileName = `intervencion-ord${id_orden}-${Date.now()}.jpg`; // Usamos .jpg ya que vimos cabeceras Exif/JFIF
 
             await s3.send(
                 new PutObjectCommand({
                     Bucket: bucketName,
                     Key: fileName,
                     Body: buffer,
-                    ContentType: "image/png"
+                    ContentType: "image/jpeg"
                 })
             );
 
