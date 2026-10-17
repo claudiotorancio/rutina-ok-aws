@@ -16,18 +16,18 @@ const registrarIntervencion = async (req, res) => {
         const detalles_json = req.query.detalles_json;
 
 
-        // 1. Validar técnico autenticado
-        const id_tecnico_autenticado = req.usuarioMovil.id_usuario;
+        // // 1. Validar técnico autenticado
+        // const id_tecnico_autenticado = req.usuarioMovil.id_usuario;
 
-        // 2. Validar orden
-        const orden = await prisma.ordenTrabajo.findUnique({
-            where: { id_orden: parseInt(id_orden) }
-        });
+        // // 2. Validar orden
+        // const orden = await prisma.ordenTrabajo.findUnique({
+        //     where: { id_orden: parseInt(id_orden) }
+        // });
 
-        if (!orden) return res.status(404).json({ success: false, error: "La orden no existe." });
-        if (orden.id_tecnico !== id_tecnico_autenticado) {
-            return res.status(403).json({ success: false, error: "Sin permisos para modificar esta orden." });
-        }
+        // if (!orden) return res.status(404).json({ success: false, error: "La orden no existe." });
+        // if (orden.id_tecnico !== id_tecnico_autenticado) {
+        //     return res.status(403).json({ success: false, error: "Sin permisos para modificar esta orden." });
+        // }
 
         // 3. Capturar el stream binario de la foto que manda PostFile
         const chunks = [];
