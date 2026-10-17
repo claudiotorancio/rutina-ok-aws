@@ -82,7 +82,7 @@ const registrarIntervencion = async (req, res) => {
             id_orden,
             tipo,
             detalles_json,
-            imagePath
+            Image: imagePath
         };
 
         // 5. Guardar en Prisma
@@ -93,11 +93,7 @@ const registrarIntervencion = async (req, res) => {
 
 
 
-        return res.status(201).json({
-            success: true,
-            message: "Intervención registrada con éxito.",
-            nuevaIntervencion
-        });
+        return res.status(201).json(nuevaIntervencion);
 
     } catch (error) {
         console.error("Error al registrar intervención:", error);
