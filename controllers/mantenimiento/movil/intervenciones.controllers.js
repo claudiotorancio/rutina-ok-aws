@@ -37,9 +37,9 @@ export const registrarIntervencion = async (req, res) => {
             return res.status(404).json({ success: false, error: "La orden de trabajo no existe." });
         }
 
-        if (orden.id_tecnico !== id_tecnico_autenticado) {
-            return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar esta orden." });
-        }
+        // if (orden.id_tecnico !== id_tecnico_autenticado) {
+        //     return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar esta orden." });
+        // }
 
         // 3. Capturar el stream binario de la foto enviado por PostFile
         const chunks = [];
