@@ -13,7 +13,7 @@ const registrarIntervencion = async (req, res) => {
     try {
         const id_orden = req.query.id_orden;
         const tipo = req.query.tipo;
-        // const detalles_json = req.query.detalles_json;
+
 
         if (!id_orden || !tipo) {
             return res.status(400).json({ success: false, error: "Faltan parámetros en la URL." });
@@ -58,7 +58,8 @@ const registrarIntervencion = async (req, res) => {
             })
         );
 
-        urlImagenSubida = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
+
+        const imagePath = `https://${process.env.BUCKET_AWS}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${fileName}`;
 
 
         // 4. Parsear detalles_json de forma segura
@@ -74,11 +75,9 @@ const registrarIntervencion = async (req, res) => {
         // }
 
         const detallesFinales = {
-            ...infoFormulario,
-            fotos_evidencia: {
-                antes_url: urlImagenSubida,
-                despues_url: null
-            }
+            id_orden,
+            tipo,
+            detalles_json: imagePath
         };
 
         // 5. Guardar en Prisma
