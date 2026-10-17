@@ -29,6 +29,10 @@ const registrarIntervencion = async (req, res) => {
         //     return res.status(403).json({ success: false, error: "Sin permisos para modificar esta orden." });
         // }
 
+        // Depuración en el controlador
+        console.log("Headers recibidos:", req.headers);
+        console.log("Content-Length de la petición:", req.headers['content-length']);
+
         // 3. Capturar el stream binario de la foto que manda PostFile
         const chunks = [];
         for await (const chunk of req) {
@@ -36,7 +40,7 @@ const registrarIntervencion = async (req, res) => {
         }
         const buffer = Buffer.concat(chunks);
 
-        let urlImagenSubida = null;
+        // let urlImagenSubida = null;
 
         if (buffer.length === 0) {
             return res.status(400).json({ error: "No se recibieron bytes de imagen." });
