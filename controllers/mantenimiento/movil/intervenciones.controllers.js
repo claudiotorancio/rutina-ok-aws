@@ -13,7 +13,7 @@ const registrarIntervencion = async (req, res) => {
     try {
         const id_orden = req.query.id_orden;
         const tipo = req.query.tipo;
-        const detalles_json = req.query.detalles_json;
+        // const detalles_json = req.query.detalles_json;
 
         if (!id_orden || !tipo) {
             return res.status(400).json({ success: false, error: "Faltan parámetros en la URL." });
@@ -41,34 +41,37 @@ const registrarIntervencion = async (req, res) => {
 
         let urlImagenSubida = null;
 
-        if (buffer.length > 0) {
-            const bucketName = process.env.BUCKET_AWS || process.env.AWS_BUCKET_NAME;
-            const region = process.env.S3_BUCKET_REGION || process.env.AWS_REGION;
-            const fileName = `intervencion-ord${id_orden}-${Date.now()}.png`;
-
-            await s3.send(
-                new PutObjectCommand({
-                    Bucket: bucketName,
-                    Key: fileName,
-                    Body: buffer,
-                    ContentType: "image/png"
-                })
-            );
-
-            urlImagenSubida = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
+        if (buffer.length === 0) {
+            return res.status(400).json({ error: "No se recibieron bytes de imagen." });
         }
+
+        const fileName = `mobile-${Date.now()}.png`;
+
+        // 4. Subida directa a AWS S3
+        await s3.send(
+            new PutObjectCommand({
+                Bucket: process.env.BUCKET_AWS,
+                Key: fileName,
+                Body: buffer,
+                ContentType: "image/png",
+                ACL: "public-read",
+            })
+        );
+
+        urlImagenSubida = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
+
 
         // 4. Parsear detalles_json de forma segura
-        let infoFormulario = {};
-        if (detalles_json) {
-            try {
-                infoFormulario = typeof detalles_json === "string"
-                    ? JSON.parse(decodeURIComponent(detalles_json))
-                    : detalles_json;
-            } catch (e) {
-                infoFormulario = {};
-            }
-        }
+        // let infoFormulario = {};
+        // if (detalles_json) {
+        //     try {
+        //         infoFormulario = typeof detalles_json === "string"
+        //             ? JSON.parse(decodeURIComponent(detalles_json))
+        //             : detalles_json;
+        //     } catch (e) {
+        //         infoFormulario = {};
+        //     }
+        // }
 
         const detallesFinales = {
             ...infoFormulario,
@@ -84,7 +87,7 @@ const registrarIntervencion = async (req, res) => {
                 data: {
                     id_orden: orden.id_orden,
                     tipo: tipo.toUpperCase(),
-                    detalles_json: detallesFinales
+                    detallesFinales
                 }
             });
             return { nuevaIntervencion };
