@@ -18,8 +18,8 @@ app.set("trust proxy", 1); //confianza en el proxyd e primer nivel
 
 //Middlewares de base
 
-app.use(urlencoded({ limit: "50mb", extended: true }));
-app.use(express.json({ limit: "50mb" }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cors());
 app.use(morgan("dev"))
 app.use(cookieParser());
