@@ -2,6 +2,10 @@
     "version": 2,
     "routes": [
         {
+            "source": "/",
+            "destination": "backend/config/app.js"
+        },
+        {
             "source": "/api/(.*)",
             "destination": "/api/index.mjs",
             "methods": [
