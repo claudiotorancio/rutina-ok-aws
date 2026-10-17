@@ -48,6 +48,8 @@ export const registrarIntervencion = async (req, res) => {
         }
         const buffer = Buffer.concat(chunks);
 
+        console.log("TAMAÑO REAL DEL BUFFER RECIBIDO:", buffer.length);
+
         let urlImagenSubida = null;
 
         if (buffer.length > 0) {
