@@ -14,37 +14,47 @@ const s3 = new S3Client({
 
 export const registrarIntervencion = async (req, res) => {
     try {
-        // Ahora todo llega ordenado y limpio en req.body (usando PostText)
-        const { id_orden, tipo, detalles_json, imagen_b64 } = req.body;
+        const id_orden = req.query.id_orden;
+        const tipo = req.query.tipo;
+        const detalles_json = req.query.detalles_json;
 
-        if (!id_orden || !tipo) {
-            return res.status(400).json({
-                success: false,
-                error: "Faltan parámetros obligatorios (id_orden o tipo)."
-            });
-        }
+        // if (!id_orden || !tipo) {
+        //     return res.status(400).json({
+        //         success: false,
+        //         error: "Faltan parámetros obligatorios (id_orden o tipo)."
+        //     });
+        // }
 
+ 
+
+        // 1. Validar técnico autenticado
         // const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
+        // 2. Validar existencia de la orden de trabajo
         const orden = await prisma.ordenTrabajo.findUnique({
             where: { id_orden: parseInt(id_orden) }
         });
 
         if (!orden) {
-            return res.status(404).json({ success: false, error: "La orden no existe." });
+            return res.status(404).json({ success: false, error: "La orden de trabajo no existe." });
         }
 
         // if (orden.id_tecnico !== id_tecnico_autenticado) {
-        //     return res.status(403).json({ success: false, error: "Sin permisos para modificar esta orden." });
+        //     return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar esta orden." });
         // }
+
+        // 3. Capturar el stream binario de la foto enviado por PostFile
+        const chunks = [];
+        for await (const chunk of req) {
+            chunks.push(chunk);
+        }
+        const buffer = Buffer.concat(chunks);
+
+        console.log("TAMAÑO REAL DEL BUFFER RECIBIDO:", buffer.length);
 
         let urlImagenSubida = null;
 
-        // Si viene la imagen en Base64, la procesamos y subimos a S3
-        if (imagen_b64) {
-            const base64Data = imagen_b64.replace(/^data:image\/\w+;base64,/, "");
-            const buffer = Buffer.from(base64Data, 'base64');
-
+        if (buffer.length > 0) {
             const bucketName = process.env.BUCKET_AWS || process.env.AWS_BUCKET_NAME;
             const region = process.env.S3_BUCKET_REGION || process.env.AWS_REGION;
             const fileName = `intervencion-ord${id_orden}-${Date.now()}.png`;
@@ -54,22 +64,35 @@ export const registrarIntervencion = async (req, res) => {
                     Bucket: bucketName,
                     Key: fileName,
                     Body: buffer,
-                    ContentType: "image/png"
+                    ContentType: "image/png",
+                    ACL: "public-read",
                 })
             );
 
             urlImagenSubida = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
         }
 
-        // Guardar en la base de datos
+        // 4. Parsear detalles_json de forma segura
+        let infoFormulario = {};
+        if (detalles_json) {
+            try {
+                infoFormulario = typeof detalles_json === "string"
+                    ? JSON.parse(decodeURIComponent(detalles_json))
+                    : detalles_json;
+            } catch (e) {
+                infoFormulario = {};
+            }
+        }
+
+        // 5. Guardar en la base de datos usando exactamente los campos de tu schema
         const resultado = await prisma.$transaction(async (tx) => {
             const nuevaIntervencion = await tx.intervencion.create({
                 data: {
-                    id_orden: parseInt(id_orden),
+                    id_orden: parseInt(id_orden), // Campo escalar con @unique
                     tipo: tipo.toUpperCase(),
-                    realizada: true,
-                    detalles_json: detalles_json || {},
-                    image: urlImagenSubida
+                    realizada: true,              // Marcamos que ya fue realizada al registrarse
+                    detalles_json: infoFormulario, // Objeto JSON puro para la columna Json?
+                    image: urlImagenSubida        // URL directa a la columna image String?
                 }
             });
             return { nuevaIntervencion };
@@ -84,6 +107,6 @@ export const registrarIntervencion = async (req, res) => {
 
     } catch (error) {
         console.error("Error al registrar intervención técnica:", error);
-        return res.status(500).json({ success: false, error: "Error interno del servidor." });
+        return res.status(500).json({ success: false, error: "Error interno del servidor al procesar el cierre." });
     }
 };
