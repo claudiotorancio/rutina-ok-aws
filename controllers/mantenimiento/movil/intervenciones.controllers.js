@@ -36,44 +36,34 @@ export const registrarIntervencion = async (req, res) => {
         console.log("Headers recibidos:", req.headers);
         console.log("Content-Length de la petición:", req.headers['content-length']);
 
-        // 3. Capturar el stream binario de la foto que manda PostFile
+        // 2. Recomponemos el Buffer binario de la imagen que manda el celular
         const chunks = [];
         for await (const chunk of req) {
             chunks.push(chunk);
         }
         const buffer = Buffer.concat(chunks);
 
-        let urlImagenSubida = null;
-
-        if (buffer.length > 0) {
-            const bucketName = process.env.BUCKET_AWS || process.env.AWS_BUCKET_NAME;
-            const region = process.env.S3_BUCKET_REGION || process.env.AWS_REGION;
-            const fileName = `intervencion-ord${id_orden}-${Date.now()}.png`;
-
-            await s3.send(
-                new PutObjectCommand({
-                    Bucket: bucketName,
-                    Key: fileName,
-                    Body: buffer,
-                    ContentType: "image/png"
-                })
-            );
-
-            urlImagenSubida = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
+        if (buffer.length === 0) {
+            return res.status(400).json({ error: "No se recibieron bytes de imagen." });
         }
 
+        // 3. Nombre único para S3
+        const fileName = `mobile-${Date.now()}.png`;
 
-        // 4. Parsear detalles_json de forma segura
-        // let infoFormulario = {};
-        // if (detalles_json) {
-        //     try {
-        //         infoFormulario = typeof detalles_json === "string"
-        //             ? JSON.parse(decodeURIComponent(detalles_json))
-        //             : detalles_json;
-        //     } catch (e) {
-        //         infoFormulario = {};
-        //     }
-        // }
+        // 4. Subida directa a AWS S3
+        await s3.send(
+            new PutObjectCommand({
+                Bucket: process.env.BUCKET_AWS,
+                Key: fileName,
+                Body: buffer,
+                ContentType: "image/png",
+                ACL: "public-read",
+            })
+        );
+
+        const urlImagenSubida = `https://${process.env.BUCKET_AWS}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${fileName}`;
+
+
 
         // 4. Parsear detalles_json de forma segura
         let infoFormulario = {};
@@ -115,7 +105,7 @@ export const registrarIntervencion = async (req, res) => {
             success: true,
             message: "Intervención registrada con éxito.",
             id_intervencion: resultado.nuevaIntervencion.id_intervencion,
-
+            url_foto: urlImagenSubida
         });
 
     } catch (error) {
