@@ -1,6 +1,6 @@
 import prisma from "../../../config/dbConnection.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -18,25 +18,30 @@ export const registrarIntervencion = async (req, res) => {
         const tipo = req.query.tipo;
         const detalles_json = req.query.detalles_json;
 
+        if (!id_orden || !tipo) {
+            return res.status(400).json({
+                success: false,
+                error: "Faltan parámetros obligatorios (id_orden o tipo)."
+            });
+        }
 
-        // // 1. Validar técnico autenticado
-        // const id_tecnico_autenticado = req.usuarioMovil.id_usuario;
+        // 1. Validar técnico autenticado
+        const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
-        // // 2. Validar orden
+        // 2. Validar existencia de la orden de trabajo
         const orden = await prisma.ordenTrabajo.findUnique({
             where: { id_orden: parseInt(id_orden) }
         });
 
-        // if (!orden) return res.status(404).json({ success: false, error: "La orden no existe." });
-        // if (orden.id_tecnico !== id_tecnico_autenticado) {
-        //     return res.status(403).json({ success: false, error: "Sin permisos para modificar esta orden." });
-        // }
+        if (!orden) {
+            return res.status(404).json({ success: false, error: "La orden de trabajo no existe." });
+        }
 
-        // Depuración en el controlador
-        console.log("Headers recibidos:", req.headers);
-        console.log("Content-Length de la petición:", req.headers['content-length']);
+        if (orden.id_tecnico !== id_tecnico_autenticado) {
+            return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar esta orden." });
+        }
 
-        // 3. Capturar el stream binario de la foto que manda PostFile
+        // 3. Capturar el stream binario de la foto enviado por PostFile
         const chunks = [];
         for await (const chunk of req) {
             chunks.push(chunk);
@@ -62,52 +67,41 @@ export const registrarIntervencion = async (req, res) => {
             urlImagenSubida = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
         }
 
-
         // 4. Parsear detalles_json de forma segura
-        // let infoFormulario = {};
-        // if (detalles_json) {
-        //     try {
-        //         infoFormulario = typeof detalles_json === "string"
-        //             ? JSON.parse(decodeURIComponent(detalles_json))
-        //             : detalles_json;
-        //     } catch (e) {
-        //         infoFormulario = {};
-        //     }
-        // }
+        let infoFormulario = {};
+        if (detalles_json) {
+            try {
+                infoFormulario = typeof detalles_json === "string"
+                    ? JSON.parse(decodeURIComponent(detalles_json))
+                    : detalles_json;
+            } catch (e) {
+                infoFormulario = {};
+            }
+        }
 
-        const detallesFinales = {
-            id_orden,
-            tipo,
-            detalles_json,
-            image: urlImagenSubida
-        };
-
-        // 5. Guardar en Prisma
-
-        // 5. Guardar en Prisma
+        // 5. Guardar en la base de datos usando exactamente los campos de tu schema
         const resultado = await prisma.$transaction(async (tx) => {
             const nuevaIntervencion = await tx.intervencion.create({
                 data: {
-                    id_orden: orden.id_orden,
+                    id_orden: parseInt(id_orden), // Campo escalar con @unique
                     tipo: tipo.toUpperCase(),
-                    detalles_json: detallesFinales
+                    realizada: true,              // Marcamos que ya fue realizada al registrarse
+                    detalles_json: infoFormulario, // Objeto JSON puro para la columna Json?
+                    image: urlImagenSubida        // URL directa a la columna image String?
                 }
             });
             return { nuevaIntervencion };
         });
 
-
-
         return res.status(201).json({
             success: true,
-            message: "Intervención registrada con éxito.",
+            message: "¡Intervención registrada y foto guardada con éxito!",
             id_intervencion: resultado.nuevaIntervencion.id_intervencion,
-
+            url_foto: urlImagenSubida
         });
 
     } catch (error) {
-        console.error("Error al registrar intervención:", error);
-        return res.status(500).json({ success: false, error: "Error interno del servidor." });
+        console.error("Error al registrar intervención técnica:", error);
+        return res.status(500).json({ success: false, error: "Error interno del servidor al procesar el cierre." });
     }
 };
-
