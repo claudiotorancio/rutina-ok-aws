@@ -25,6 +25,8 @@ export const registrarIntervencion = async (req, res) => {
             });
         }
 
+        console.log(req.file)
+
         // 1. Validar técnico autenticado
         // const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
