@@ -84,13 +84,26 @@ export const registrarIntervencion = async (req, res) => {
 
         // 5. Guardar en Prisma
 
-        const nuevaIntervencion = await prisma.intervencion.create(
-            detallesFinales
-        );
+        // 5. Guardar en Prisma
+        const resultado = await prisma.$transaction(async (tx) => {
+            const nuevaIntervencion = await tx.intervencion.create({
+                data: {
+                    id_orden: orden.id_orden,
+                    tipo: tipo.toUpperCase(),
+                    detalles_json: detallesFinales
+                }
+            });
+            return { nuevaIntervencion };
+        });
 
 
 
-        return res.status(201).json(nuevaIntervencion);
+        return res.status(201).json({
+            success: true,
+            message: "Intervención registrada con éxito.",
+            id_intervencion: resultado.nuevaIntervencion.id_intervencion,
+
+        });
 
     } catch (error) {
         console.error("Error al registrar intervención:", error);
