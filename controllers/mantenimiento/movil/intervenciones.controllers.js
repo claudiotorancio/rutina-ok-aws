@@ -84,7 +84,7 @@ export const registrarIntervencion = async (req, res) => {
 
         // 5. Guardar en Prisma
 
-        const nuevaIntervencion = await prisma.create(
+        const nuevaIntervencion = await prisma.intervencion.create(
             detallesFinales
         );
 
