@@ -64,7 +64,8 @@ export const registrarIntervencion = async (req, res) => {
                     Bucket: bucketName,
                     Key: fileName,
                     Body: buffer,
-                    ContentType: "image/png"
+                    ContentType: "image/png",
+                    ACL: "public-read",
                 })
             );
 
