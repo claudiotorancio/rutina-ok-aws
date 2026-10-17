@@ -16,7 +16,7 @@ const registrarIntervencion = async (req, res) => {
     try {
         const id_orden = req.query.id_orden;
         const tipo = req.query.tipo;
-        const detalles_json = req.query.detalles_json;
+        // const detalles_json = req.query.detalles_json;
 
 
         // // 1. Validar técnico autenticado
@@ -65,6 +65,7 @@ const registrarIntervencion = async (req, res) => {
 
         const imagePath = `https://${process.env.BUCKET_AWS}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${fileName}`;
 
+        console.log(imagePath)
 
         // 4. Parsear detalles_json de forma segura
         // let infoFormulario = {};
@@ -81,7 +82,6 @@ const registrarIntervencion = async (req, res) => {
         const detallesFinales = {
             id_orden,
             tipo,
-            detalles_json,
             Image: imagePath
         };
 
