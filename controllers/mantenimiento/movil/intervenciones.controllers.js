@@ -22,7 +22,7 @@ export const registrarIntervencion = async (req, res) => {
             return res.status(400).json({ success: false, error: "Faltan parámetros obligatorios." });
         }
 
-        const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
+        // const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
         const orden = await prisma.ordenTrabajo.findUnique({
             where: { id_orden: parseInt(id_orden) }
@@ -32,9 +32,9 @@ export const registrarIntervencion = async (req, res) => {
             return res.status(404).json({ success: false, error: "La orden no existe." });
         }
 
-        if (orden.id_tecnico !== id_tecnico_autenticado) {
-            return res.status(403).json({ success: false, error: "Sin permisos para esta orden." });
-        }
+        // if (orden.id_tecnico !== id_tecnico_autenticado) {
+        //     return res.status(403).json({ success: false, error: "Sin permisos para esta orden." });
+        // }
 
         // El Buffer de la imagen viene limpio gracias a express.raw()
         const buffer = req.body;
