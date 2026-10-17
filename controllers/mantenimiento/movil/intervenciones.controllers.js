@@ -81,22 +81,16 @@ const registrarIntervencion = async (req, res) => {
         };
 
         // 5. Guardar en Prisma
-        const resultado = await prisma.$transaction(async (tx) => {
-            const nuevaIntervencion = await tx.intervencion.create({
-                data: {
-                    id_orden: orden.id_orden,
-                    tipo: tipo.toUpperCase(),
-                    detallesFinales
-                }
-            });
-            return { nuevaIntervencion };
-        });
+
+        const nuevaIntervencion = await prisma.create(
+            detallesFinales
+        );
+
+
 
         return res.status(201).json({
             success: true,
-            message: "Intervención registrada con éxito.",
-            id_intervencion: resultado.nuevaIntervencion.id_intervencion,
-            url_foto: urlImagenSubida
+            nuevaIntervencion
         });
 
     } catch (error) {
