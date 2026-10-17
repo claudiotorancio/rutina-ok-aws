@@ -75,11 +75,24 @@ export const registrarIntervencion = async (req, res) => {
         //     }
         // }
 
+        // 4. Parsear detalles_json de forma segura
+        let infoFormulario = {};
+        if (detalles_json) {
+            try {
+                infoFormulario = typeof detalles_json === "string"
+                    ? JSON.parse(decodeURIComponent(detalles_json))
+                    : detalles_json;
+            } catch (e) {
+                infoFormulario = {};
+            }
+        }
+
         const detallesFinales = {
-            id_orden,
-            tipo,
-            detalles_json,
-            image: urlImagenSubida
+            ...infoFormulario,
+            fotos_evidencia: {
+                antes_url: urlImagenSubida,
+                despues_url: null
+            }
         };
 
         // 5. Guardar en Prisma
