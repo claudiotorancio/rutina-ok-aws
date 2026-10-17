@@ -1,8 +1,7 @@
-// controllers/movil/intervenciones.controller.js
 import prisma from "../../../config/dbConnection.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-// Instancia del cliente de S3
+// Instancia única del cliente de AWS S3 con AWS SDK v3
 const s3 = new S3Client({
     region: process.env.S3_BUCKET_REGION || process.env.AWS_REGION,
     credentials: {
@@ -13,33 +12,44 @@ const s3 = new S3Client({
 
 const registrarIntervencion = async (req, res) => {
     try {
+        // 1. Obtener parámetros enviadas desde App Inventor vía req.query
         const id_orden = req.query.id_orden;
         const tipo = req.query.tipo;
         const detalles_json = req.query.detalles_json;
-        // Indicador opcional enviado en la URL: 'antes' o 'despues'
-        const tipo_foto = req.query.tipo_foto || 'antes';
+        // Permite saber si la foto subida es 'antes' o 'despues' (por defecto 'antes')
+        const tipo_foto = req.query.tipo_foto || "antes";
 
-        // if (!id_orden || !tipo) {
-        //     return res.status(400).json({ success: false, error: "Faltan parámetros id_orden o tipo en la URL." });
-        // }
+        if (!id_orden || !tipo) {
+            return res.status(400).json({
+                success: false,
+                error: "Faltan parámetros id_orden o tipo en la URL."
+            });
+        }
 
-        // 1. Validar técnico autenticado
+        // 2. Validar técnico autenticado
         const id_tecnico_autenticado = req.usuarioMovil.id_usuario;
 
-        // 2. Validaciones de la orden
+        // 3. Validar existencia de la orden en Supabase/PostgreSQL
         const orden = await prisma.ordenTrabajo.findUnique({
             where: { id_orden: parseInt(id_orden) }
         });
 
         if (!orden) {
-            return res.status(404).json({ success: false, error: "La orden de trabajo no existe." });
+            return res.status(404).json({
+                success: false,
+                error: "La orden de trabajo no existe."
+            });
         }
 
+        // 4. Verificar pertenencia de la orden al técnico logueado
         if (orden.id_tecnico !== id_tecnico_autenticado) {
-            return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar la orden." });
+            return res.status(403).json({
+                success: false,
+                error: "Acceso denegado, sin permisos para modificar la orden."
+            });
         }
 
-        // 3. Recomponemos el Buffer binario de la imagen enviada por App Inventor (PostFile)
+        // 5. Recomponer el Buffer binario enviado por App Inventor mediante PostFile
         const chunks = [];
         for await (const chunk of req) {
             chunks.push(chunk);
@@ -48,30 +58,32 @@ const registrarIntervencion = async (req, res) => {
 
         let urlImagenSubida = null;
 
-        // Si llegaron bytes de imagen, la subimos a S3
+        // Si se recibieron bytes de la imagen en la petición, subimos a AWS S3
         if (buffer.length > 0) {
-            const fileName = `intervencion-${id_orden}-${Date.now()}.png`;
             const bucketName = process.env.BUCKET_AWS || process.env.AWS_BUCKET_NAME;
             const region = process.env.S3_BUCKET_REGION || process.env.AWS_REGION;
+            const fileName = `intervencion-ord${id_orden}-${Date.now()}.png`;
 
             await s3.send(
                 new PutObjectCommand({
                     Bucket: bucketName,
                     Key: fileName,
                     Body: buffer,
-                    ContentType: "image/png",
+                    ContentType: "image/png"
                 })
             );
 
             urlImagenSubida = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
         }
 
-        // 4. Decodificamos el JSON de detalles
-        const infoFormulario = typeof detalles_json === "string" ? JSON.parse(detalles_json) : (detalles_json || {});
+        // 6. Decodificación segura de detalles_json
+        const infoFormulario = typeof detalles_json === "string"
+            ? JSON.parse(detalles_json)
+            : (detalles_json || {});
 
-        // Asignamos la URL de la imagen según corresponda
-        const urlAntes = tipo_foto === 'antes' ? urlImagenSubida : null;
-        const urlDespues = tipo_foto === 'despues' ? urlImagenSubida : null;
+        // Asignación de la URL de la evidencia fotográfica segun tipo_foto
+        const urlAntes = tipo_foto === "antes" ? urlImagenSubida : null;
+        const urlDespues = tipo_foto === "despues" ? urlImagenSubida : null;
 
         const detallesFinales = {
             ...infoFormulario,
@@ -81,7 +93,7 @@ const registrarIntervencion = async (req, res) => {
             }
         };
 
-        // 5. Transacción e inserción en la base de datos
+        // 7. Transacción en la base de datos con Prisma
         const resultado = await prisma.$transaction(async (tx) => {
             const nuevaIntervencion = await tx.intervencion.create({
                 data: {
@@ -94,6 +106,7 @@ const registrarIntervencion = async (req, res) => {
             return { nuevaIntervencion };
         });
 
+        // 8. Respuesta de éxito única y cortada con return
         return res.status(201).json({
             success: true,
             message: `¡Informe guardado! Intervención de tipo ${tipo} registrada con éxito.`,
@@ -103,7 +116,10 @@ const registrarIntervencion = async (req, res) => {
 
     } catch (error) {
         console.error("Error al registrar intervención técnica:", error);
-        return res.status(500).json({ success: false, error: "Error interno del servidor al procesar el cierre." });
+        return res.status(500).json({
+            success: false,
+            error: "Error interno del servidor al procesar el cierre de intervención."
+        });
     }
 };
 
