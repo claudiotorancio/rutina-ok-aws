@@ -63,25 +63,23 @@ export const registrarIntervencion = async (req, res) => {
         }
 
 
-
         // 4. Parsear detalles_json de forma segura
-        let infoFormulario = {};
-        if (detalles_json) {
-            try {
-                infoFormulario = typeof detalles_json === "string"
-                    ? JSON.parse(decodeURIComponent(detalles_json))
-                    : detalles_json;
-            } catch (e) {
-                infoFormulario = {};
-            }
-        }
+        // let infoFormulario = {};
+        // if (detalles_json) {
+        //     try {
+        //         infoFormulario = typeof detalles_json === "string"
+        //             ? JSON.parse(decodeURIComponent(detalles_json))
+        //             : detalles_json;
+        //     } catch (e) {
+        //         infoFormulario = {};
+        //     }
+        // }
 
         const detallesFinales = {
-            ...infoFormulario,
-            fotos_evidencia: {
-                antes_url: urlImagenSubida,
-                despues_url: null
-            }
+            id_orden,
+            tipo,
+            detalles_json,
+            image: urlImagenSubida
         };
 
         // 5. Guardar en Prisma
@@ -104,7 +102,6 @@ export const registrarIntervencion = async (req, res) => {
             success: true,
             message: "Intervención registrada con éxito.",
             id_intervencion: resultado.nuevaIntervencion.id_intervencion,
-            url_foto: urlImagenSubida
 
         });
 
