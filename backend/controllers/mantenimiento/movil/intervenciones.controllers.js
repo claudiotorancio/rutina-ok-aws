@@ -26,7 +26,7 @@ export const registrarIntervencion = async (req, res) => {
         }
 
         // 1. Validar técnico autenticado
-        const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
+        // const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
         // 2. Validar existencia de la orden de trabajo
         const orden = await prisma.ordenTrabajo.findUnique({
