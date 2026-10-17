@@ -13,11 +13,8 @@ const registrarIntervencion = async (req, res) => {
     try {
         const id_orden = req.query.id_orden;
         const tipo = req.query.tipo;
+        const detalles_json = req.query.detalles_json;
 
-
-        if (!id_orden || !tipo) {
-            return res.status(400).json({ success: false, error: "Faltan parámetros en la URL." });
-        }
 
         // 1. Validar técnico autenticado
         const id_tecnico_autenticado = req.usuarioMovil.id_usuario;
@@ -77,7 +74,8 @@ const registrarIntervencion = async (req, res) => {
         const detallesFinales = {
             id_orden,
             tipo,
-            detalles_json: imagePath
+            detalles_json,
+            imagePath
         };
 
         // 5. Guardar en Prisma
@@ -90,6 +88,7 @@ const registrarIntervencion = async (req, res) => {
 
         return res.status(201).json({
             success: true,
+            message: "Intervención registrada con éxito.",
             nuevaIntervencion
         });
 
