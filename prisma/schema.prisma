@@ -110,7 +110,6 @@ model Intervencion {
   realizada          Boolean          @default(false)
   //Los datos específicos de cada intervencion
   detalles_json     Json? 
-  image             String?
 
   orden             OrdenTrabajo     @relation(fields: [id_orden], references: [id_orden])
   creado_en         DateTime         @default(now())
