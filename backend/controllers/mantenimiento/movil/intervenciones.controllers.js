@@ -12,9 +12,11 @@ const s3 = new S3Client({
     },
 });
 
-(req, res) => { console.log(req.body) }
-
 export const registrarIntervencion = async (req, res) => {
+
+    console.log("🔍 TIPO DE REQ.BODY:", typeof req.body);
+    console.log("🔍 CONTENIDO DE REQ.BODY:", req.body);
+    console.log("🔍 QUERY PARAMS:", req.query);
 
     try {
         // 1. Los datos principales vienen por query
