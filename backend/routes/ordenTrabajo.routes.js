@@ -14,16 +14,16 @@ import { reasignarOrdenTrabajo } from "../controllers/ordenes/reasignarOrden.con
 
 const router = Router()
 
-const rawBodyMiddleware = express.raw({
-    type: () => true,
-    limit: '10mb'
-});
+// const rawBodyMiddleware = express.raw({
+//     type: () => true,
+//     limit: '10mb'
+// });
 
 
 router.post("/crear-orden", validarOrdenTrabajo, estaAuthenticado, esAdministrador, crearOrdenTrabajo);
 router.put("/actualizar-estado", validarActualizarOrden, validarTokenMovil, actualizarEstadoOt);
 router.get("/obtener-ordenes", validarTokenMovil, obtenerOrdenes);
-router.post("/registrar-intervencion", rawBodyMiddleware, registrarIntervencion);
+router.post("/registrar-intervencion",  registrarIntervencion);
 router.delete('/eliminar-orden/:id', estaAuthenticado, esAdministrador, eliminarOrden);
 router.get('/obtener-orden/:id', estaAuthenticado, esAdministrador, obtenerOrdenPorId);
 router.put('/reasignar-orden/:id', estaAuthenticado, esAdministrador, reasignarOrdenTrabajo);
