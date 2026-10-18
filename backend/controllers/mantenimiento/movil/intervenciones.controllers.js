@@ -21,9 +21,22 @@ export const registrarIntervencion = async (req, res) => {
         // Extraemos imagen1 e imagen2 desde req.body
         const imagen1B64 = req.body?.imagen1 || null;
         const imagen2B64 = req.body?.imagen2 || null;
-
         if (!id_orden || !tipo) {
-            return res.status(400).json({ success: false, error: "Faltan parámetros obligatorios en la URL." });
+            return res.status(400).json({ success: false, error: "Faltan parámetros obligatorios." });
+        }
+
+        const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
+
+        const orden = await prisma.ordenTrabajo.findUnique({
+            where: { id_orden: parseInt(id_orden) }
+        });
+
+        if (!orden) {
+            return res.status(404).json({ success: false, error: "La orden no existe." });
+        }
+
+        if (orden.id_tecnico !== id_tecnico_autenticado) {
+            return res.status(403).json({ success: false, error: "Sin permisos para esta orden." });
         }
 
         const bucketName = process.env.BUCKET_AWS || process.env.AWS_BUCKET_NAME;
