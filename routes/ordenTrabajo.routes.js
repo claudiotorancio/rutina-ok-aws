@@ -1,5 +1,4 @@
 import { Router } from "express";
-import express from "express";
 import { crearOrdenTrabajo } from "../controllers/ordenes/crearOrden.controllers.js";
 import { validarActualizarOrden, validarOrdenTrabajo } from "../middlewares/validators/ordenTrabajo.validator.js";
 import { esAdministrador, estaAuthenticado } from "../middlewares/auth.middleware.js";
@@ -14,16 +13,13 @@ import { reasignarOrdenTrabajo } from "../controllers/ordenes/reasignarOrden.con
 
 const router = Router()
 
-// const rawBodyMiddleware = express.raw({
-//     type: () => true,
-//     limit: '10mb'
-// });
+
 
 
 router.post("/crear-orden", validarOrdenTrabajo, estaAuthenticado, esAdministrador, crearOrdenTrabajo);
 router.put("/actualizar-estado", validarActualizarOrden, validarTokenMovil, actualizarEstadoOt);
 router.get("/obtener-ordenes", validarTokenMovil, obtenerOrdenes);
-router.post("/registrar-intervencion", (req, res, next) => { console.log(req.body, console.log("🔑 Token recibido en Headers:", req.headers.authorization)); next() }, validarTokenMovil, registrarIntervencion);
+router.post("/registrar-intervencion", validarTokenMovil, registrarIntervencion);
 router.delete('/eliminar-orden/:id', estaAuthenticado, esAdministrador, eliminarOrden);
 router.get('/obtener-orden/:id', estaAuthenticado, esAdministrador, obtenerOrdenPorId);
 router.put('/reasignar-orden/:id', estaAuthenticado, esAdministrador, reasignarOrdenTrabajo);

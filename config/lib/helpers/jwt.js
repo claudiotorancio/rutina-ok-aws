@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.SECRET_KEY || "secreto_movil_super_seguro";
-
 /**
  * Genera un token JWT firmado digitalmente
  * @param {Object} payload - Datos a encriptar (id_usuario, tipo_usuario)
@@ -9,7 +7,7 @@ const JWT_SECRET = process.env.SECRET_KEY || "secreto_movil_super_seguro";
  */
 
 export const generarToken = (payload) => {
-    return jwt.sign(payload, JWT_SECRET, {
+    return jwt.sign(payload, process.env.SECRET_KEY, {
         expiresIn: "30d"
     })
 };
@@ -22,9 +20,10 @@ export const generarToken = (payload) => {
 
 export const verificarToken = (token) => {
     try {
-        return jwt.verify(token, JWT_SECRET)
+        return jwt.verify(token, process.env.SECRET_KEY);
     } catch (error) {
-        return null
+        console.error("Error detallado de JWT:", error.message); // Esto te mostrará si falló por firma o expiración
+        return null;
     }
 };
 
