@@ -19,7 +19,7 @@ export const validarTokenMovil = (req, res, next) => {
         return res.status(403).json({ error: "Token inválido o expirado. Inicia sesión nuevamente." });
     }
 
-    // 3. 🚀 ¡LA JUGADA MAESTRA! Inyectamos el id_usuario descifrado directamente en el req
+    // 3.Inyectamos el id_usuario descifrado directamente en el req
     req.usuarioMovil = {
         id_usuario: payloadDecodificado.id_usuario,
         tipo_usuario: payloadDecodificado.tipo_usuario

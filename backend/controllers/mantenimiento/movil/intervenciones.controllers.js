@@ -1,8 +1,5 @@
 import prisma from "../../../config/dbConnection.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const s3 = new S3Client({
     region: process.env.S3_BUCKET_REGION || process.env.AWS_REGION,
