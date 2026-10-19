@@ -25,7 +25,7 @@ export const validarTokenMovil = (req, res, next) => {
         tipo_usuario: payloadDecodificado.tipo_usuario
     };
 
-    next(); // Permite continuar al controlador que manejará los datos
+    next();
 };
 
 
