@@ -4,7 +4,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"; // Asegurate de
 
 // Inicializar cliente S3 (usando las mismas credenciales que configuras en tu proyecto)
 const s3Client = new S3Client({
-    region: process.env.AWS_REGION,
+    region: process.env.S3_BUCKET_REGION,
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -21,7 +21,7 @@ const registrarIntervencion = async (req, res) => {
     } = req.body;
 
     // Validar tecnico autenticado (asegurate que coincida con req.user o req.usuarioMovil según tu middleware)
-    const id_tecnico_autenticado =  req.usuarioMovil?.id_usuario;
+    const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
     try {
         // Validaciones de la orden en Supabase
@@ -43,7 +43,7 @@ const registrarIntervencion = async (req, res) => {
             const fileName = `${nombreCarpeta}/${Date.now()}-${Math.round(Math.random() * 1e9)}.png`;
 
             const uploadParams = {
-                Bucket: process.env.AWS_BUCKET_NAME,
+                Bucket: process.env.BUCKET_AWS,
                 Key: fileName,
                 Body: base64Data,
                 ContentType: 'image/png',
@@ -53,7 +53,7 @@ const registrarIntervencion = async (req, res) => {
             await s3Client.send(new PutObjectCommand(uploadParams));
 
             // Retornar la URL pública del archivo en S3
-            return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+            return `https://${process.env.BUCKET_AWS}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${fileName}`;
         };
 
         // TRANSACCIÓN
