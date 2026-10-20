@@ -19,9 +19,7 @@ const router = Router()
 router.post("/crear-orden", validarOrdenTrabajo, estaAuthenticado, esAdministrador, crearOrdenTrabajo);
 router.put("/actualizar-estado", validarActualizarOrden, validarTokenMovil, actualizarEstadoOt);
 router.get("/obtener-ordenes", validarTokenMovil, obtenerOrdenes);
-router.post("/registrar-intervencion", validarTokenMovil, uploadSingle, (req, res) => {
-console.log('contenido de req.file', req.file)
-}, registrarIntervencion);
+router.post("/registrar-intervencion", validarTokenMovil, registrarIntervencion);
 router.delete('/eliminar-orden/:id', estaAuthenticado, esAdministrador, eliminarOrden);
 router.get('/obtener-orden/:id', estaAuthenticado, esAdministrador, obtenerOrdenPorId);
 router.put('/reasignar-orden/:id', estaAuthenticado, esAdministrador, reasignarOrdenTrabajo);
