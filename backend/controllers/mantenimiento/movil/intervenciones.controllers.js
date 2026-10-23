@@ -34,7 +34,7 @@ const registrarIntervencion = async (req, res) => {
             return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar orden." });
         }
         //Verificar si la orden ya fue cerrada
-        const intervencion_realizada = await prisma.intervencion.findMany({ where: { id_orden: parseInt(id_orden), realizada: true } });
+        const intervencion_realizada = await prisma.intervencion.findFirst({ where: { id_orden: parseInt(id_orden), realizada: true } });
 
         if (intervencion_realizada) return res.status(403).json({ success: false, error: "La orden de trabajo se ecuentra finalizda." });
 
