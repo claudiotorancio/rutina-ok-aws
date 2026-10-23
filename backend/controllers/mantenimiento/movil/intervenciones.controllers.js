@@ -2,7 +2,7 @@
 import prisma from "../../../config/dbConnection.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"; // Asegurate de tener instalado @aws-sdk/client-s3
 
-// Inicializar cliente S3 (usando las mismas credenciales que configuras en tu proyecto)
+// Inicializar cliente S3
 const s3Client = new S3Client({
     region: process.env.S3_BUCKET_REGION,
     credentials: {
@@ -16,15 +16,15 @@ const registrarIntervencion = async (req, res) => {
         id_orden,
         tipo,
         detalles_json,
-        foto_antes,   // Recibido como texto Base64 desde el JSON
-        foto_despues  // Recibido como texto Base64 desde el JSON
+        foto_antes,
+        foto_despues
     } = req.body;
 
-    // Validar tecnico autenticado (asegurate que coincida con req.user o req.usuarioMovil según tu middleware)
+    // Validar tecnico autenticado 
     const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
     try {
-        // Validaciones de la orden en Supabase
+        // Validaciones de la orden 
         const orden = await prisma.ordenTrabajo.findUnique({ where: { id_orden: parseInt(id_orden) } });
 
         if (!orden) return res.status(404).json({ success: false, error: "La orden de trabajo no existe." });
@@ -33,6 +33,11 @@ const registrarIntervencion = async (req, res) => {
         if (orden.id_tecnico !== id_tecnico_autenticado) {
             return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar orden." });
         }
+
+        const intervencion = await prisma.intervencion.findUnique({ where: { id_orden: parseInt(id_orden) } });
+
+        if (intervencion.realizada) return res.status(403).json({ success: false, error: "La orden de trabajo se ecuentra finalizda." });
+
 
         // Función auxiliar para subir un Base64 a S3
         const subirBase64AS3 = async (base64String, nombreCarpeta = "intervenciones") => {
