@@ -43,14 +43,14 @@ const registrarIntervencion = async (req, res) => {
         const subirBase64AS3 = async (base64String, nombreCarpeta = "intervenciones") => {
             if (!base64String) return null;
 
-            // Limpiar el prefijo data:image/... si lo tuviera
-            const base64Data = Buffer.from(base64String.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+            // crear el boofer de base64
+            const buffer = Buffer.from(base64String, 'base64');
             const fileName = `${nombreCarpeta}/${Date.now()}-${Math.round(Math.random() * 1e9)}.png`;
 
             const uploadParams = {
                 Bucket: process.env.BUCKET_AWS,
                 Key: fileName,
-                Body: base64Data,
+                Body: buffer,
                 ContentType: 'image/png',
                 // ACL: 'public-read' // Opcional según cómo tengas configurado tu bucket S3
             };
