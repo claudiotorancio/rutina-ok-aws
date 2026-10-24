@@ -2,6 +2,7 @@ import { Router } from "express";
 import authRoutes from "./auth.routes.js";
 import adminRoutes from "./admin.routes.js"
 import ordenTrabajoRoutes from "./ordenTrabajo.routes.js"
+import movilRoutes from './movil.routes.js'
 
 const router = Router();
 
@@ -13,5 +14,8 @@ router.use("/admin", adminRoutes);
 
 // ===== ORDENES TRABAJO =====
 router.use("/orden", ordenTrabajoRoutes)
+
+// ===== MOVIL =====
+router.use("/movil", movilRoutes)
 
 export default router;
