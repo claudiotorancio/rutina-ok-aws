@@ -50,7 +50,7 @@ const registrarIntervencion = async (req, res) => {
             const uploadParams = {
                 Bucket: process.env.BUCKET_AWS,
                 Key: fileName,
-                Body: base64Data,
+                Body: subirBase64AS3,
                 ContentType: 'image/png',
                 // ACL: 'public-read' // Opcional según cómo tengas configurado tu bucket S3
             };
