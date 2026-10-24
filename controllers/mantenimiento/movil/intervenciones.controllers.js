@@ -1,6 +1,6 @@
 
 import prisma from "../../../config/dbConnection.js";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"; 
 
 // Inicializar cliente S3
 const s3Client = new S3Client({
@@ -33,19 +33,19 @@ const registrarIntervencion = async (req, res) => {
         if (orden.id_tecnico !== id_tecnico_autenticado) {
             return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar orden." });
         }
-
+        
         //Verificar si la orden ya fue cerrada
         const intervencion_realizada = await prisma.intervencion.findFirst({ where: { id_orden: parseInt(id_orden), realizada: true } });
 
         if (intervencion_realizada) return res.status(403).json({ success: false, error: "La orden de trabajo se ecuentra finalizda, solicite una nueva orden porfavor." });
 
         // Función auxiliar para subir un Base64 a S3
-        const subirBase64AS3 = async (base64String) => {
+        const subirBase64AS3 = async (base64String, nombreCarpeta = "intervenciones") => {
             if (!base64String) return null;
 
-            // crear el boofer de base64 y el formatod e guardado en s3
+            // crear el boofer de base64 y la druta final de la imagen
             const buffer = Buffer.from(base64String, 'base64');
-            const fileName = `mobile-${Date.now()}.png`;
+            const fileName = `${nombreCarpeta}/mobile-${Date.now()}.png`;
 
             const uploadParams = {
                 Bucket: process.env.BUCKET_AWS,
