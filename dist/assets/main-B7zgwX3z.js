@@ -1,0 +1,2 @@
+import{i as e,n as t}from"./mostrarModal-BhixhtJD.js";var n=new e;document.getElementById(`form-login`).addEventListener(`submit`,async e=>{e.preventDefault();let r=document.getElementById(`email`).value,i=document.getElementById(`password`).value;try{let e=await n.login(r,i);e.user&&e.user.tipo_usuario===`ADMIN`?window.location.href=`/panel-admin`:t(`Acceso no autorizado para este usuario.`)}catch(e){t(e.message)}});
+//# sourceMappingURL=main-B7zgwX3z.js.map
