@@ -1,6 +1,6 @@
 
 import prisma from "../../../config/dbConnection.js";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"; 
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 // Inicializar cliente S3
 const s3Client = new S3Client({
@@ -33,26 +33,25 @@ const registrarIntervencion = async (req, res) => {
         if (orden.id_tecnico !== id_tecnico_autenticado) {
             return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar orden." });
         }
-        
+
         //Verificar si la orden ya fue cerrada
         const intervencion_realizada = await prisma.intervencion.findFirst({ where: { id_orden: parseInt(id_orden), realizada: true } });
 
         if (intervencion_realizada) return res.status(403).json({ success: false, error: "La orden de trabajo se ecuentra finalizda, solicite una nueva orden porfavor." });
 
         // Función auxiliar para subir un Base64 a S3
-        const subirBase64AS3 = async (base64String, nombreCarpeta = "intervenciones") => {
+        const subirBase64AS3 = async (base64String) => {
             if (!base64String) return null;
 
-            // crear el boofer de base64
+            // crear el boofer de base64 y el formatod e guardado en s3
             const buffer = Buffer.from(base64String, 'base64');
-            const fileName = `${nombreCarpeta}/${Date.now()}-${Math.round(Math.random() * 1e9)}.png`;
+            const fileName = `mobile-${Date.now()}.png`;
 
             const uploadParams = {
                 Bucket: process.env.BUCKET_AWS,
                 Key: fileName,
                 Body: buffer,
                 ContentType: 'image/png',
-                // ACL: 'public-read' // Opcional según cómo tengas configurado tu bucket S3
             };
 
             await s3Client.send(new PutObjectCommand(uploadParams));
@@ -64,7 +63,7 @@ const registrarIntervencion = async (req, res) => {
         // TRANSACCIÓN
         const resultado = await prisma.$transaction(async (tx) => {
 
-            // Subimos ambas fotos a S3 en paralelo o secuencial
+            // Subimos ambas fotos a S3 en carpetas separadas
             const urlAntes = await subirBase64AS3(foto_antes, "antes");
             const urlDespues = await subirBase64AS3(foto_despues, "despues");
 
