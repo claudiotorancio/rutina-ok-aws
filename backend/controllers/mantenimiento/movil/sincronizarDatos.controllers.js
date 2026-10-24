@@ -1,8 +1,8 @@
-// controllers/movil/sincronizacion.controller.js
+
 import prisma from "../../../config/dbConnection.js";
 
 const sincronizarDatosMovil = async (req, res) => {
-    // Obtenemos el ID del técnico autenticado por el token JWT
+    // Obtener el id del tecnico autenticado
     const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
     try {
@@ -13,9 +13,9 @@ const sincronizarDatosMovil = async (req, res) => {
             });
         }
 
-        // Ejecutamos todas las consultas en paralelo para que sea súper rápido
+        // Consultas en paralelo
         const [ordenesAsignadas, clientes, equipos, tecnicos] = await Promise.all([
-            // 1. Órdenes: SOLO las de este técnico y que estén pendientes
+            // Ordenes pendientes
             prisma.ordenTrabajo.findMany({
                 where: {
                     id_tecnico: id_tecnico_autenticado,
@@ -23,6 +23,7 @@ const sincronizarDatosMovil = async (req, res) => {
                         notIn: ['COMPLETADA', 'CANCELADA']
                     }
                 },
+                //Incluir equipos y clientes
                 include: {
                     equipo: {
                         include: {
@@ -42,13 +43,13 @@ const sincronizarDatosMovil = async (req, res) => {
                 }
             }),
 
-            // 2. Clientes: Todos (para catálogos o referencias)
+            // Clientes
             prisma.cliente.findMany(),
 
-            // 3. Equipos: Todos (por si se necesitan consultar)
+            // Equipos
             prisma.equipo.findMany(),
 
-            // 4. Técnicos: Todos (opcional, por si querés mostrar nombres en la app)
+            // Tecncicos
             prisma.tecnico.findMany({
                 include: {
                     usuario: {
@@ -63,15 +64,15 @@ const sincronizarDatosMovil = async (req, res) => {
             })
         ]);
 
-        // Retornamos el paquete unificado para la app móvil
+        // Ok si devuelve los datos
         return res.status(200).json({
             success: true,
             mensaje: "Sincronización exitosa",
             datos: {
-                ordenes: ordenesAsignadas, // Filtradas por técnico
-                clientes: clientes,         // Catálogo completo
-                equipos: equipos,           // Catálogo completo
-                tecnicos: tecnicos          // Catálogo completo
+                ordenes: ordenesAsignadas, 
+                clientes: clientes,         
+                equipos: equipos,         
+                tecnicos: tecnicos         
             }
         });
 
