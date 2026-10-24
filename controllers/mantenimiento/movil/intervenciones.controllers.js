@@ -1,6 +1,6 @@
 
 import prisma from "../../../config/dbConnection.js";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"; 
 
 // Inicializar cliente S3
 const s3Client = new S3Client({
@@ -33,7 +33,7 @@ const registrarIntervencion = async (req, res) => {
         if (orden.id_tecnico !== id_tecnico_autenticado) {
             return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar orden." });
         }
-
+        
         //Verificar si la orden ya fue cerrada
         const intervencion_realizada = await prisma.intervencion.findFirst({ where: { id_orden: parseInt(id_orden), realizada: true } });
 
@@ -44,13 +44,13 @@ const registrarIntervencion = async (req, res) => {
             if (!base64String) return null;
 
             // Limpiar el prefijo data:image/... si lo tuviera
-            // const base64Data = Buffer.from(base64String.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+            const base64Data = Buffer.from(base64String.replace(/^data:image\/\w+;base64,/, ""), 'base64');
             const fileName = `${nombreCarpeta}/${Date.now()}-${Math.round(Math.random() * 1e9)}.png`;
 
             const uploadParams = {
                 Bucket: process.env.BUCKET_AWS,
                 Key: fileName,
-                Body: subirBase64AS3,
+                Body: base64Data,
                 ContentType: 'image/png',
                 // ACL: 'public-read' // Opcional según cómo tengas configurado tu bucket S3
             };
