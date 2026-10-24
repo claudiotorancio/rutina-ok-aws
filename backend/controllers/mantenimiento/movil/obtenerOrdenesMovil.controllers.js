@@ -12,7 +12,7 @@ const obtenerOrdenes = async (req, res) => {
                 id_tecnico: id_tecnico_autenticado,
                 //filtro el estado operativo
                 estado: {
-                    in: ["PENDIENTE", "ACEPTADA", "EN_PROCESO"]
+                    notIn: ["COMPLETADA", "CANCELADA"]
                 }
             },
             include: {

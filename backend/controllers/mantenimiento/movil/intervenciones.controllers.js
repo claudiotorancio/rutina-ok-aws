@@ -33,11 +33,11 @@ const registrarIntervencion = async (req, res) => {
         if (orden.id_tecnico !== id_tecnico_autenticado) {
             return res.status(403).json({ success: false, error: "Acceso denegado, sin permisos para modificar orden." });
         }
+        
         //Verificar si la orden ya fue cerrada
         const intervencion_realizada = await prisma.intervencion.findFirst({ where: { id_orden: parseInt(id_orden), realizada: true } });
 
-        if (intervencion_realizada) return res.status(403).json({ success: false, error: "La orden de trabajo se ecuentra finalizda." });
-
+        if (intervencion_realizada) return res.status(403).json({ success: false, error: "La orden de trabajo se ecuentra finalizda, solicite una nueva orden porfavor." });
 
         // Función auxiliar para subir un Base64 a S3
         const subirBase64AS3 = async (base64String, nombreCarpeta = "intervenciones") => {
