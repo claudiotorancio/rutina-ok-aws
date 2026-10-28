@@ -39,7 +39,7 @@ const obtenerOrdenes = async (req, res) => {
         const ordenFormateada = misOrdenes.map(o => ({
             id_orden: o.id_orden,
             fecha: o.fecha_programada,
-            Tipificacion: o.tipificacion,
+            tipificacion: o.tipificacion,
             prioridad: o.prioridad,
             estado: o.estado,
             tipo: o.tipo_mantenimiento,
