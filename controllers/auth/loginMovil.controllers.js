@@ -40,6 +40,7 @@ const loginMovil = async (req, res) => {
         });
     } catch (error) {
         console.error("Error en login móvil: ", error);
+        res.status(400).json({ error: "Error en la autenticación" });
         return res.status(500).json({ error: "Error interno del servidor" })
     }
 };
