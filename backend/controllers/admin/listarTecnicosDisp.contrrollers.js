@@ -55,15 +55,14 @@ export const listarTecnicosDisponibilidad = async (req, res) => {
 
         // Mapear en tiempo real
         const plantillaTecnicos = tecnicos.map(tecnico => {
-            let estadoActual = tecnico.estado_disponibilidad; // DISPONIBLE, EN_CAMPO, LICENCIA, INACTIVO
+            let estadoActual = tecnico.estado_disponibilidad; // DISPONIBLE, EN_CAMPO,
 
-            // Si tiene órdenes en proceso, lo marcamos como TRABAJANDO
-            const tieneEnProceso = tecnico.ordenes.some(ot => ot.estado === 'EN_PROCESO');
-            if (tieneEnProceso) {
-                estadoActual = 'TRABAJANDO';
-            } else if (tecnico.ordenes.length > 0 && estadoActual === 'DISPONIBLE') {
-                // Opcional: Si tiene pendientes/aceptadas pero no arrancó, podés dejarlo disponible o en campo
-                estadoActual = 'EN_CAMPO';
+            // Si tiene menos de 3 órdenes, esta disponible         
+            if (tecnico.ordenes.length < 3) {
+                estadoActual = 'DISPONIBLE';
+            } else  {
+               // Si tiene mas ya esta asignado
+                estadoActual = 'ASIGNADO';
             }
 
             return {

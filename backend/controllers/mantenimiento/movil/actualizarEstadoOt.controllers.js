@@ -52,17 +52,16 @@ const actualizarEstadoOt = async (req, res) => {
                 data: { estado: estado_destino }
             });
 
-            // Si la orden se completó, marcamos la intervención como realizada
-            // if (estado_destino === "COMPLETADA") {
-            //     await tx.intervencion.updateMany({
-            //         where: { id_orden: orden.id_orden },
-            //         data: { realizada: true }
-            //     });
-            // }
-
-            // Actualizar disponibilidad del técnico según estado
-            if (estado_destino === "COMPLETADA" || estado_destino === "REPROGRAMAR") {
-                // Disponibilidad del técncio
+            const ordenes = await tx.ordenTrabajo.findMany({
+                where: {
+                    id_usuario: orden.id_tecnico,
+                    estado: {
+                        notIn: ['REPROGRAMAR', 'COMPLETADA']
+                    }
+                }
+            });
+            // Actualizar disponibilidad del técnico según la cantidad de órdenes que tenga en su bandeja
+            if (ordenes.length <= 3) {
                 await tx.tecnico.update({
                     where: { id_usuario: id_tecnico_autenticado },
                     data: { estado_disponibilidad: "DISPONIBLE" }
@@ -70,7 +69,7 @@ const actualizarEstadoOt = async (req, res) => {
             } else {
                 await tx.tecnico.update({
                     where: { id_usuario: id_tecnico_autenticado },
-                    data: { estado_disponibilidad: "EN_CAMPO" }
+                    data: { estado_disponibilidad: "ASIGNADO" }
                 });
             }
             return ot;

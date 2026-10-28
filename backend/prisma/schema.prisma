@@ -90,7 +90,7 @@ model OrdenTrabajo {
   id_tecnico           Int 
   tipificacion         Tipificacion      @default(AIRE_ACONDICIONADO)
   estado               EstadoOrden       @default(PENDIENTE)
-  prioridad            Prioridad         @default(MEDIA)
+  prioridad            Prioridad         @default(BAJA)
   fecha_programada     DateTime
   descripcion_tarea    String
   comentario_respuesta String?
@@ -135,16 +135,12 @@ enum EstadoOrden {
 
 enum EstadoDisponibilidad {
   DISPONIBLE
-  EN_CAMPO
-  LICENCIA
-  INACTIVO
+  ASIGNADO
 }
 
 enum Prioridad {
   BAJA
-  MEDIA
   ALTA
-  URGENTE
 }
 
 enum TipoIntervencion {

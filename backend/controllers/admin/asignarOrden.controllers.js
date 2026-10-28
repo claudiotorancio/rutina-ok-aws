@@ -27,20 +27,6 @@ const asignarOrdenTrabajo = async (req, res) => {
             return res.status(404).json({ error: 'El técnico especificado no existe.' });
         }
 
-        if (tecnicoExiste.estado_disponibilidad === 'INACTIVO' || tecnicoExiste.estado_disponibilidad === 'LICENCIA') {
-            return res.status(400).json({
-                error: `No se puede asignar la OT. El técnico se encuentra en estado: ${tecnicoExiste.estado_disponibilidad}`
-            });
-        }
-
-        // Verificamos que el equipo exista
-        const equipoExiste = await prisma.equipo.findUnique({
-            where: { id_equipo: parseInt(id_equipo) }
-        });
-
-        if (!equipoExiste) {
-            return res.status(404).json({ error: 'El equipo especificado no existe.' });
-        }
 
         // Creamos la Orden de Trabajo en estado PENDIENTE por defecto
         const nuevaOrden = await prisma.ordenTrabajo.create({
