@@ -129,11 +129,8 @@ enum Tipificacion {
 
 enum EstadoOrden {
   PENDIENTE
-  ACEPTADA
-  RECHAZADA
-  EN_PROCESO
+  REPROGRAMAR
   COMPLETADA
-  CANCELADA
 }
 
 enum EstadoDisponibilidad {
