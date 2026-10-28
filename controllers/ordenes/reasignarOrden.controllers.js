@@ -37,7 +37,10 @@ export const reasignarOrdenTrabajo = async (req, res) => {
         // 3. UPDATE en lugar de CREATE
         const ordenActualizada = await prisma.ordenTrabajo.update({
             where: { id_orden: idOrden },
-            data: { id_tecnico: idTecnico },
+            data: {
+                id_tecnico: idTecnico,
+                estado: 'PENDIENTE'
+            },
             include: {
                 equipo: {
                     include: { cliente: true }
