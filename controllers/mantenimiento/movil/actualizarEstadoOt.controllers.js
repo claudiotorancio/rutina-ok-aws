@@ -54,7 +54,7 @@ const actualizarEstadoOt = async (req, res) => {
 
             const ordenes = await tx.ordenTrabajo.findMany({
                 where: {
-                    id_usuario: orden.id_tecnico,
+                    id_tecnico: orden.id_tecnico,
                     estado: {
                         notIn: ['REPROGRAMAR', 'COMPLETADA']
                     }
