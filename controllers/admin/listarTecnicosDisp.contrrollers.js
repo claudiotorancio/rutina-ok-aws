@@ -22,7 +22,7 @@ export const listarTecnicosDisponibilidad = async (req, res) => {
                 ordenes: {
                     where: {
                         estado: {
-                            in: ["PENDIENTE", "ACEPTADA", "EN_PROCESO"],
+                            in: ["PENDIENTE"],
                         },
                     },
                     select: {

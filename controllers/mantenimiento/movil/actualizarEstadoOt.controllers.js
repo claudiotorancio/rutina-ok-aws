@@ -53,16 +53,16 @@ const actualizarEstadoOt = async (req, res) => {
             });
 
             // Si la orden se completó, marcamos la intervención como realizada
-            if (estado_destino === "COMPLETADA") {
-                await tx.intervencion.updateMany({
-                    where: { id_orden: orden.id_orden },
-                    data: { realizada: true }
-                });
-            }
+            // if (estado_destino === "COMPLETADA") {
+            //     await tx.intervencion.updateMany({
+            //         where: { id_orden: orden.id_orden },
+            //         data: { realizada: true }
+            //     });
+            // }
 
             // Actualizar disponibilidad del técnico según estado
             if (estado_destino === "COMPLETADA" || estado_destino === "REPROGRAMAR") {
-                // Dependiendo de tu lógica de negocio, si se completa/reprograma puede quedar disponible o en campo
+                // Disponibilidad del técncio
                 await tx.tecnico.update({
                     where: { id_usuario: id_tecnico_autenticado },
                     data: { estado_disponibilidad: "DISPONIBLE" }
