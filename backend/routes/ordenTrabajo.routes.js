@@ -6,7 +6,7 @@ import actualizarEstadoOt from "../controllers/mantenimiento/movil/actualizarEst
 import { validarTokenMovil } from "../middlewares/jwt.middlewares.js";
 import obtenerOrdenes from "../controllers/mantenimiento/movil/obtenerOrdenesMovil.controllers.js";
 import registrarIntervencion from "../controllers/mantenimiento/movil/intervenciones.controllers.js";
-import { uploadSingle } from "../middlewares/uploadS3.js";
+// import { uploadSingle } from "../middlewares/uploadS3.js";
 import { eliminarOrden } from "../controllers/ordenes/eliminarOrden.controllers.js";
 import { obtenerOrdenPorId } from "../controllers/ordenes/obtenerOrdenId.controllers.js";
 import { reasignarOrdenTrabajo } from "../controllers/ordenes/reasignarOrden.controllers.js";

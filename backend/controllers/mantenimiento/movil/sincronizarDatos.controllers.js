@@ -20,7 +20,7 @@ const sincronizarDatosMovil = async (req, res) => {
                 where: {
                     id_tecnico: id_tecnico_autenticado,
                     estado: {
-                        notIn: ['COMPLETADA', 'CANCELADA']
+                        notIn: ['COMPLETADA', 'REPROGRAMAR']
                     }
                 },
                 //Incluir equipos y clientes

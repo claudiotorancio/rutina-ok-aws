@@ -63,7 +63,7 @@ const registrarIntervencion = async (req, res) => {
         // TRANSACCIÓN
         const resultado = await prisma.$transaction(async (tx) => {
 
-            // Subimos ambas fotos a S3 en carpetas separadas
+            // Subimos ambas fotos a S3 en carpetas separadas llamando la funcion auxiliar
             const urlAntes = await subirBase64AS3(foto_antes, "antes");
             const urlDespues = await subirBase64AS3(foto_despues, "despues");
 
