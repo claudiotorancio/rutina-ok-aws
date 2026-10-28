@@ -54,7 +54,7 @@ const actualizarEstadoOt = async (req, res) => {
 
             // Si la orden se completó, marcamos la intervención como realizada
             if (estado_destino === "COMPLETADA") {
-                await tx.intervencion.update({
+                await tx.intervencion.updateMany({
                     where: { id_orden: orden.id_orden },
                     data: { realizada: true }
                 });
