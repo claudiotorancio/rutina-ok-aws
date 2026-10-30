@@ -13,13 +13,12 @@ export const obtenerOrdenPorId = async (req, res) => {
         const orden = await prisma.ordenTrabajo.findUnique({
             where: { id_orden: idOrden },
             include: {
-                equipo: {
-                    include: { cliente: true } // Traemos el cliente a través del equipo
-                },
+                cliente: true, // <-- Ahora el cliente se incluye de forma directa
+                equipo: true,  // <-- El equipo es opcional (puede venir null si es un trabajo general)
                 tecnico: {
                     include: { usuario: true } // Traemos los datos del usuario técnico
                 },
-                intervenciones: true // ¡Acá traemos el historial técnico!
+                intervenciones: true // Historial técnico asociado a la orden
             }
         });
 
@@ -37,3 +36,5 @@ export const obtenerOrdenPorId = async (req, res) => {
         return res.status(500).json({ success: false, error: "Error interno del servidor." });
     }
 };
+
+export default obtenerOrdenPorId;

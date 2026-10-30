@@ -1,8 +1,7 @@
-
 import prisma from "../../../config/dbConnection.js";
 
 const sincronizarDatosMovil = async (req, res) => {
-    // Obtener el id del tecnico autenticado
+    // Obtener el id del técnico autenticado
     const id_tecnico_autenticado = req.usuarioMovil?.id_usuario;
 
     try {
@@ -15,7 +14,7 @@ const sincronizarDatosMovil = async (req, res) => {
 
         // Consultas en paralelo
         const [ordenesAsignadas, clientes, equipos, tecnicos] = await Promise.all([
-            // Ordenes pendientes
+            // Órdenes pendientes con la nueva estructura de relaciones
             prisma.ordenTrabajo.findMany({
                 where: {
                     id_tecnico: id_tecnico_autenticado,
@@ -23,18 +22,25 @@ const sincronizarDatosMovil = async (req, res) => {
                         notIn: ['COMPLETADA', 'REPROGRAMAR']
                     }
                 },
-                //Incluir equipos y clientes
+                // Incluimos cliente de forma directa y equipo de forma opcional
                 include: {
+                    cliente: {
+                        select: {
+                            id_cliente: true,
+                            nombre_empresa: true,
+                            direccion: true,
+                            contacto_nombre: true,
+                            telefono: true
+                        }
+                    },
                     equipo: {
-                        include: {
-                            cliente: {
-                                select: {
-                                    nombre_empresa: true,
-                                    direccion: true,
-                                    contacto_nombre: true,
-                                    telefono: true
-                                }
-                            }
+                        select: {
+                            id_equipo: true,
+                            nombre_equipo: true,
+                            marca: true,
+                            modelo: true,
+                            numero_serie: true,
+                            ubicacion_interna: true
                         }
                     }
                 },
@@ -49,7 +55,7 @@ const sincronizarDatosMovil = async (req, res) => {
             // Equipos
             prisma.equipo.findMany(),
 
-            // Tecncicos
+            // Técnicos
             prisma.tecnico.findMany({
                 include: {
                     usuario: {
@@ -69,10 +75,10 @@ const sincronizarDatosMovil = async (req, res) => {
             success: true,
             mensaje: "Sincronización exitosa",
             datos: {
-                ordenes: ordenesAsignadas, 
-                clientes: clientes,         
-                equipos: equipos,         
-                tecnicos: tecnicos         
+                ordenes: ordenesAsignadas,
+                clientes: clientes,
+                equipos: equipos,
+                tecnicos: tecnicos
             }
         });
 

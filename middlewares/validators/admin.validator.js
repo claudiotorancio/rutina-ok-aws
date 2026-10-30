@@ -14,7 +14,6 @@ export const validarRegistroTecnico = [
     validar.password("password", "Debe proporcionar una contraseña"),
     validar.campo("telefono", "El telefono es requerido", true),
     validar.campo("especialidad", "La especialdiad es requerida", false),
-    validar.matricula("matricula"),
     handleValidator
 
 ]

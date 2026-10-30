@@ -18,7 +18,7 @@ export const reasignarOrdenTrabajo = async (req, res) => {
             return res.status(404).json({ error: 'La orden de trabajo no existe.' });
         }
 
-        // 2. Tu misma validación: Verificamos que el nuevo técnico exista y esté disponible
+        // 2. Verificamos que el nuevo técnico exista y esté disponible
         const tecnicoExiste = await prisma.tecnico.findUnique({
             where: { id_usuario: idTecnico },
             include: { usuario: true }
@@ -34,7 +34,7 @@ export const reasignarOrdenTrabajo = async (req, res) => {
             });
         }
 
-        // 3. UPDATE en lugar de CREATE
+        // 3. UPDATE con la nueva estructura de relaciones
         const ordenActualizada = await prisma.ordenTrabajo.update({
             where: { id_orden: idOrden },
             data: {
@@ -42,9 +42,8 @@ export const reasignarOrdenTrabajo = async (req, res) => {
                 estado: 'PENDIENTE'
             },
             include: {
-                equipo: {
-                    include: { cliente: true }
-                },
+                cliente: true, // <-- El cliente ahora se incluye directamente
+                equipo: true,  // <-- El equipo es opcional (puede venir null)
                 tecnico: {
                     include: {
                         usuario: { select: { nombre: true, apellido: true } }
@@ -66,3 +65,5 @@ export const reasignarOrdenTrabajo = async (req, res) => {
         });
     }
 };
+
+export default reasignarOrdenTrabajo;
