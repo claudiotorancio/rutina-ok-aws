@@ -19,7 +19,6 @@ export const validarRegistroTecnico = [
 ]
 
 export const valdiarAsignarOT = [
-    validar.id("id_equipo", "Debe seleccionar un equipo válido de la lista"),
     validar.id("id_tecnico", "Debe asignar un técnico responsable a la orden"),
     validar.fecha("fecha_programada", "La fecha programada es obligatoria"),
     validar.campo("descripcion_tarea", "La orden debe llevar una descripción de la tarea", false),

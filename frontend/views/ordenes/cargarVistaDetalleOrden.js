@@ -105,7 +105,7 @@ export const cargarVistaDetalleOrden = async (idOrden) => {
                         <tbody>
             `;
             orden.intervenciones.forEach(interv => {
-                const observaciones = interv.detalles_json?.observaciones || interv.observaciones || 'Sin comentarios';
+                const observaciones = interv.detalles_json?.tecnico_comentario || 'Sin comentarios';
                 html += `
                     <tr class="border-secondary">
                         <td class="fw-bold text-accent">#${interv.id_intervencion}</td>
