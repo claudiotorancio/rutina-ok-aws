@@ -14,6 +14,7 @@ export class IntervencionService {
         };
     }
 
+    //Obtener intervenciones
     async getIntervenciones() {
         try {
             const response = await fetch(`${this.baseUrl}api/admin/intervenciones`, this.fetchOptions);
@@ -23,7 +24,22 @@ export class IntervencionService {
 
             return data;
         } catch (error) {
-            console.error('AdminService.getIntervenciones:', error);
+            console.error('IntervencioonesService.getIntervenciones:', error);
+            throw error;
+        }
+    }
+
+    //Obtener intervenciones por ID
+    async getIntervencionById(id) {
+        try {
+            const response = await fetch(`${this.baseUrl}api/admin/obtener-intervencion/${id}`, this.fetchOptions);
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.error || 'Error al obtener la intervencion');
+
+            return data;
+        } catch (error) {
+            console.error('IntervencionService.getIntervencionesById:', error);
             throw error;
         }
     }

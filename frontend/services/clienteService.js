@@ -36,9 +36,9 @@ export class ClienteService {
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.error || 'Error al crear cliente');
-            return data.cliente;
+            return data;
         } catch (error) {
-            console.error('AdminService.crearCliente:', error);
+            console.error('ClienteService.crearCliente:', error);
             throw error;
         }
     }

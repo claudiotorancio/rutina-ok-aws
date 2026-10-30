@@ -11,7 +11,7 @@ const s3Client = new S3Client({
     },
 });
 
-const registrarIntervencion = async (req, res) => {
+export const registrarIntervencion = async (req, res) => {
     const {
         id_orden,
         tipo,
@@ -98,4 +98,3 @@ const registrarIntervencion = async (req, res) => {
     }
 };
 
-export default registrarIntervencion;

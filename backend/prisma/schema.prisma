@@ -64,6 +64,7 @@ model Cliente {
   activo          Boolean  @default(true)
   creado_en       DateTime @default(now())
   equipos         Equipo[]
+  ordenes         OrdenTrabajo[]
 
   @@map("clientes")
 }
@@ -86,7 +87,8 @@ model Equipo {
 
 model OrdenTrabajo {
   id_orden             Int               @id @default(autoincrement())
-  id_equipo            Int
+  id_cliente           Int
+  id_equipo            Int?
   id_tecnico           Int 
   tipificacion         Tipificacion      @default(AIRE_ACONDICIONADO)
   estado               EstadoOrden       @default(PENDIENTE)
@@ -97,7 +99,8 @@ model OrdenTrabajo {
   fecha_respuesta      DateTime?
   creado_en            DateTime          @default(now())
   intervenciones       Intervencion[]
-  equipo               Equipo            @relation(fields: [id_equipo], references: [id_equipo])
+  cliente              Cliente          @relation(fields: [id_cliente], references: [id_cliente])
+  equipo               Equipo?            @relation(fields: [id_equipo], references: [id_equipo])
   tecnico              Tecnico           @relation(fields: [id_tecnico], references: [id_usuario])
 
   @@map("ordenes_trabajo")
@@ -107,7 +110,6 @@ model Intervencion {
   id_intervencion   Int              @id @default(autoincrement())
   id_orden          Int              
   tipo              TipoIntervencion 
-  realizada          Boolean          @default(false)
   //Los datos específicos de cada intervencion
   detalles_json     Json? 
 

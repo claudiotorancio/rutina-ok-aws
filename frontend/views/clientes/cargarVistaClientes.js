@@ -1,5 +1,6 @@
 import { mostrarLoader, mostrarError } from "../../config/helpersInterfaz.js";
 import { ClienteService } from "../../services/clienteService.js";
+import { cargarVistaCrearCliente } from "./cargarVistaNuevoCliente.js";
 
 const clienteService = new ClienteService()
 
@@ -14,7 +15,7 @@ export const cargarVistaClientes = async () => {
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold m-0"><i class="bi bi-building text-accent me-2"></i>Gestión de Clientes</h5>
-            <button class="btn btn-accent btn-sm"><i class="bi bi-plus-lg me-1"></i>Nuevo Cliente</button>
+            <button class="btn btn-accent btn-sm" id="btn-ir-nuevo-cliente"><i class="bi bi-plus-lg me-1"></i>Nuevo Cliente</button>
           </div>
           <div class="table-responsive">
             <table class="table table-dark table-hover align-middle mb-0">
@@ -54,6 +55,10 @@ export const cargarVistaClientes = async () => {
       </div>
     `;
     mainContainer.innerHTML = html;
+
+    document.getElementById('btn-ir-nuevo-cliente').addEventListener('click', () => {
+      cargarVistaCrearCliente();
+    });
   } catch (error) {
     console.error('Error al cargar clientes:', error);
     mostrarError('Error al obtener los clientes del sistema.');

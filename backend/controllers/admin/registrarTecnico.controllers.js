@@ -6,7 +6,7 @@ import helpers from "../../config/lib/helpers/helpers.js";
 export const registrarTecnico = async (req, res) => {
 
 
-    const { nombre, apellido, email, password, telefono, especialidad, matricula } = req.body;
+    const { nombre, apellido, email, password, telefono, especialidad } = req.body;
 
 
     //Validacion de existencia
@@ -44,8 +44,7 @@ export const registrarTecnico = async (req, res) => {
                 data: {
                     id_usuario: usuario.id_usuario,
                     especialidad: especialidad || null,
-                    matricula: matricula || null,
-                    estado_disponibilidad: 'DISPONIBLE' // Valor por defecto de tu enum
+                    estado_disponibilidad: 'DISPONIBLE' 
                 }
             });
 
@@ -58,12 +57,7 @@ export const registrarTecnico = async (req, res) => {
         // 3. Respuesta exitosa para el panel de administración
         res.status(201).json({
             message: "Técnico dado de alta en el sistema exitosamente.",
-            data: {
-                id: nuevoTecnicoCMMS.usuarioBase.id_usuario,
-                nombre: `${nuevoTecnicoCMMS.usuarioBase.nombre} ${nuevoTecnicoCMMS.usuarioBase.apellido}`,
-                email: nuevoTecnicoCMMS.usuarioBase.email,
-                matricula: nuevoTecnicoCMMS.tecnicoDetalle.matricula
-            }
+            data: nuevoTecnicoCMMS
         });
 
     } catch (error) {
@@ -76,34 +70,47 @@ export const registrarTecnico = async (req, res) => {
     }
 };
 
-export const desactivarTecnico = async (req, res) => {
-
+export const alternarEstadoTecnico = async (req, res) => {
     try {
         const { id } = req.params;
+        const idUsuario = parseInt(id);
 
-        // Actualizamos el campo activo a false utilizando el id_tecnico del modelo
-        const tecnicoDesactivado = await prisma.tecnico.update({
-            where: { id_tecnico: parseInt(id) },
-            data: { activo: false }
+        // 1. Buscar el estado actual del técnico
+        const tecnicoActual = await prisma.tecnico.findUnique({
+            where: { id_usuario: idUsuario },
+            select: { activo: true }
         });
+
+        // Si el técnico no existe, lanzamos un error para que lo capture el catch
+        if (!tecnicoActual) {
+            return res.status(404).json({ success: false, error: 'No se encontró el técnico especificado.' });
+        }
+
+        // 2. Invertir el valor actual
+        const nuevoEstado = !tecnicoActual.activo;
+
+        // 3. Actualizar con el nuevo estado alternado
+        const tecnicoActualizado = await prisma.tecnico.update({
+            where: { id_usuario: idUsuario },
+            data: { activo: nuevoEstado }
+        });
+
+        // Mensaje dinámico dependiendo de si se activó o desactivó
+        const accion = nuevoEstado ? 'activado' : 'desactivado';
 
         return res.status(200).json({
             success: true,
-            message: 'Técnico desactivado correctamente',
-            tecnico: tecnicoDesactivado
+            message: `Técnico ${accion} correctamente`,
+            tecnico: tecnicoActualizado
         });
 
     } catch (error) {
-        console.error("Error al desactivar técnico:", error);
+        console.error("Error al alternar estado del técnico:", error);
 
-        // Control opcional por si el ID no existe en la base de datos
         if (error.code === 'P2025') {
-            return res.status(404).json({ error: 'No se encontró el técnico especificado.' });
+            return res.status(404).json({ success: false, error: 'No se encontró el técnico especificado.' });
         }
 
-        return res.status(500).json({ error: 'Error interno al intentar desactivar el técnico.' });
+        return res.status(500).json({ success: false, error: 'Error interno al intentar cambiar el estado del técnico.' });
     }
 };
-
-
-

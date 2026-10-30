@@ -1,59 +1,49 @@
 import prisma from "../../../config/dbConnection.js";
-import { Tipificacion } from "../../../prisma/generated/index.js";
 
 const obtenerOrdenes = async (req, res) => {
     try {
-
-        //recuperar id del tecnico del token en el header
+        // Recuperar id del técnico del token en el header
         const id_tecnico_autenticado = req.usuarioMovil.id_usuario;
 
-        //Buscar sus ordenes
+        // Buscar sus órdenes con la nueva arquitectura (Cliente directo y Equipo opcional)
         const misOrdenes = await prisma.ordenTrabajo.findMany({
             where: {
                 id_tecnico: id_tecnico_autenticado,
-                //filtro el estado operativo
+                // Filtro el estado operativo
                 estado: {
                     notIn: ["COMPLETADA", "REPROGRAMAR"]
                 }
             },
             include: {
-                equipo: {
-                    include: {
-                        cliente: {
-                            select: {
-                                nombre_empresa: true,
-                                direccion: true,
-                                contacto_nombre: true,
-                                telefono: true
-                            }
-                        }
-                    }
-                }
+                cliente: true, // <-- Relación directa obligatoria
+                equipo: true   // <-- Relación opcional (puede venir null)
             },
             orderBy: {
                 fecha_programada: "asc"
             }
         });
 
-        //Creo el Json para appInventor
+        // Creo el JSON plano para App Inventor manejando de forma segura si no hay equipo
         const ordenFormateada = misOrdenes.map(o => ({
             id_orden: o.id_orden,
             fecha: o.fecha_programada,
             tipificacion: o.tipificacion,
             prioridad: o.prioridad,
             estado: o.estado,
-            tipo: o.tipo_mantenimiento,
             descripcion: o.descripcion_tarea,
-            equipo: o.equipo.nombre_equipo,
-            marca: o.equipo.marca,
-            modelo: o.equipo.modelo,
-            serie: o.equipo.numero_serie,
-            ubicacion_interna: o.equipo.ubicacion_interna,
-            // Datos del Cliente 
-            cliente_empresa: o.equipo.cliente.nombre_empresa,
-            cliente_direccion: o.equipo.cliente.direccion,
-            cliente_contacto: o.equipo.cliente.contacto_nombre,
-            cliente_telefono: o.equipo.cliente.telefono
+
+            // Datos del Equipo (Si es null, mandamos valores por defecto para que App Inventor no falle)
+            equipo: o.equipo ? o.equipo.nombre_equipo : "Trabajo General / Sin Equipo",
+            marca: o.equipo ? o.equipo.marca : "-",
+            modelo: o.equipo ? o.equipo.modelo : "-",
+            serie: o.equipo ? o.equipo.numero_serie : "-",
+            ubicacion_interna: o.equipo ? o.equipo.ubicacion_interna : o.cliente.direccion,
+
+            // Datos del Cliente (Ahora directos desde o.cliente)
+            cliente_empresa: o.cliente.nombre_empresa,
+            cliente_direccion: o.cliente.direccion,
+            cliente_contacto: o.cliente.contacto_nombre || "Sin contacto",
+            cliente_telefono: o.cliente.telefono || "Sin teléfono"
         }));
 
         return res.json({

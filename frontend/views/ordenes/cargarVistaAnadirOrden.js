@@ -1,11 +1,11 @@
 import { mostrarError, mostrarExito, mostrarLoader } from "../../config/helpersInterfaz.js";
 import { OrdenService } from "../../services/ordenService.js";
-import { EquipoService } from "../../services/equipoService.js";
+import { ClienteService } from "../../services/clienteService.js"; // <-- Cambiado de equipoService a clienteService
 import { TecnicoService } from "../../services/tecnicoService.js";
 import { cargarVistaOrdenes } from './cargarVistaOrdenes.js';
 
 const ordenService = new OrdenService();
-const equipoService = new EquipoService();
+const clienteService = new ClienteService(); // <-- Instanciamos clienteService
 const tecnicoService = new TecnicoService();
 
 const mainContainer = document.getElementById('main-container-content');
@@ -13,13 +13,13 @@ const mainContainer = document.getElementById('main-container-content');
 export const cargarVistaAnadirOrden = async () => {
   mostrarLoader();
   try {
-    // Obtenemos en paralelo los equipos y técnicos para poblar los selectores del formulario
-    const [equiposRes, tecnicosRes] = await Promise.all([
-      equipoService.getEquipos(),
+    // Obtenemos en paralelo los clientes y técnicos para poblar los selectores
+    const [clientesRes, tecnicosRes] = await Promise.all([
+      clienteService.getClientes(),
       tecnicoService.getTecnicos()
     ]);
 
-    const equipos = equiposRes?.equipos || equiposRes || [];
+    const clientes = clientesRes?.clientes || clientesRes || [];
     const tecnicos = tecnicosRes?.tecnicos || tecnicosRes || [];
 
     let html = `
@@ -37,7 +37,7 @@ export const cargarVistaAnadirOrden = async () => {
             <!-- Fila: Tipo de Mantenimiento y Prioridad -->
             <div class="row mb-3">
               <div class="col-md-6">
-                <label for="tipo_mantenimiento" class="form-label text-muted small fw-semibold">Tipificación</label>
+                <label for="tipificacion" class="form-label text-muted small fw-semibold">Tipificación</label>
                 <select class="form-select bg-dark text-light border-secondary" id="tipificacion" required>
                   <option value="" selected disabled>Seleccione el tipo...</option>
                   <option value="AIRE_ACONDICIONADO">Aire Acondicionado</option>
@@ -49,42 +49,49 @@ export const cargarVistaAnadirOrden = async () => {
                 <select class="form-select bg-dark text-light border-secondary" id="prioridad" required>
                   <option value="" selected disabled>Seleccione prioridad...</option>
                   <option value="BAJA">Baja</option>
-                  <option value="MEDIA">Media</option>
                   <option value="ALTA">Alta</option>
-                  <option value="URGENTE">Urgente</option>
                 </select>
               </div>
             </div>
 
-            <!-- Fila: Equipo y Técnico Asignado -->
+            <!-- Fila: Cliente Principal y Técnico Asignado -->
             <div class="row mb-3">
               <div class="col-md-6">
-                <label for="id_equipo" class="form-label text-muted small fw-semibold">Equipo / Activo</label>
-                <select class="form-select bg-dark text-light border-secondary" id="id_equipo" required>
-                  <option value="" selected disabled>Seleccione un equipo...</option>
-        `;
+                <label for="id_cliente" class="form-label text-muted small fw-semibold">Cliente *</label>
+                <select class="form-select bg-dark text-light border-secondary" id="id_cliente" required>
+                  <option value="" selected disabled>Seleccione un cliente...</option>
+    `;
 
-    equipos.forEach(eq => {
-      html += `<option value="${eq.id_equipo}">${eq.nombre_equipo} (${eq.cliente?.nombre_empresa || 'S/C'})</option>`;
+    clientes.forEach(cli => {
+      html += `<option value="${cli.id_cliente}">${cli.nombre_empresa} (${cli.direccion || 'S/C'})</option>`;
     });
 
     html += `
                 </select>
               </div>
               <div class="col-md-6 mt-3 mt-md-0">
-                <label for="id_tecnico" class="form-label text-muted small fw-semibold">Técnico Responsable</label>
+                <label for="id_tecnico" class="form-label text-muted small fw-semibold">Técnico Responsable *</label>
                 <select class="form-select bg-dark text-light border-secondary" id="id_tecnico" required>
                   <option value="" selected disabled>Seleccione un técnico...</option>
-        `;
-    console.log(tecnicos.usuario)
+    `;
+
     tecnicos.forEach(tec => {
       const nombreTec = tec.nombre ? `${tec.nombre} ${tec.apellido || ''}` : `Técnico #${tec.id_usuario}`;
-      html += `<option value="${tec.id_usuario}">${nombreTec} - ${tec.especialidad || 'General'}</option>`;
+      html += `<option value="${tec.id_usuario}">${nombreTec} (${tec.especialidad || 'General'})</option>`;
     });
 
     html += `
                 </select>
               </div>
+            </div>
+
+            <!-- Fila Opcional: Equipo / Activo (Ya no es obligatorio) -->
+            <div class="mb-3">
+              <label for="id_equipo" class="form-label text-muted small fw-semibold">Equipo / Activo Asociado (Opcional)</label>
+              <select class="form-select bg-dark text-light border-secondary" id="id_equipo">
+                <option value="" selected>Sin equipo específico (Trabajo general)</option>
+              </select>
+              <div class="form-text text-muted small">Al seleccionar un cliente, aquí se cargarán sus equipos asociados si los tuviera.</div>
             </div>
 
             <!-- Fila: Fecha Programada -->
@@ -112,8 +119,8 @@ export const cargarVistaAnadirOrden = async () => {
 
     mainContainer.innerHTML = html;
 
-    // Configurar los eventos del formulario post-renderizado
-    configurarEventosFormularioOrden();
+    // Configurar eventos adicionales (como el cambio de cliente para filtrar equipos si lo deseas)
+    configurarEventosFormularioOrden(clientes);
 
   } catch (error) {
     console.error('Error al cargar la vista de añadir orden:', error);
@@ -121,15 +128,29 @@ export const cargarVistaAnadirOrden = async () => {
   }
 };
 
-// Función auxiliar para manejar el submit y los botones de navegación interna
-function configurarEventosFormularioOrden() {
+// Función auxiliar para manejar el submit y los eventos
+function configurarEventosFormularioOrden(clientes) {
   const form = document.getElementById('form-crear-orden');
   const btnVolver = document.getElementById('btn-volver-ordenes');
   const btnCancelar = document.getElementById('btn-cancelar');
+  const selectCliente = document.getElementById('id_cliente');
+  const selectEquipo = document.getElementById('id_equipo');
 
-  // Botones para volver a la tabla de órdenes
+  // Dinámica opcional: cuando cambia el cliente, cargamos sus equipos en el select de equipos
+  selectCliente.addEventListener('change', (e) => {
+    const clienteId = parseInt(e.target.value);
+    const clienteSeleccionado = clientes.find(c => c.id_cliente === clienteId);
+
+    selectEquipo.innerHTML = '<option value="" selected>Sin equipo específico (Trabajo general)</option>';
+
+    if (clienteSeleccionado && clienteSeleccionado.equipos && clienteSeleccionado.equipos.length > 0) {
+      clienteSeleccionado.equipos.forEach(eq => {
+        selectEquipo.innerHTML += `<option value="${eq.id_equipo}">${eq.nombre_equipo} (S/N: ${eq.numero_serie || 'N/D'})</option>`;
+      });
+    }
+  });
+
   const volverAlListado = async () => {
-    // Acá llamás a tu función que renderiza de nuevo la tabla de órdenes
     await cargarVistaOrdenes();
   };
 
@@ -140,13 +161,12 @@ function configurarEventosFormularioOrden() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const idEquipo = document.getElementById('id_equipo').value;
+    const idCliente = document.getElementById('id_cliente').value;
     const idTecnico = document.getElementById('id_tecnico').value;
     const fechaProgramada = document.getElementById('fecha_programada').value;
 
-    // Validación rápida en cliente para dar feedback inmediato y amigable
-    if (!idEquipo) {
-      mostrarError('Por favor, seleccione un equipo o activo.');
+    if (!idCliente) {
+      mostrarError('Por favor, seleccione un cliente.');
       return;
     }
     if (!idTecnico) {
@@ -158,24 +178,27 @@ function configurarEventosFormularioOrden() {
       return;
     }
 
+    const equipoVal = document.getElementById('id_equipo').value;
+
     const nuevaOrden = {
-      tipo_mantenimiento: document.getElementById('tipificacion').value,
+      tipificacion: document.getElementById('tipificacion').value,
       prioridad: document.getElementById('prioridad').value,
-      id_equipo: parseInt(document.getElementById('id_equipo').value),
-      id_tecnico: parseInt(document.getElementById('id_tecnico').value),
+      id_cliente: parseInt(idCliente),                                // <-- ¡Obligatorio!
+      id_equipo: equipoVal ? parseInt(equipoVal) : null,              // <-- Opcional (null si no eligió)
+      id_tecnico: parseInt(idTecnico),
       fecha_programada: document.getElementById('fecha_programada').value,
       descripcion_tarea: document.getElementById('descripcion_tarea').value,
     };
 
+    console.log('Orden a enviar: ', nuevaOrden);
+
     try {
-      // Llamada a tu servicio para crear la orden en el backend
       await ordenService.asignarOrden(nuevaOrden);
       mostrarExito('Orden de trabajo creada con éxito.');
       volverAlListado();
     } catch (error) {
       console.error('Error al crear orden:', error);
       mostrarError(error.message || 'Error al registrar la orden de trabajo.');
-
     }
   });
 }

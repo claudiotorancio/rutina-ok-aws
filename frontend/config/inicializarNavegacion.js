@@ -3,7 +3,7 @@ import { cargarVistaClientes } from "../views/clientes/cargarVistaClientes.js";
 import { cargarVistaEquipos } from "../views/equipos/cargarVistaEquipos.js";
 import { cargarVistaOrdenes } from "../views/ordenes/cargarVistaOrdenes.js";
 import { cargarVistaTecnicos } from "../views/tecnicos/cargarVistaTecnicos.js";
-import { cargarVistaIntervenciones } from "../views/intervenciones/cargarVistaIntervenciones.js";
+import { cargarVistaIntervenciones } from "../views/intervenciones/vistaIntervenciones/cargarVistaIntervenciones.js";
 
 
 const navLinks = document.querySelectorAll('.sidebar .nav-link');

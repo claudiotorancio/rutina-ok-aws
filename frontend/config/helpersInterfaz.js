@@ -27,8 +27,8 @@ export const mostrarError = (mensaje) => {
 export const getBadgeEstado = (estado) => {
   const est = (estado || '').toLowerCase();
   if (est.includes('pendiente')) return `<span class="badge bg-danger">Pendiente</span>`;
-  if (est.includes('proceso') || est.includes('curso')) return `<span class="badge bg-warning text-dark">En Proceso</span>`;
-  if (est.includes('completad') || est.includes('finaliz')) return `<span class="badge bg-success">Completada</span>`;
+  if (est.includes('reprogramar') || est.includes('curso')) return `<span class="badge bg-warning text-dark">Reprogramar</span>`;
+  if (est.includes('completada') || est.includes('finaliz')) return `<span class="badge bg-success">Completada</span>`;
   return `<span class="badge bg-secondary">${estado || 'Sin estado'}</span>`;
 }
 

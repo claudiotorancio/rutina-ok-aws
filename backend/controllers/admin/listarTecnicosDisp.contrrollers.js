@@ -75,7 +75,8 @@ export const listarTecnicosDisponibilidad = async (req, res) => {
                 matricula: tecnico.matricula || 'Sin matrícula',
                 estado_disponibilidad: estadoActual,
                 total_ots_activas: tecnico.ordenes.length,
-                ordenes_trabajo: tecnico.ordenes // Acá viaja toda la info del equipo y cliente
+                ordenes_trabajo: tecnico.ordenes,
+                activo: tecnico.activo
             };
         });
 
