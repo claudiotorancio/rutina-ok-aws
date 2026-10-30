@@ -1,5 +1,6 @@
 import { mostrarError, mostrarLoader } from "../../../config/helpersInterfaz.js";
 import { IntervencionService } from "../../../services/intervencionService.js";
+import { cargarVistaDetalleOrden } from "../../ordenes/cargarVistaDetalleOrden.js";
 import { cargarVistaIntervenciones } from "../vistaIntervenciones/cargarVistaIntervenciones.js";
 import { renderEvidenciaFotosHtml } from "./evidenciaFotograficaHtml.js";
 import { renderizarChecklistSegunTipo } from "./renderizarSegunTipo.js";
@@ -8,7 +9,7 @@ import { extraerCoordenadas, seccionMapa } from "./seccionMapa.js";
 const intervencionService = new IntervencionService();
 const mainContainer = document.getElementById('main-container-content');
 
-export const cargarVistaDetalleIntervencion = async (idIntervencion) => {
+export const cargarVistaDetalleIntervencion = async (idIntervencion, callbackVolver = null) => {
     mostrarLoader();
     try {
         //Obtener respuesta del servicio
@@ -43,7 +44,7 @@ export const cargarVistaDetalleIntervencion = async (idIntervencion) => {
                     <!-- Encabezado con Botón Volver y Badges -->
                     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
                         <div class="d-flex align-items-center">
-                            <button class="btn btn-outline-secondary btn-sm me-3" id="btn-volver-intervenciones">
+                            <button class="btn btn-outline-secondary btn-sm me-3" id="btn-volver-intervencion">
                                 <i class="bi bi-arrow-left"></i> Volver
                             </button>
                             <h5 class="fw-bold m-0 text-light">
@@ -60,7 +61,10 @@ export const cargarVistaDetalleIntervencion = async (idIntervencion) => {
                         <div class="col-md-6">
                             <div class="p-3 bg-dark border border-secondary rounded h-100">
                                 <h6 class="fw-bold text-info mb-3"><i class="bi bi-clipboard-check me-2"></i>Información General</h6>
-                                <p class="mb-2"><strong>Orden de Trabajo:</strong> <span class="badge bg-secondary">OT #${idOrden}</span></p>
+                                <p class="mb-2"><strong>Orden de Trabajo:</strong> <span class="badge bg-secondary">OT #${idOrden} </span>  
+                                <!-- <button class="btn btn-outline-info btn-sm btn-ver-detalle" data-id="${idOrden}" title="Ver Detalle Completo">
+                                <i class="bi bi-eye"></i>
+                                </button> --></p>
                                 <p class="mb-2"><strong>Cliente:</strong> ${clienteNombre}</p>
                                 <p class="mb-0"><strong>Fecha Reporte:</strong> ${fechaIntervencionTexto}</p>
                             </div>
@@ -97,12 +101,24 @@ export const cargarVistaDetalleIntervencion = async (idIntervencion) => {
 
         mainContainer.innerHTML = html;
 
-        document.getElementById('btn-volver-intervenciones').addEventListener('click', () => {
-            cargarVistaIntervenciones();
+        //Ver detalle de Orden
+        // document.querySelectorAll('.btn-ver-detalle').forEach(btn => {
+        //     btn.addEventListener('click', () => {
+        //         const id = btn.getAttribute('data-id');
+        //         cargarVistaDetalleOrden(id, () => cargarVistaDetalleIntervencion(idIntervencion));
+        //     });
+        // });
+
+        document.getElementById('btn-volver-intervencion').addEventListener('click', () => {
+            if (callbackVolver && typeof callbackVolver === 'function') {
+                callbackVolver(); // volver al detalle de la orden
+            } else {
+                cargarVistaIntervenciones(); // Por defecto, va al listado general
+            }
         });
 
     } catch (error) {
         console.error('Error al cargar detalle de intervención:', error);
-        mostrarError('No se pudo cargar el detalle completo de la intervención.');
+        mostrarError('No se pudo cargar el detalle completo de la intervención.', () => cargarVistaIntervenciones());
     }
 };

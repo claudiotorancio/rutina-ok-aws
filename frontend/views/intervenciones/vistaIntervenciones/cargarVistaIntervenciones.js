@@ -74,7 +74,7 @@ export const cargarVistaIntervenciones = async () => {
       document.querySelectorAll('.btn-ver-detalle').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-id');
-          cargarVistaDetalleIntervencion(id);
+          cargarVistaDetalleIntervencion(id, () => cargarVistaIntervenciones());
         });
       });
     };
@@ -116,6 +116,6 @@ export const cargarVistaIntervenciones = async () => {
 
   } catch (error) {
     console.error('Error al cargar intervenciones:', error);
-    mostrarError('Error al cargar las intervenciones técnicas del servidor.');
+    mostrarError('Error al cargar las intervenciones técnicas del servidor.', () => cargarVistaIntervenciones());
   }
 };

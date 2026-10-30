@@ -19,7 +19,7 @@ export const cargarVistaAnadirTecnico = () => {
 
     } catch (error) {
         console.error('Error al cargar la vista de añadir técnico:', error);
-        mostrarError('No se pudo cargar el formulario.');
+        mostrarError('No se pudo cargar el formulario.', () => cargarVistaTecnicos());
     }
 };
 
@@ -31,7 +31,6 @@ const inicializarEventosFormulario = () => {
 
     // Botones para volver a la tabla de órdenes
     const volverAlListado = async () => {
-        // Acá llamás a tu función que renderiza de nuevo la tabla de órdenes
         await cargarVistaTecnicos();
     };
 
@@ -59,7 +58,7 @@ const inicializarEventosFormulario = () => {
 
         } catch (error) {
             console.error('Error al registrar técnico:', error);
-            mostrarError(error.message || 'Error al registrar el técnico.');
+            mostrarError(error.message || 'Error al registrar el técnico.', () => cargarVistaAnadirTecnico());
         }
     });
 };

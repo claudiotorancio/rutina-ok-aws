@@ -25,29 +25,35 @@ export const cargarVistaAnadirOrden = async () => {
 
     let html = `${cabeceraAnadirOrdenHTML()}`
 
+    //Select clientes
+    html += `
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="id_cliente" class="form-label text-muted small fw-semibold">Cliente *</label>
+           <select class="form-select bg-dark text-light border-secondary" id="id_cliente" required>
+              <option value="" selected disabled>Seleccione un cliente...</option>
+`
     clientes.forEach(cli => {
-      html += `<option value="${cli.id_cliente}">${cli.nombre_empresa} (${cli.direccion || 'S/C'})</option>`;
+      html += `<option value="${cli.id_cliente}" ${cli.activo ? '' : 'disabled'
+        }>${cli.nombre_empresa}(${cli.direccion || 'S/C'})</option>`;
     });
 
-    const todosInactivos = tecnicos.length > 0 && tecnicos.every(tec => !tec.activo);
-
+    //Select técnicos
     html += `
             </select>
           </div>
           <div class="col-md-6 mt-3 mt-md-0">
             <label for="id_tecnico" class="form-label text-muted small fw-semibold">Técnico Responsable *</label>
-            <select class="form-select bg-dark text-light border-secondary" id="id_tecnico" ${todosInactivos ? 'disabled' : ''} required>
+            <select class="form-select bg-dark text-light border-secondary" id="id_tecnico" required>
               <option value="" selected disabled>Seleccione un técnico...</option>
 `;
 
     tecnicos.forEach(tec => {
       const nombreTec = tec.nombre ? `${tec.nombre} ${tec.apellido || ''}` : `Técnico #${tec.id_usuario}`;
 
-      // 2. Evaluamos de forma individual: si el técnico no está activo, añadimos 'disabled' a su opción
-      const opcionDeshabilitada = tec.activo ? '' : 'disabled';
-
-      html += `<option value="${tec.id_usuario}" ${opcionDeshabilitada}>${nombreTec} (${tec.especialidad})</option>`;
+      html += `<option value="${tec.id_usuario}" ${tec.activo ? '' : 'disabled'}>${nombreTec} (${tec.especialidad})</option>`;
     });
+
 
     html += footerAnadirVistaHTML();
 
@@ -79,7 +85,7 @@ function configurarEventosFormularioOrden(clientes) {
 
     if (clienteSeleccionado && clienteSeleccionado.equipos && clienteSeleccionado.equipos.length > 0) {
       clienteSeleccionado.equipos.forEach(eq => {
-        selectEquipo.innerHTML += `<option value="${eq.id_equipo}">${eq.nombre_equipo} (S/N: ${eq.numero_serie || 'N/D'})</option>`;
+        selectEquipo.innerHTML += `<option value="${eq.id_equipo}" ${eq.activo ? '' : 'disabled'}>${eq.nombre_equipo} (S/N: ${eq.numero_serie || 'N/D'})</option>`;
       });
     }
   });

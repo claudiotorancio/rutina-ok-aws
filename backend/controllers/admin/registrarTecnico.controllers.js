@@ -70,6 +70,7 @@ export const registrarTecnico = async (req, res) => {
     }
 };
 
+//Actualizar estado tecnico
 export const alternarEstadoTecnico = async (req, res) => {
     try {
         const { id } = req.params;

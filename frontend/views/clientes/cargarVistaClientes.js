@@ -1,6 +1,8 @@
 import { mostrarLoader, mostrarError } from "../../config/helpersInterfaz.js";
 import { ClienteService } from "../../services/clienteService.js";
+import { mostrarModalConfirmacion } from "../mostrarModal.js";
 import { cargarVistaCrearCliente } from "./cargarVistaNuevoCliente.js";
+import { cargarVistaDetalleCliente } from "./cargarVistaDetalleCliente.js"; // <-- Importamos la nueva vista
 
 const clienteService = new ClienteService()
 
@@ -40,7 +42,16 @@ export const cargarVistaClientes = async () => {
             <td class="text-muted">${c.email || 'Sin correo'}</td>
             <td>${c.telefono || '-'}</td>
             <td class="text-end">
-              <button class="btn btn-outline-info btn-sm me-1"><i class="bi bi-pencil"></i></button>
+              <!-- Botón Ver Detalle -->
+              <button class="btn btn-outline-info btn-sm me-1 btn-ver-detalle" data-id="${c.id_cliente}" title="Ver Detalle">
+                <i class="bi bi-eye"></i>
+              </button>
+              <!-- Botón Toggle Estado -->
+              <button class="btn btn-outline-${c.activo ? 'warning' : 'success'} btn-sm me-1 btn-toggle-estado" 
+                      data-id="${c.id_cliente}" 
+                      title="${c.activo ? 'Pausar Cliente' : 'Activar Cliente'}">
+                <i class="bi ${c.activo ? 'bi-pause-fill' : 'bi-play-fill'}"></i>
+              </button>
             </td>
           </tr>
         `;
@@ -56,11 +67,44 @@ export const cargarVistaClientes = async () => {
     `;
     mainContainer.innerHTML = html;
 
+    // Ir a formulario de nuevo cliente
     document.getElementById('btn-ir-nuevo-cliente').addEventListener('click', () => {
       cargarVistaCrearCliente();
     });
+
+    // Delegación de eventos para la tabla (Ver detalle y Toggle estado)
+    const tablaCuerpo = document.querySelector('tbody');
+    tablaCuerpo.addEventListener('click', async (e) => {
+      const btnVer = e.target.closest('.btn-ver-detalle');
+      const btnToggle = e.target.closest('.btn-toggle-estado');
+
+      // 1. Ver Detalle
+      if (btnVer) {
+        const idCliente = btnVer.getAttribute('data-id');
+        cargarVistaDetalleCliente(idCliente);
+        return;
+      }
+
+      // 2. Toggle Estado
+      if (btnToggle) {
+        const idCliente = btnToggle.getAttribute('data-id');
+
+        const confirmacion = await mostrarModalConfirmacion('Confirmación', '¿Desea actualizar el estado del cliente?');
+        if (!confirmacion) return;
+
+        try {
+          mostrarLoader();
+          await clienteService.toggleEstadoCliente(idCliente);
+          await cargarVistaClientes();
+        } catch (error) {
+          console.error('Error al cambiar el estado del cliente:', error);
+          mostrarError('No se pudo actualizar el estado del cliente.', () => cargarVistaClientes());
+        }
+      }
+    });
+
   } catch (error) {
     console.error('Error al cargar clientes:', error);
-    mostrarError('Error al obtener los clientes del sistema.');
+    mostrarError('Error al obtener los clientes del sistema.', () => cargarVistaClientes());
   }
-}
+};

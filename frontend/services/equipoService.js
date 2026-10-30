@@ -29,7 +29,7 @@ export class EquipoService {
 
     async crearEquipo(equipoData) {
         try {
-            const response = await fetch(`${this.baseUrl}api/admin//equipos`, {
+            const response = await fetch(`${this.baseUrl}api/admin/equipos`, {
                 ...this.fetchOptions,
                 method: 'POST',
                 body: JSON.stringify(equipoData)
@@ -38,7 +38,24 @@ export class EquipoService {
             if (!response.ok) throw new Error(data.error || 'Error al crear equipo');
             return data.equipo;
         } catch (error) {
-            console.error('AdminService.crearEquipo:', error);
+            console.error('EquipoService.crearEquipo:', error);
+            throw error;
+        }
+    }
+
+    //Cambiar estado del equipo
+    async toggleEstadoEquipo(id) {
+        try {
+            const response = await fetch(`${this.baseUrl}api/admin/equipo/${id}/desactivar`, {
+                ...this.fetchOptions,
+                method: 'PATCH',
+                body: JSON.stringify()
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Error al actualizar equipo');
+            return data.equipo;
+        } catch (error) {
+            console.error('EquipoService.toogleEstadoEquipo:', error);
             throw error;
         }
     }

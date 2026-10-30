@@ -3,13 +3,14 @@ import { mostrarModalRespuesta, mostrarModalSeleccionTecnico } from "../mostrarM
 import { OrdenService } from "../../services/ordenService.js";
 import { TecnicoService } from "../../services/tecnicoService.js";
 import { cargarVistaOrdenes } from "./cargarVistaOrdenes.js";
+import { cargarVistaDetalleIntervencion } from "../intervenciones/vistaDetallesIntervenciones/cargarVistaDetalleIntervencion.js";
 
 const ordenService = new OrdenService();
 const tecnicoService = new TecnicoService();
 
 const mainContainer = document.getElementById('main-container-content');
 
-export const cargarVistaDetalleOrden = async (idOrden) => {
+export const cargarVistaDetalleOrden = async (idOrden, callbackVolver = null) => {
     mostrarLoader();
     try {
         const orden = await ordenService.getOrdenById(idOrden);
@@ -61,7 +62,7 @@ export const cargarVistaDetalleOrden = async (idOrden) => {
                 <div class="col-md-3">
                     <div class="p-3 border border-secondary rounded bg-dark">
                         <small class="text-muted d-block mb-1"><i class="bi bi-tags me-1"></i>Tipificación</small>
-                        <span class="fw-bold">${orden.tipificacion}</span>
+                        <span class="fw-bold text-break">${orden.tipificacion}</span>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -100,6 +101,7 @@ export const cargarVistaDetalleOrden = async (idOrden) => {
                                 <th># ID</th>
                                 <th>Fecha / Observaciones</th>
                                 <th>Técnico</th>
+                                 <th>Accion</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -111,6 +113,7 @@ export const cargarVistaDetalleOrden = async (idOrden) => {
                         <td class="fw-bold text-accent">#${interv.id_intervencion}</td>
                         <td>${fechaFormateada} / ${observaciones}</td>
                         <td>${tecnicoNom}</td>
+                        <td> <button class="btn btn-outline-info btn-sm mb-1 btn-ver-detalle" title="Ver Detalle" data-id="${interv.id_intervencion}"><i class="bi bi-eye"></i></button></td>
                     </tr>
                 `;
             });
@@ -129,9 +132,22 @@ export const cargarVistaDetalleOrden = async (idOrden) => {
 
         mainContainer.innerHTML = html;
 
-        // Evento para el botón Volver
+        //Verdetalle de intervencion
+        document.querySelectorAll('.btn-ver-detalle').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-id');
+                mostrarLoader();
+                await cargarVistaDetalleIntervencion(id, () => cargarVistaDetalleOrden(orden.id_orden));
+            });
+        });
+
+        //volver segun el estado
         document.getElementById('btn-volver').addEventListener('click', () => {
-            cargarVistaOrdenes();
+            if (callbackVolver && typeof callbackVolver === 'function') {
+                callbackVolver(); // volver al detalle de la orden
+            } else {
+                cargarVistaOrdenes(); // Por defecto, va al listado general
+            }
         });
 
         // Evento para Reasignar Orden
@@ -163,12 +179,12 @@ export const cargarVistaDetalleOrden = async (idOrden) => {
 
             } catch (err) {
                 console.error("Error al reasignar:", err);
-                mostrarModalRespuesta("Error", err.message || "No se pudo reasignar la orden.", "error");
+                mostrarError("No se pudo reasignar la orden.", () => cargarVistaDetalleOrden(idOrden));
             }
         });
 
     } catch (error) {
         console.error('Error al cargar detalle de orden:', error);
-        mostrarError('No se pudo cargar el detalle de la orden.');
+        mostrarError('No se pudo cargar el detalle de la orden.', () => cargarVistaDetalleOrden());
     }
 };

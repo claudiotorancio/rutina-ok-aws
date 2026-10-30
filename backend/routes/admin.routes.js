@@ -6,9 +6,8 @@ import { esAdministrador, estaAuthenticado } from "../middlewares/auth.middlewar
 import { actualizarTecnico, listarTecnicosDisponibilidad } from "../controllers/admin/listarTecnicosDisp.contrrollers.js";
 import asignarOrdenTrabajo from "../controllers/admin/asignarOrden.controllers.js";
 import listarOrdenesAdmin from "../controllers/admin/lsitarOrdenes.controllers.js";
-import { actualizarCliente, crearCliente, listarClientes } from "../controllers/admin/clientes.controllers.js";
-import { desactivarCliente } from "../controllers/admin/clientes.controllers.js";
-import { actualizarEquipo, crearEquipo, desactivarEquipo, listarEquipos } from "../controllers/admin/equipos.controllers.js";
+import { actualizarCliente, alternarEstadoCliente, crearCliente, listarClientes, obtenerClienteById } from "../controllers/admin/clientes.controllers.js";
+import { actualizarEquipo, alternarEstadoEquipo, crearEquipo, listarEquipos } from "../controllers/admin/equipos.controllers.js";
 import { obtenerIntervencioById, obtenerIntervenciones } from "../controllers/admin/obtenerIntervenciones.controllers.js";
 
 
@@ -29,13 +28,14 @@ router.get("/listar-ordenes", estaAuthenticado, esAdministrador, listarOrdenesAd
 router.get('/clientes', estaAuthenticado, esAdministrador, listarClientes);
 router.post('/clientes', validarCrearCliente, estaAuthenticado, esAdministrador, crearCliente);
 router.put('/clientes/:id', estaAuthenticado, esAdministrador, actualizarCliente);
-router.patch('/clientes/:id/desactivar', estaAuthenticado, esAdministrador, desactivarCliente);
+router.patch('/clientes/:id/desactivar', estaAuthenticado, esAdministrador, alternarEstadoCliente);
+router.get("/obtener-cliente/:id", estaAuthenticado, esAdministrador, obtenerClienteById);
 
 //================ EQUIPOS =====================
 router.get('/equipos', estaAuthenticado, esAdministrador, listarEquipos);
 router.post('/equipos', validarCrearEquipo, estaAuthenticado, esAdministrador, crearEquipo);
 router.put('/equipos/:id', estaAuthenticado, esAdministrador, actualizarEquipo);
-router.patch('/equipos/:id/desactivar', estaAuthenticado, esAdministrador, desactivarEquipo);
+router.patch('/equipo/:id/desactivar', estaAuthenticado, esAdministrador, alternarEstadoEquipo);
 
 //================ INTERVENCIONES =====================
 router.get("/intervenciones", estaAuthenticado, esAdministrador, obtenerIntervenciones);

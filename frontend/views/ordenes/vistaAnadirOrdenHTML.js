@@ -32,13 +32,6 @@ export const cabeceraAnadirOrdenHTML = () => {
                 </select>
               </div>
             </div>
-
-            <!-- Fila: Cliente Principal y Técnico Asignado -->
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="id_cliente" class="form-label text-muted small fw-semibold">Cliente *</label>
-                <select class="form-select bg-dark text-light border-secondary" id="id_cliente" required>
-                  <option value="" selected disabled>Seleccione un cliente...</option>
     `;
 }
 

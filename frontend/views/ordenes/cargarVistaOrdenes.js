@@ -123,6 +123,6 @@ export const cargarVistaOrdenes = async () => {
 
   } catch (error) {
     console.error('Error al cargar órdenes de trabajo:', error);
-    mostrarError('Error al cargar las órdenes de trabajo del servidor.');
+    mostrarError('Error al cargar las órdenes de trabajo del servidor.', () => cargarVistaOrdenes());
   }
 };

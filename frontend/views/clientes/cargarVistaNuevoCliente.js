@@ -40,7 +40,7 @@ export const cargarVistaCrearCliente = async () => {
 
         } catch (error) {
             console.error('Error al crear el cliente:', error);
-            mostrarError('No se pudo registrar el nuevo cliente en el servidor.');
+            mostrarError('No se pudo registrar el nuevo cliente en el servidor.', () => cargarVistaClientes());
         }
     });
 };

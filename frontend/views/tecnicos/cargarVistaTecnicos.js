@@ -98,13 +98,13 @@ export const cargarVistaTecnicos = async () => {
 
         } catch (error) {
           console.error('Error al cambiar el estado del técnico:', error);
-          mostrarError('No se pudo actualizar el estado del técnico.');
+          mostrarError('No se pudo actualizar el estado del técnico.', () => cargarVistaTecnicos());
         }
       });
     });
 
   } catch (error) {
     console.error('Error al cargar técnicos:', error);
-    mostrarError('Error al cargar la lista de técnicos. Verifique sesión de admin.');
+    mostrarError('Error al cargar la lista de técnicos. Verifique sesión de admin.', () => cargarVistaTecnicos());
   }
 }
