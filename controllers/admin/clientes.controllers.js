@@ -88,24 +88,86 @@ export const actualizarCliente = async (req, res) => {
     }
 };
 
-// DESACTIVAR CLIENTE
-export const desactivarCliente = async (req, res) => {
+
+
+//Actualizar estado cliente
+export const alternarEstadoCliente = async (req, res) => {
     try {
         const { id } = req.params;
+        const idCliente = parseInt(id);
 
-        const clienteDesactivado = await prisma.cliente.update({
-            where: { id_cliente: parseInt(id) },
-            data: { activo: false } // Cambiamos el estado a falso
+        // 1. Buscar el estado actual del técnico
+        const clienteActual = await prisma.cliente.findUnique({
+            where: { id_cliente: idCliente },
+            select: { activo: true }
         });
+
+        // Si el técnico no existe, lanzamos un error para que lo capture el catch
+        if (!clienteActual) {
+            return res.status(404).json({ success: false, error: 'No se encontró el cliente especificado.' });
+        }
+
+        // 2. Invertir el valor actual
+        const nuevoEstado = !clienteActual.activo;
+
+        // 3. Actualizar con el nuevo estado alternado
+        const clienteActualizado = await prisma.cliente.update({
+            where: { id_cliente: idCliente },
+            data: { activo: nuevoEstado }
+        });
+
+        // Mensaje dinámico dependiendo de si se activó o desactivó
+        const accion = nuevoEstado ? 'activado' : 'desactivado';
 
         return res.status(200).json({
             success: true,
-            message: 'Cliente desactivado correctamente',
-            cliente: clienteDesactivado
+            message: `Cliente ${accion} correctamente`,
+            cliente: clienteActualizado
         });
+
     } catch (error) {
-        console.error("Error al desactivar cliente:", error);
-        return res.status(500).json({ error: 'Error interno al desactivar el cliente.' });
+        console.error("Error al alternar estado del cliente:", error);
+
+        if (error.code === 'P2025') {
+            return res.status(404).json({ success: false, error: 'No se encontró el cliente especificado.' });
+        }
+
+        return res.status(500).json({ success: false, error: 'Error interno al intentar cambiar el estado del cliente.' });
     }
 };
+
+// Obtener Cliente por ID (con el detalle completo actualizado)
+export const obtenerClienteById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (isNaN(id)) {
+            return res.status(400).json({ success: false, message: 'ID inválido.' });
+        }
+
+        const cliente = await prisma.cliente.findUnique({
+            where: {
+                id_cliente: parseInt(id)
+            },
+            include: {
+                ordenes: true,
+                equipos: true
+            }
+        });
+
+        if (!cliente) {
+            return res.status(404).json({ success: false, message: 'El cliente no existe.' });
+        }
+
+        return res.status(200).json({
+            success: true,
+            cliente: cliente
+        });
+
+    } catch (error) {
+        console.error("Error al obtener detalle del cliente:", error);
+        return res.status(500).json({ success: false, error: "Error interno del servidor." });
+    }
+};
+
 

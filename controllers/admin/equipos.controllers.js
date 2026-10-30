@@ -156,24 +156,49 @@ export const actualizarEquipo = async (req, res) => {
     }
 };
 
-// DESACTIVAR EQUIPO
-export const desactivarEquipo = async (req, res) => {
+//Actualizar estado cliente
+export const alternarEstadoEquipo = async (req, res) => {
     try {
         const { id } = req.params;
+        const idEquipo = parseInt(id);
 
-        const equipoDesactivado = await prisma.equipo.update({
-            where: { id_equipo: parseInt(id) },
-            data: { activo: false } // Cambiamos el estado a falso
+        // 1. Buscar el estado actual del técnico
+        const equipoActual = await prisma.equipo.findUnique({
+            where: { id_equipo: idEquipo },
+            select: { activo: true }
         });
+
+        // Si el técnico no existe, lanzamos un error para que lo capture el catch
+        if (!equipoActual) {
+            return res.status(404).json({ success: false, error: 'No se encontró el equipo especificado.' });
+        }
+
+        // 2. Invertir el valor actual
+        const nuevoEstado = !equipoActual.activo;
+
+        // 3. Actualizar con el nuevo estado alternado
+        const equipoActualizado = await prisma.equipo.update({
+            where: { id_equipo: idEquipo },
+            data: { activo: nuevoEstado }
+        });
+
+        // Mensaje dinámico dependiendo de si se activó o desactivó
+        const accion = nuevoEstado ? 'activado' : 'desactivado';
 
         return res.status(200).json({
             success: true,
-            message: 'Cliente desactivado correctamente',
-            cliente: equipoDesactivado
+            message: `Cliente ${accion} correctamente`,
+            cliente: equipoActualizado
         });
+
     } catch (error) {
-        console.error("Error al desactivar cliente:", error);
-        return res.status(500).json({ error: 'Error interno al desactivar el cliente.' });
+        console.error("Error al alternar estado del equipo:", error);
+
+        if (error.code === 'P2025') {
+            return res.status(404).json({ success: false, error: 'No se encontró el equipo especificado.' });
+        }
+
+        return res.status(500).json({ success: false, error: 'Error interno al intentar cambiar el estado del equipo.' });
     }
 };
 
