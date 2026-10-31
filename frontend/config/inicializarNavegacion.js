@@ -5,6 +5,10 @@ import { cargarVistaEquipos } from "../views/equipos/cargarVistaEquipos.js";
 import { cargarVistaOrdenes } from "../views/ordenes/cargarVistaOrdenes.js";
 import { cargarVistaTecnicos } from "../views/tecnicos/cargarVistaTecnicos.js";
 import { cargarVistaIntervenciones } from "../views/intervenciones/vistaIntervenciones/cargarVistaIntervenciones.js";
+// import { IntervencionService } from "../services/intervencionService.js";
+import { actualizarNotificacionesIntervenciones } from "../views/dashboard/notificacionIntervenciones.js";
+
+// const intervencionService = new IntervencionService();
 
 const navLinks = document.querySelectorAll('.sidebar .nav-link');
 
@@ -30,6 +34,9 @@ export const navegarA = async (tab) => {
             break;
         case 'intervenciones':
             await cargarVistaIntervenciones();
+            // await intervencionService.patchIntervencionesVistas();
+            //quitar el badge de notificacion
+            actualizarNotificacionesIntervenciones(0);
             break;
         case 'clientes':
             await cargarVistaClientes();
@@ -64,4 +71,5 @@ export const inicializarNavegacion = () => {
             await navegarA(tab);
         });
     });
+
 };

@@ -2,6 +2,7 @@ import { mostrarError, mostrarLoader } from "../../../config/helpersInterfaz.js"
 import { IntervencionService } from "../../../services/intervencionService.js";
 import { cargarVistaDetalleIntervencion } from "../vistaDetallesIntervenciones/cargarVistaDetalleIntervencion.js";
 import { vistaIntervencionesHTML } from "./vistaIntervencionesHTML.js";
+// import { actualizarNotificacionesIntervenciones } from "../../dashboard/notificacionIntervenciones.js";
 
 const intervencionService = new IntervencionService();
 const mainContainer = document.getElementById('main-container-content');
@@ -11,6 +12,7 @@ export const cargarVistaIntervenciones = async () => {
   try {
     // Llamada al servicio que consume el endpoint /api/admin/intervenciones
     const respuesta = await intervencionService.getIntervenciones();
+
     const intervenciones = respuesta.intervenciones || [];
 
     //Renderizar la vista HTML ppal
@@ -47,7 +49,7 @@ export const cargarVistaIntervenciones = async () => {
         }) : 'Fecha N/A';
 
         filasHtml += `
-          <tr class="border-secondary">
+          <tr class="border-secondary ${i.visto ? '' : 'table-active'}">
             <td class="fw-bold text-accent">#${idIntervencion}</td>
             <td>
               <span class="badge bg-secondary mb-1">OT #${idOrden}</span>
@@ -72,8 +74,12 @@ export const cargarVistaIntervenciones = async () => {
       tbody.innerHTML = filasHtml;
 
       document.querySelectorAll('.btn-ver-detalle').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
+
           const id = btn.getAttribute('data-id');
+    
+          await intervencionService.patchIntervencionesVistas(id);
+
           cargarVistaDetalleIntervencion(id, () => cargarVistaIntervenciones());
         });
       });

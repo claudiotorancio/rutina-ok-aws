@@ -42,7 +42,7 @@ export const cargarVistaDetalleIntervencion = async (idIntervencion, callbackVol
                 <div class="custom-card p-4">
                     
                     <!-- Encabezado con Botón Volver y Badges -->
-                    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                         <div class="d-flex align-items-center">
                             <button class="btn btn-outline-secondary btn-sm me-3" id="btn-volver-intervencion">
                                 <i class="bi bi-arrow-left"></i> Volver

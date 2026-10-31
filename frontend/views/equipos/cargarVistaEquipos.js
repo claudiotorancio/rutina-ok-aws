@@ -26,9 +26,9 @@ export const cargarVistaEquipos = async () => {
           <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
             <h5 class="fw-bold m-0"><i class="bi bi-cpu text-accent me-2"></i>Equipos / HVAC e Instalaciones</h5>
             
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex-sm align-items-center gap-2">
               <!-- Select de Filtrado por Cliente -->
-              <select class="form-select form-select-sm bg-dark text-light border-secondary" id="filtro-cliente" style="width: 220px;">
+              <select class="form-select form-select-sm bg-dark text-light border-secondary mb-3" id="filtro-cliente" style="width: 220px;">
                 <option value="todos">Todos los Clientes</option>
     `;
 
