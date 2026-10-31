@@ -78,3 +78,46 @@ export const obtenerIntervencioById = async (req, res) => {
         return res.status(500).json({ success: false, error: "Error interno del servidor." });
     }
 };
+
+//Contar interv. para mostrar en nortificación
+export const contarIntervencionesNuevas = async (req, res) => {
+    try {
+        const cantidadNoVistas = await prisma.intervencion.count({
+            where: {
+                visto: false
+            }
+        });
+
+        return res.json({ success: true, count: cantidadNoVistas });
+
+    } catch (error) {
+        console.error("Error al obtener detalle de la intervención:", error);
+        return res.status(500).json({ success: false, error: "Error interno del servidor." });
+
+    }
+}
+
+//Contar interv. para mostrar en nortificación
+export const marcarIntervencionesComoVistas = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (isNaN(id)) {
+            return res.status(400).json({ success: false, message: 'ID inválido.' });
+        }
+
+        await prisma.intervencion.update({
+            where: {
+                id_intervencion: parseInt(id)
+            },
+            data: { visto: true }
+        });
+
+        return res.json({ success: true });
+
+    } catch (error) {
+        console.error("Error al obtener detalle de la intervención:", error);
+        return res.status(500).json({ success: false, error: "Error interno del servidor." });
+
+    }
+}
