@@ -8,7 +8,7 @@ import asignarOrdenTrabajo from "../controllers/admin/asignarOrden.controllers.j
 import listarOrdenesAdmin from "../controllers/admin/lsitarOrdenes.controllers.js";
 import { actualizarCliente, alternarEstadoCliente, crearCliente, listarClientes, obtenerClienteById } from "../controllers/admin/clientes.controllers.js";
 import { actualizarEquipo, alternarEstadoEquipo, crearEquipo, listarEquipos } from "../controllers/admin/equipos.controllers.js";
-import { obtenerIntervencioById, obtenerIntervenciones } from "../controllers/admin/obtenerIntervenciones.controllers.js";
+import { contarIntervencionesNuevas, marcarIntervencionesComoVistas, obtenerIntervencioById, obtenerIntervenciones } from "../controllers/admin/obtenerIntervenciones.controllers.js";
 
 
 const router = Router();
@@ -40,5 +40,7 @@ router.patch('/equipo/:id/desactivar', estaAuthenticado, esAdministrador, altern
 //================ INTERVENCIONES =====================
 router.get("/intervenciones", estaAuthenticado, esAdministrador, obtenerIntervenciones);
 router.get("/obtener-intervencion/:id", estaAuthenticado, esAdministrador, obtenerIntervencioById);
+router.get("/contar-intervenciones-nuevas", estaAuthenticado, esAdministrador, contarIntervencionesNuevas);
+router.patch("/marcar-intervenciones-vistas/:id", estaAuthenticado, esAdministrador, marcarIntervencionesComoVistas);
 
 export default router;
