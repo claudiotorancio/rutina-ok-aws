@@ -57,13 +57,13 @@ export const validar = {
 
     password: (campo, mensaje) =>
         body(campo)
-            .notEmpty().withMessage(mensaje)
-            .bail()
-            .isLength({ min: 8 }).withMessage("La contraseña debe tener al menos 8 carácteres")
-            .bail()
-            .matches(/\d/).withMessage("La contraseña debe contener al menos un número.")
-            .bail()
-            .matches(/[a-zA-Z]/).withMessage("La contraseña debe contener al menos una letra."),
+            .notEmpty().withMessage(mensaje),
+            // .bail()
+            // .isLength({ min: 8 }).withMessage("La contraseña debe tener al menos 8 carácteres")
+            // .bail()
+            // .matches(/\d/).withMessage("La contraseña debe contener al menos un número.")
+            // .bail()
+            // .matches(/[a-zA-Z]/).withMessage("La contraseña debe contener al menos una letra."),
 
     fecha: (campo, mensaje) =>
         body(campo)
