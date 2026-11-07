@@ -1,6 +1,7 @@
 // src/login.js
 import { AuthService } from "../services/authService.js";
 import { mostrarModalRespuesta } from "../views/mostrarModal.js";
+import { mostrarError } from "../config/helpersInterfaz.js"
 
 
 const authService = new AuthService();
@@ -19,9 +20,9 @@ formLogin.addEventListener('submit', async (e) => {
             const esProduccion = process.env.NODE_ENV === 'production'
             window.location.href = esProduccion ? '/panel-admin' : '/panel.html';
         } else {
-            mostrarModalRespuesta('Acceso no autorizado para este usuario.');
+            mostrarError('Acceso no autorizado para este usuario.');
         }
     } catch (error) {
-        mostrarModalRespuesta(error.message);
+        mostrarError(error.message);
     }
 });
