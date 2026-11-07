@@ -1,4 +1,4 @@
-import { mostrarLoader, mostrarError, getBadgeEstado } from "../../config/helpersInterfaz.js";
+import { mostrarLoader, mostrarError, getBadgeEstado, mostrarErrorServidor } from "../../config/helpersInterfaz.js";
 import { ClienteService } from "../../services/clienteService.js";
 import { cargarVistaClientes } from "./cargarVistaClientes.js";
 
@@ -161,6 +161,6 @@ export const cargarVistaDetalleCliente = async (idCliente) => {
 
     } catch (error) {
         console.error('Error al cargar detalle del cliente:', error);
-        mostrarError('No se pudo obtener el detalle del cliente.', () => cargarVistaClientes());
+        mostrarErrorServidor('No se pudo obtener el detalle del cliente.', () => cargarVistaClientes());
     }
 };

@@ -1,4 +1,4 @@
-import { mostrarLoader, mostrarError } from "../../config/helpersInterfaz.js";
+import { mostrarLoader, mostrarErrorServidor } from "../../config/helpersInterfaz.js";
 import { ClienteService } from "../../services/clienteService.js";
 import { cargarVistaClientes } from "./cargarVistaClientes.js"; // Para volver al listado
 import { vistaNuevoClienteHTML } from "./vistaNuevoClienteHTML.js";
@@ -40,7 +40,7 @@ export const cargarVistaCrearCliente = async () => {
 
         } catch (error) {
             console.error('Error al crear el cliente:', error);
-            mostrarError('No se pudo registrar el nuevo cliente en el servidor.', () => cargarVistaClientes());
+            mostrarErrorServidor('No se pudo registrar el nuevo cliente en el servidor.', () => cargarVistaClientes());
         }
     });
 };

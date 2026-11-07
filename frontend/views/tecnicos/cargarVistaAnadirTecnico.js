@@ -1,5 +1,5 @@
 import { TecnicoService } from "../../services/tecnicoService.js";
-import { mostrarExito, mostrarError } from "../../config/helpersInterfaz.js";
+import { mostrarExito, mostrarErrorServidor } from "../../config/helpersInterfaz.js";
 import { cargarVistaTecnicos } from "./cargarVistaTecnicos.js";
 import { mostrarModalConfirmacion } from "../mostrarModal.js";
 import { vistaTecnicosHTML } from "./vistaAnadirTecnicosHTML.js";
@@ -19,7 +19,7 @@ export const cargarVistaAnadirTecnico = () => {
 
     } catch (error) {
         console.error('Error al cargar la vista de añadir técnico:', error);
-        mostrarError('No se pudo cargar el formulario.', () => cargarVistaTecnicos());
+        mostrarErrorServoidor('No se pudo cargar el formulario.', () => cargarVistaTecnicos());
     }
 };
 
@@ -58,7 +58,7 @@ const inicializarEventosFormulario = () => {
 
         } catch (error) {
             console.error('Error al registrar técnico:', error);
-            mostrarError(error.message || 'Error al registrar el técnico.', () => cargarVistaAnadirTecnico());
+            mostrarErrorServidor(error.message || 'Error al registrar el técnico.', () => cargarVistaAnadirTecnico());
         }
     });
 };

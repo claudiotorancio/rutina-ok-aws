@@ -1,4 +1,4 @@
-import { mostrarError, mostrarLoader } from "../../config/helpersInterfaz.js";
+import {  mostrarErrorServidor, mostrarLoader } from "../../config/helpersInterfaz.js";
 import { EquipoService } from "../../services/equipoService.js";
 import { ClienteService } from "../../services/clienteService.js"; // <-- Importamos para traer los clientes del filtro
 import { mostrarModalConfirmacion } from "../mostrarModal.js";
@@ -137,13 +137,13 @@ export const cargarVistaEquipos = async () => {
           await cargarVistaEquipos();
         } catch (error) {
           console.error('Error al cambiar el estado del equipo:', error);
-          mostrarError('No se pudo actualizar el estado del equipo.');
+          mostrarErrorServidor('No se pudo actualizar el estado del equipo.', () => cargarVistaEquipos());
         }
       });
     });
 
   } catch (error) {
     console.error('Error al cargar equipos:', error);
-    mostrarError('Error al obtener la lista de equipos.', () => cargarVistaEquipos());
+    mostrarErrorServidor('Error al obtener la lista de equipos.', () => cargarVistaEquipos());
   }
 };

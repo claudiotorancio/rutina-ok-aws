@@ -1,4 +1,4 @@
-import { mostrarError, mostrarLoader, getBadgeEstado, mostrarExito } from "../../config/helpersInterfaz.js";
+import { mostrarErrorServidor, mostrarError, mostrarLoader, getBadgeEstado, mostrarExito } from "../../config/helpersInterfaz.js";
 import { OrdenService } from "../../services/ordenService.js";
 import { mostrarModalConfirmacion } from "../mostrarModal.js";
 import { cargarVistaAnadirOrden } from "./cargarVistaAnadirOrden.js";
@@ -116,13 +116,13 @@ export const cargarVistaOrdenes = async () => {
 
         } catch (error) {
           console.error('Error al eliminar orden de trabajo:', error);
-          mostrarError(error.message || 'Error al eliminar la orden de trabajo.');
+          mostrarErrorServidor(error.message || 'Error al eliminar la orden de trabajo.', () => cargarVistaOrdenes());
         }
       }
     });
 
   } catch (error) {
     console.error('Error al cargar órdenes de trabajo:', error);
-    mostrarError('Error al cargar las órdenes de trabajo del servidor.', () => cargarVistaOrdenes());
+    mostrarErrorServidor('Error al cargar las órdenes de trabajo del servidor.', () => cargarVistaOrdenes());
   }
 };

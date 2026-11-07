@@ -13,7 +13,7 @@ export const mostrarLoader = () => {
   `;
 }
 
-export const mostrarError = (mensaje, callbackReintentar) => {
+export const mostrarErrorServidor = (mensaje, callbackReintentar) => {
   // 1. Limpiar el contenedor principal por si tenía el loader activo
   const mainContainer = document.getElementById('main-container-content');
   if (mainContainer) {
@@ -71,5 +71,15 @@ export const mostrarExito = (mensaje) => {
   } else {
     // Fallback nativo por si el modal no estuviera disponible
     alert('ÉXITO: ' + mensaje);
+  }
+};
+
+export const mostrarError = (mensaje) => {
+  if (typeof mostrarModalRespuesta === 'function') {
+    // Opcional: Podés pasarle un parámetro extra o configurar el modal para que tenga borde verde o título "Éxito"
+    mostrarModalRespuesta("", mensaje, 'error');
+  } else {
+    // Fallback nativo por si el modal no estuviera disponible
+    alert('ERROR: ' + mensaje);
   }
 };

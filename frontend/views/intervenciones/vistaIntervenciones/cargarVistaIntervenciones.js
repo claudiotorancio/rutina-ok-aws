@@ -1,4 +1,4 @@
-import { mostrarError, mostrarLoader } from "../../../config/helpersInterfaz.js";
+import { mostrarError, mostrarErrorServidor, mostrarLoader } from "../../../config/helpersInterfaz.js";
 import { IntervencionService } from "../../../services/intervencionService.js";
 import { cargarVistaDetalleIntervencion } from "../vistaDetallesIntervenciones/cargarVistaDetalleIntervencion.js";
 import { vistaIntervencionesHTML } from "./vistaIntervencionesHTML.js";
@@ -122,6 +122,6 @@ export const cargarVistaIntervenciones = async () => {
 
   } catch (error) {
     console.error('Error al cargar intervenciones:', error);
-    mostrarError('Error al cargar las intervenciones técnicas del servidor.', () => cargarVistaIntervenciones());
+    mostrarErrorServidor('Error al cargar las intervenciones técnicas del servidor.', () => cargarVistaIntervenciones());
   }
 };

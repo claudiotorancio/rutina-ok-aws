@@ -1,4 +1,4 @@
-import { mostrarLoader, mostrarError } from "../../config/helpersInterfaz.js";
+import { mostrarLoader, mostrarErrorServidor } from "../../config/helpersInterfaz.js";
 import { ClienteService } from "../../services/clienteService.js";
 import { mostrarModalConfirmacion } from "../mostrarModal.js";
 import { cargarVistaCrearCliente } from "./cargarVistaNuevoCliente.js";
@@ -98,13 +98,13 @@ export const cargarVistaClientes = async () => {
           await cargarVistaClientes();
         } catch (error) {
           console.error('Error al cambiar el estado del cliente:', error);
-          mostrarError('No se pudo actualizar el estado del cliente.', () => cargarVistaClientes());
+          mostrarErrorServidor('No se pudo actualizar el estado del cliente.', () => cargarVistaClientes());
         }
       }
     });
 
   } catch (error) {
     console.error('Error al cargar clientes:', error);
-    mostrarError('Error al obtener los clientes del sistema.', () => cargarVistaClientes());
+    mostrarErrorServidor('Error al obtener los clientes del sistema.', () => cargarVistaClientes());
   }
 };

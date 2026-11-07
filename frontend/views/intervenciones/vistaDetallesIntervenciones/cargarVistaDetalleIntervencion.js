@@ -1,4 +1,4 @@
-import { mostrarError, mostrarLoader } from "../../../config/helpersInterfaz.js";
+import { mostrarError, mostrarErrorServidor, mostrarLoader } from "../../../config/helpersInterfaz.js";
 import { IntervencionService } from "../../../services/intervencionService.js";
 import { cargarVistaDetalleOrden } from "../../ordenes/cargarVistaDetalleOrden.js";
 import { cargarVistaIntervenciones } from "../vistaIntervenciones/cargarVistaIntervenciones.js";
@@ -119,6 +119,6 @@ export const cargarVistaDetalleIntervencion = async (idIntervencion, callbackVol
 
     } catch (error) {
         console.error('Error al cargar detalle de intervención:', error);
-        mostrarError('No se pudo cargar el detalle completo de la intervención.', () => cargarVistaIntervenciones());
+        mostrarErrorServidor('No se pudo cargar el detalle completo de la intervención.', () => cargarVistaIntervenciones());
     }
 };

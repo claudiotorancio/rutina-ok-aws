@@ -1,4 +1,4 @@
-import { mostrarLoader, mostrarError, getBadgeEstado } from "../../config/helpersInterfaz.js";
+import { mostrarLoader,  getBadgeEstado, mostrarErrorServidor } from "../../config/helpersInterfaz.js";
 import { OrdenService } from "../../services/ordenService.js";
 import { ClienteService } from "../../services/clienteService.js";
 import { EquipoService } from "../../services/equipoService.js";
@@ -40,7 +40,7 @@ export const cargarVistaDashboard = async () => {
         //Actualizar notificacion
         actualizarNotificacionesIntervenciones(cantIntervenciones);
 
-        // Filtrar órdenes pendientes o en curso para darles visibilidad rápida
+        // Filtrar órdenes pendientes o en curso
         const ordenesPendientes = ordenes ? ordenes.filter(o => o.estado !== 'COMPLETADA') : [];
 
         //Renderizar html
@@ -49,7 +49,7 @@ export const cargarVistaDashboard = async () => {
         if (ordenesPendientes.length === 0) {
             html += `<tr><td colspan="5" class="text-center text-muted py-3">No hay órdenes pendientes en este momento. ¡Excelente trabajo!</td></tr>`;
         } else {
-            // Mostramos solo las primeras 5 más recientes para no saturar el dashboard
+            // Mostramos solo las primeras 5 más recientes 
             ordenesPendientes.slice(0, 5).forEach(ot => {
                 const clienteNombre = ot.cliente?.nombre_empresa || 'Sin cliente';
                 html += `
@@ -98,6 +98,6 @@ export const cargarVistaDashboard = async () => {
 
     } catch (error) {
         console.error('Error al cargar el dashboard:', error);
-        mostrarError('No se pudo cargar la información del panel principal.', () => cargarVistaDashboard());
+        mostrarErrorServidor('No se pudo cargar la información del panel principal.', () => cargarVistaDashboard());
     }
 };

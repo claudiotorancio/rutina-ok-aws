@@ -1,4 +1,4 @@
-import { mostrarError, mostrarExito, mostrarLoader } from "../../config/helpersInterfaz.js";
+import { mostrarError, mostrarErrorServidor, mostrarExito, mostrarLoader } from "../../config/helpersInterfaz.js";
 import { OrdenService } from "../../services/ordenService.js";
 import { ClienteService } from "../../services/clienteService.js"; // <-- Cambiado de equipoService a clienteService
 import { TecnicoService } from "../../services/tecnicoService.js";
@@ -123,8 +123,8 @@ function configurarEventosFormularioOrden(clientes) {
     const nuevaOrden = {
       tipificacion: document.getElementById('tipificacion').value,
       prioridad: document.getElementById('prioridad').value,
-      id_cliente: parseInt(idCliente),                                // <-- ¡Obligatorio!
-      id_equipo: equipoVal ? parseInt(equipoVal) : null,              // <-- Opcional (null si no eligió)
+      id_cliente: parseInt(idCliente),                              
+      id_equipo: equipoVal ? parseInt(equipoVal) : null,              
       id_tecnico: parseInt(idTecnico),
       fecha_programada: document.getElementById('fecha_programada').value,
       descripcion_tarea: document.getElementById('descripcion_tarea').value,
@@ -138,7 +138,7 @@ function configurarEventosFormularioOrden(clientes) {
       volverAlListado();
     } catch (error) {
       console.error('Error al crear orden:', error);
-      mostrarError(error.message || 'Error al registrar la orden de trabajo.');
+      mostrarErrorServidor(error.message || 'Error al registrar la orden de trabajo.', ()=> cargarVistaAnadirOrden());
     }
   });
 }

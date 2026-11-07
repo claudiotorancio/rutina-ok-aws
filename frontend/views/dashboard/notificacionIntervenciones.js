@@ -8,7 +8,6 @@ export const actualizarNotificacionesIntervenciones = (cantidad) => {
         badge.textContent = cantidad;
         badge.classList.remove('d-none'); // Muestra la burbuja roja
     } else {
-        badge.textContent = '0';
-        badge.classList.add('d-none');    // La vuelve a ocultar si no hay nada
+        badge.classList.add('d-none');    // quita la burbuja roja
     }
 };

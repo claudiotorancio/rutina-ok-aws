@@ -1,4 +1,4 @@
-import { mostrarError, mostrarExito, mostrarLoader } from "../../config/helpersInterfaz.js";
+import { mostrarError, mostrarErrorServidor, mostrarExito, mostrarLoader } from "../../config/helpersInterfaz.js";
 import { EquipoService } from "../../services/equipoService.js";
 import { ClienteService } from "../../services/clienteService.js";
 import { cargarVistaEquipos } from "./cargarVistaEquipos.js";
@@ -97,7 +97,7 @@ export const cargarVistaAnadirEquipo = async () => {
 
   } catch (error) {
     console.error('Error al cargar la vista de añadir equipo:', error);
-    mostrarError('No se pudieron cargar los datos necesarios para registrar el equipo.', () => cargarVistaEquipos());
+    mostrarErrorServoidor('No se pudieron cargar los datos necesarios para registrar el equipo.', () => cargarVistaEquipos());
   }
 };
 
@@ -145,7 +145,7 @@ function configurarEventosFormularioEquipo() {
       await volverAlListado();
     } catch (error) {
       console.error('Error al registrar equipo:', error);
-      mostrarError(error.message || 'Error al guardar el equipo en el servidor.', () => cargarVistaEquipos());
+      mostrarErrorServidor(error.message || 'Error al guardar el equipo en el servidor.', () => cargarVistaEquipos());
     }
   });
 }

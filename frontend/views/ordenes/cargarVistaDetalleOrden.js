@@ -1,4 +1,4 @@
-import { mostrarLoader, mostrarError, getBadgeEstado } from "../../config/helpersInterfaz.js";
+import { mostrarLoader, getBadgeEstado, mostrarErrorServidor } from "../../config/helpersInterfaz.js";
 import { mostrarModalRespuesta, mostrarModalSeleccionTecnico } from "../mostrarModal.js";
 import { OrdenService } from "../../services/ordenService.js";
 import { TecnicoService } from "../../services/tecnicoService.js";
@@ -179,12 +179,12 @@ export const cargarVistaDetalleOrden = async (idOrden, callbackVolver = null) =>
 
             } catch (err) {
                 console.error("Error al reasignar:", err);
-                mostrarError("No se pudo reasignar la orden.", () => cargarVistaDetalleOrden(idOrden));
+                mostrarErrorServidor("No se pudo reasignar la orden.", () => cargarVistaDetalleOrden(idOrden));
             }
         });
 
     } catch (error) {
         console.error('Error al cargar detalle de orden:', error);
-        mostrarError('No se pudo cargar el detalle de la orden.', () => cargarVistaDetalleOrden());
+        mostrarErrorServidor('No se pudo cargar el detalle de la orden.', () => cargarVistaDetalleOrden());
     }
 };
