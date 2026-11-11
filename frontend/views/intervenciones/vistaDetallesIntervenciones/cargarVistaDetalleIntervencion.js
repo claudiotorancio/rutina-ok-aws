@@ -85,7 +85,7 @@ export const cargarVistaDetalleIntervencion = async (idIntervencion, callbackVol
                     </div>
 
                     <!-- MAPA DE UBICACIÓN (SI EXISTE) -->
-                    ${seccionMapa(coords)}
+                    ${seccionMapa(coords) || 'Sección Mapa: N/A'} 
 
                     <!-- Comentarios / Observaciones del Técnico -->
                     <div class="mb-4">

@@ -48,6 +48,10 @@ export class AuthService {
 
         } catch (error) {
             console.error('AuthService.login:', error);
+            if (error instanceof TypeError || error.message === 'Failed to fetch') {
+                throw new Error("No se pudo conectar con el servidor. Verifica tu conexión a internet.");
+            }
+
             throw error;
         }
     }

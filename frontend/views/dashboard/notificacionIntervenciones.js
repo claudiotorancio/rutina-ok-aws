@@ -1,5 +1,5 @@
 
-
+//frontend/views/dashboard/notificacionIntervenciones.js
 export const actualizarNotificacionesIntervenciones = (cantidad) => {
     const badge = document.getElementById('badge-intervenciones');
     if (!badge) return;

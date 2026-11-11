@@ -1,4 +1,4 @@
-import { mostrarError, mostrarErrorServidor, mostrarLoader } from "../../../config/helpersInterfaz.js";
+import { mostrarErrorServidor, mostrarLoader } from "../../../config/helpersInterfaz.js";
 import { IntervencionService } from "../../../services/intervencionService.js";
 import { cargarVistaDetalleIntervencion } from "../vistaDetallesIntervenciones/cargarVistaDetalleIntervencion.js";
 import { vistaIntervencionesHTML } from "./vistaIntervencionesHTML.js";
