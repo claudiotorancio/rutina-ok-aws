@@ -1,4 +1,4 @@
-import app from "./config/app";
+import app from "./config/app.js";
 
 
 //Definir el puerto en el que se ejecutará el servidor
