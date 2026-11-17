@@ -35,27 +35,27 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // verificación antes de express.static paa sacar del panel
-// app.get("/panel.html", verificarAdmin);
+app.get("/panel.html", verificarAdmin);
 
 //entrar como admin
-// app.get("/panel-admin", verificarAdmin, (req, res) => {
-//     // console.log("pase por app.js (panel-admin)")
-//     //Evitar qeu el navegador guarde esta ruta protegida
-//     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-//     return res.sendFile(path.join(__dirname, "../../frontend/dist/panel.html"));
-// });
+app.get("/panel-admin", verificarAdmin, (req, res) => {
+    // console.log("pase por app.js (panel-admin)")
+    //Evitar qeu el navegador guarde esta ruta protegida
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    return res.sendFile(path.join(__dirname, "../../frontend/dist/panel.html"));
+});
 
 
 //Servir los archivos estaticos
-// app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
 //Ruta ppal hacia servidor
 app.use("/api", mainRoutes);
 
-// app.get("/*catchall", (req, res) => {
-//     // console.log("pase por app.js (/catcall)")
-//     res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
-// });
+app.get("/*catchall", (req, res) => {
+    // console.log("pase por app.js (/catcall)")
+    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+});
 
 
 export default app;
