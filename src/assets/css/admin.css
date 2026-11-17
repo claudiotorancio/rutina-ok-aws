@@ -12,9 +12,17 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
+.main-content {
+  flex: 1;
+  min-width: 0;
+  /* ¡Vital para que las tablas o grids internos no estiren el layout! */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 /* Layout Principal */
 .dashboard-wrapper {
-  display: flex;
   min-height: 100vh;
 }
 
@@ -54,7 +62,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   padding: 1.25rem;
-  height: 100%;
 }
 
 .btn-accent {
@@ -76,4 +83,11 @@ body {
 .card-lista {
   max-height: 50rem;
   overflow-x: hidden;
+}
+
+@media (min-width: 992px) {
+  .dashboard-wrapper {
+    display: flex;
+
+  }
 }

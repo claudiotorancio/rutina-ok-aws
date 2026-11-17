@@ -1,5 +1,7 @@
 import { TecnicoService } from "../../services/tecnicoService.js";
-import { mostrarLoader, mostrarError } from "../../config/helpersInterfaz.js";
+import { mostrarLoader, mostrarErrorServidor } from "../../config/helpersInterfaz.js";
+import { cargarVistaAnadirTecnico } from "./cargarVistaAnadirTecnico.js";
+import { mostrarModalConfirmacion } from "../mostrarModal.js";
 
 
 const tecnicoService = new TecnicoService();
@@ -17,7 +19,7 @@ export const cargarVistaTecnicos = async () => {
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold m-0"><i class="bi bi-person-badge text-accent me-2"></i>Gestión de Técnicos</h5>
-            <button class="btn btn-accent btn-sm"><i class="bi bi-plus-lg me-1"></i>Nuevo Técnico</button>
+            <button class="btn btn-accent btn-sm" id="btn-nuevo-tecnico"><i class="bi bi-plus-lg me-1" ></i>Nuevo Técnico</button>
           </div>
           <div class="table-responsive">
             <table class="table table-dark table-hover align-middle mb-0">
@@ -36,6 +38,7 @@ export const cargarVistaTecnicos = async () => {
       html += `<tr><td colspan="4" class="text-center text-muted py-3">No hay técnicos registrados.</td></tr>`;
     } else {
       tecnicos.forEach(t => {
+
         html += `
           <tr class="border-secondary">
             <td class="fw-semibold">${t.nombre} ${t.apellido || ''}</td>
@@ -46,8 +49,13 @@ export const cargarVistaTecnicos = async () => {
               </span>
             </td>
             <td class="text-end">
-              <button class="btn btn-outline-info btn-sm me-1"><i class="bi bi-pencil"></i></button>
-              <button class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button>
+            <!--<button class="btn btn-outline-info btn-sm me-1"><i class="bi bi-pencil"></i></button>-->
+
+                      <button class="btn btn-outline-${t.activo ? 'warning' : 'success'} btn-sm me-1 btn-toggle-estado" 
+                      data-id="${t.id_usuario}" 
+                      title="${t.activo ? 'Pausar Técnico' : 'Activar Técnico'}">
+                <i class="bi ${t.activo ? 'bi-pause-fill' : 'bi-play-fill'}"></i>
+              </button>
             </td>
           </tr>
         `;
@@ -62,8 +70,41 @@ export const cargarVistaTecnicos = async () => {
       </div>
     `;
     mainContainer.innerHTML = html;
+
+    //  cargarVistaOrdenes:
+    const btnNuevoTecnico = document.getElementById('btn-nuevo-tecnico');
+    if (btnNuevoTecnico) {
+      btnNuevoTecnico.addEventListener('click', () => {
+        cargarVistaAnadirTecnico();
+      });
+    }
+
+    const botonesToggleEstado = document.querySelectorAll('.btn-toggle-estado');
+    botonesToggleEstado.forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const idTecnico = btn.getAttribute('data-id');
+
+        //Esperar la confiramcion para ejecutar la actualizacion
+        const confirmacion = await mostrarModalConfirmacion('Confirmacion', 'Desea actiualizar el estado del técnico?')
+
+        if (!confirmacion) return;
+
+        try {
+          mostrarLoader();
+
+          await tecnicoService.toggleEstadoTecnico(idTecnico);
+
+          await cargarVistaTecnicos();
+
+        } catch (error) {
+          console.error('Error al cambiar el estado del técnico:', error);
+          mostrarErrorServidor('No se pudo actualizar el estado del técnico.', () => cargarVistaTecnicos());
+        }
+      });
+    });
+
   } catch (error) {
     console.error('Error al cargar técnicos:', error);
-    mostrarError('Error al cargar la lista de técnicos. Verifique sesión de admin.');
+    mostrarErrorServidor('Error al cargar la lista de técnicos. Verifique sesión de admin.', () => cargarVistaTecnicos());
   }
 }

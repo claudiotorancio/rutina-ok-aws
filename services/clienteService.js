@@ -5,7 +5,7 @@ import baseUrl from "./baseUrl.js"
 export class ClienteService {
     constructor() {
         this.baseUrl = baseUrl;
-        // Configuración para enviar cookies de sesión (Passport)
+        // Configuración común para enviar cookies de sesión (Passport)
         this.fetchOptions = {
             credentials: 'include',
             headers: {
@@ -36,10 +36,43 @@ export class ClienteService {
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.error || 'Error al crear cliente');
-            return data.cliente;
+            return data;
         } catch (error) {
-            console.error('AdminService.crearCliente:', error);
+            console.error('ClienteService.crearCliente:', error);
             throw error;
         }
     }
+
+    //Cambiar estado de cliente
+    async toggleEstadoCliente(id) {
+        try {
+            const response = await fetch(`${this.baseUrl}api/admin/clientes/${id}/desactivar`, {
+                ...this.fetchOptions,
+                method: 'PATCH',
+                body: JSON.stringify()
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Error al actualizar cliente');
+            return data.cliente;
+        } catch (error) {
+            console.error('ClienteService.toogleEstadoCliente:', error);
+            throw error;
+        }
+    }
+
+    //Obtener Cliente por ID
+    async getClienteById(id) {
+        try {
+            const response = await fetch(`${this.baseUrl}api/admin/obtener-cliente/${id}`, this.fetchOptions);
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.error || 'Error al obtener la intervencion');
+
+            return data.cliente;
+        } catch (error) {
+            console.error('ClienteService.getClienteById:', error);
+            throw error;
+        }
+    }
+
 };

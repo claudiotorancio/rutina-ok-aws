@@ -4,7 +4,7 @@ export class AuthService {
     constructor() {
         this.baseUrl = baseUrl
         this.fetchOptions = {
-            credentials: 'include', 
+            credentials: 'include', // Vital para enviar y recibir la cookie de sesión (connect.sid)
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -19,7 +19,7 @@ export class AuthService {
             const response = await fetch(`${this.baseUrl}api/auth/signin`, {
                 ...this.fetchOptions,
                 method: 'POST',
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password })
             });
 
 
@@ -48,6 +48,10 @@ export class AuthService {
 
         } catch (error) {
             console.error('AuthService.login:', error);
+            if (error instanceof TypeError || error.message === 'Failed to fetch') {
+                throw new Error("No se pudo conectar con el servidor. Verifica tu conexión a internet.");
+            }
+
             throw error;
         }
     }

@@ -28,6 +28,7 @@ export class TecnicoService {
         }
     }
 
+    //Actualizar tecnicos
     async actualizarTecnico(id, tecnicoData) {
         try {
             const response = await fetch(`${this.baseUrl}api/admin/tecnicos/${id}`, {
@@ -40,6 +41,61 @@ export class TecnicoService {
             return data.tecnico;
         } catch (error) {
             console.error('AdminService.actualizarTecnico:', error);
+            throw error;
+        }
+    }
+
+    //Cambiar estado de tecnico
+    async toggleEstadoTecnico(id) {
+        try {
+            const response = await fetch(`${this.baseUrl}api/admin/tecnicos/${id}/desactivar`, {
+                ...this.fetchOptions,
+                method: 'PATCH',
+                body: JSON.stringify()
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Error al actualizar técnico');
+            return data.tecnico;
+        } catch (error) {
+            console.error('TecnicoService.toogleEstadoTecnico:', error);
+            throw error;
+        }
+    }
+
+    //Registrar un tecnico nuevo
+    async registrarTecnico(tecnicoNuevo) {
+        try {
+            const response = await fetch(`${this.baseUrl}api/admin/registrar-tecnico`, {
+                ...this.fetchOptions,
+                method: 'POST',
+                body: JSON.stringify(tecnicoNuevo)
+            });
+            //Valdiar respuesta exitosa
+            if (response.ok) {
+                const data = await response.json();
+                return data.nuevoTecnicoCMMS;
+            }
+
+            //Controlar el error
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                // Si el error del servidor no incluyó un JSON evito que la app se rompa
+                data = {};
+            }
+            //Guardo los tipos de errores para mostrarlos
+            const backendMessage =
+                data?.errores?.[0]?.msg ||
+                data?.message ||
+                data?.error;
+
+            const errorMessage = backendMessage || "Ocurrio un error inesperado";
+
+            throw new Error(errorMessage);
+
+        } catch (error) {
+            console.error('TecnicoService.registrarTecnico:', error);
             throw error;
         }
     }

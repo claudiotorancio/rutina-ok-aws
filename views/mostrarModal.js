@@ -104,7 +104,7 @@ export const mostrarModalSeleccionTecnico = (titulo, mensaje, tecnicos) => {
         let opcionesHtml = `<option value="">Seleccione un técnico...</option>`;
         tecnicos.forEach(t => {
             const nombreTecnico = t ? `${t.nombre} ${t.apellido || ''}` : `Técnico #${t.id_usuario}`;
-            opcionesHtml += `<option value="${t.id_usuario}">${nombreTecnico} (${t.estado_disponibilidad || 'DISPONIBLE'})</option>`;
+            opcionesHtml += `<option value="${t.id_usuario}">${nombreTecnico} (${t.activo ? 'DISPONIBLE' : 'INACTIVO'})</option>`;
         });
 
         if (mensajeEl) {
