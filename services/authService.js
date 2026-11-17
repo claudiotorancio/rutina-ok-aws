@@ -4,7 +4,7 @@ export class AuthService {
     constructor() {
         this.baseUrl = baseUrl
         this.fetchOptions = {
-            credentials: 'include', // Vital para enviar y recibir la cookie de sesión (connect.sid)
+            credentials: 'include', 
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -20,7 +20,6 @@ export class AuthService {
                 ...this.fetchOptions,
                 method: 'POST',
                 body: JSON.stringify({ email, password }),
-                credentials: true
             });
 
 
