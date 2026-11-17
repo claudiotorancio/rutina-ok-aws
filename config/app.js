@@ -20,7 +20,12 @@ app.set("trust proxy", 1); //confianza en el proxyd e primer nivel
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(cors());
+app.use(cors({
+    origin: ['https://rutina-ok-app.vercel.app', 'http://localhost:5173'], // Añade tus orígenes permitidos
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 app.use(morgan("dev"))
 app.use(cookieParser());
 
