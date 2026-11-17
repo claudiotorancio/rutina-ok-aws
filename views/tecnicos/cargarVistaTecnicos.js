@@ -1,6 +1,6 @@
 import { TecnicoService } from "../../services/tecnicoService.js";
 import { mostrarLoader, mostrarErrorServidor } from "../../config/helpersInterfaz.js";
-import { cargarVistaAnadirTecnico } from "./cargarVistaAnadirTecnico.js";
+import { cargarVistaAnadirTecnico } from "./cargarVistaAnadirTecnicos.js";
 import { mostrarModalConfirmacion } from "../mostrarModal.js";
 
 
