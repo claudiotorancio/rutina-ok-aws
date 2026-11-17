@@ -2,7 +2,7 @@ import { mostrarError, mostrarErrorServidor, mostrarLoader } from "../../../conf
 import { IntervencionService } from "../../../services/intervencionService.js";
 import { cargarVistaDetalleOrden } from "../../ordenes/cargarVistaDetalleOrden.js";
 import { cargarVistaIntervenciones } from "../vistaIntervenciones/cargarVistaIntervenciones.js";
-import { renderEvidenciaFotosHtml } from "./evidenciaFotograficaHtml.js";
+import { renderEvidenciaFotosHtml } from "./evidenciaFotograficaHTML.js";
 import { renderizarChecklistSegunTipo } from "./renderizarSegunTipo.js";
 import { extraerCoordenadas, seccionMapa } from "./seccionMapa.js";
 
