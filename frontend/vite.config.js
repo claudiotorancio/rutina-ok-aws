@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? './' : '',
+  // base: process.env.NODE_ENV === 'production' ? './' : '',
   build: {
     sourcemap: true,
     rollupOptions: {
