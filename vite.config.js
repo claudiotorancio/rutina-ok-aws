@@ -2,7 +2,6 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/",
   build: {
     sourcemap: false, // Opcional: false evita exponer tu código fuente en producción
     rollupOptions: {
