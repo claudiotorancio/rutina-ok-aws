@@ -5,7 +5,7 @@ import baseUrl from "./baseUrl.js"
 export class ClienteService {
     constructor() {
         this.baseUrl = baseUrl;
-        // Configuración común para enviar cookies de sesión (Passport)
+        // Configuración para enviar cookies de sesión (Passport)
         this.fetchOptions = {
             credentials: 'include',
             headers: {

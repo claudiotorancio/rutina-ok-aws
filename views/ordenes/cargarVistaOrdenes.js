@@ -40,7 +40,7 @@ export const cargarVistaOrdenes = async () => {
       html += `<tr><td colspan="6" class="text-center text-muted py-3">No hay órdenes de trabajo registradas.</td></tr>`;
     } else {
       ordenes.forEach(o => {
-        const clienteNom = o.equipo.cliente?.nombre_empresa || o.clienteNombre || 'N/A';
+        const clienteNom = o.cliente?.nombre_empresa || o.clienteNombre || 'N/A';
         const equipoNom = o.equipo?.nombre_equipo || o.equipoNombre || 'General';
         const tecnicoNom = o.tecnico ? `${o.tecnico.usuario.nombre} ${o.tecnico.usuario.apellido || ''}` : 'Sin Asignar';
 
@@ -105,14 +105,13 @@ export const cargarVistaOrdenes = async () => {
         if (!confirmado) return;
 
         try {
-          //Si aceptó, eliminamos en el backend
           await ordenService.eliminarOrden(idOrden);
 
-          // Borrar la fila de la tabla visualmente al instante
+          // Borrar la fila de la tabla 
           const fila = btnEliminar.closest('tr');
           if (fila) fila.remove();
 
-          // 4. Mostrar el modal de éxito de siempre
+          // 4. Mostrar el modal de éxito
           mostrarExito(`La orden #${idOrden} fue eliminada con éxito.`);
 
         } catch (error) {
