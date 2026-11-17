@@ -2,15 +2,15 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "./",
+  // base: "./",
   build: {
     sourcemap: false, // Opcional: false evita exponer tu código fuente en producción
-    rollupOptions: {
-      input: {
-        main: resolve(import.meta.dirname, "index.html"),
-        panelAdmin: resolve(import.meta.dirname, "panel.html"),
-      },
-    },
+    // rollupOptions: {
+    //   input: {
+    //     main: resolve(import.meta.dirname, "index.html"),
+    //     panelAdmin: resolve(import.meta.dirname, "panel.html"),
+    //   },
+    // },
   },
   server: {
     port: 5173,
