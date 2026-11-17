@@ -18,7 +18,7 @@ formLogin.addEventListener('submit', async (e) => {
 
         if (res.user && res.user.tipo_usuario === 'ADMIN') {
             const esProduccion = process.env.NODE_ENV === 'production'
-            window.location.href = esProduccion ? '/panel.html' : '/panel.html';
+            window.location.href = esProduccion ? '/panel-admin' : '/panel.html';
         } else {
             mostrarError('Acceso no autorizado para este usuario.');
         }
